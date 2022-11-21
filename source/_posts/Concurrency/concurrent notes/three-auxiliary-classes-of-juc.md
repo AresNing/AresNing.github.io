@@ -1,3 +1,18 @@
+---
+title: JUC的三大辅助类
+categories:
+  - [Concurrency]
+tags:
+  - [Concurrency]
+  - [CountDownLatch]
+  - [CyclicBarrier]
+  - [Semaphore]
+---
+
+> CountDownLatch，CyclicBarrier，Semaphore
+
+<!--more-->
+
 # `CountDownLatch` 减小计数
 
 - `CountDownLatch `类可以设置一个计数器，然后通过 `countDown `方法来进行 减 1 的操作，使用 `await` 方法等待计数器不大于 0，然后继续执行 `await `方法 之后的语句
@@ -24,9 +39,6 @@ public static void main(String[] args) throws InterruptedException {
     System.out.println(Thread.currentThread().getName() + " finish");
 }
 ```
-
-
-
 
 
 # `CyclicBarrier` 循环栅栏
@@ -61,25 +73,21 @@ public static void main(String[] args) {
 
 
 
-
-
 # `Semaphore` 信号量
 
 - `Semaphore `的构造方法中传入的第一个参数是最大信号量（可以看成最大线程池），每个信号量初始化为一个最多只能分发一个许可证
 
   - `Semaphore `的构造方法有一个可选参数是设置是否为公平锁
 
-  - ```java
-    public Semaphore(int permits, boolean fair) {
-        sync = fair ? new FairSync(permits) : new NonfairSync(permits);
-    }
-    ```
+```java
+public Semaphore(int permits, boolean fair) {
+    sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+}
+```
 
 - 使用 `acquire` 方 法获得许可证，`release `方法释放许可
 
 - `Semaphore `通常用于限制可以访问某些资源（物理或逻辑的）的线程数目
-
-- 
 
 ```java
 public static void main(String[] args) {

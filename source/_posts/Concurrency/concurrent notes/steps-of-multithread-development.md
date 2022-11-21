@@ -1,3 +1,15 @@
+---
+title: 多线程开发步骤
+categories:
+  - [Concurrency]
+tags:
+  - [Concurrency]
+---
+
+# 基本步骤
+
+<!--more-->
+
 1. 创建资源类，定义属性和操作方法
 2. 资源类的操作方法
    - 上锁

@@ -1,10 +1,19 @@
+---
+title: 集合的线程安全
+categories:
+  - [Concurrency]
+tags:
+  - [Concurrency]
+---
+
+
 # 快速失败
 
 - `java.util`下的集合都是快速失败的
 - 集合的遍历是通过迭代器实现的，迭代器迭代时会检查`modCount == expectedModCount`，如果进行并发修改，可能导致`modCount != expectedModCount`，导致并发修改异常
 - 如`ArrayList`
 
-
+<!--more-->
 
 # 安全失败
 

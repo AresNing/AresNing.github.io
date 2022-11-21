@@ -1,3 +1,12 @@
+---
+title: 读写锁
+categories:
+  - [Concurrency]
+tags:
+  - [Concurrency]
+---
+
+
 # 读写锁
 
 - 读写互斥，读读共享
@@ -6,7 +15,7 @@
 
 - 无论读锁还是写锁，都会发生死锁（读-写死锁，写-写死锁）
 
-
+<!--more-->
 
 # `ReentrantReadWriteLock`
 

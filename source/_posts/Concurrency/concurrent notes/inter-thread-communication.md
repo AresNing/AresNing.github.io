@@ -1,3 +1,14 @@
+---
+title: 线程间通信
+categories:
+  - [Concurrency]
+tags:
+  - [Concurrency]
+  - [synchronized]
+  - [Lock]
+---
+
+
 # synchronized
 
 ## `wait` + `notify/notifyAll`
@@ -22,7 +33,7 @@ class Share {
 }
 ```
 
-
+<!--more-->
 
 # Lock
 

@@ -1,3 +1,12 @@
+---
+title: 多线程锁
+categories:
+  - [Concurrency]
+tags:
+  - [Concurrency]
+---
+
+
 # `synchronized`实现同步
 
 - `synchronized`实现同步的基础：Java 中的每一个对象都可以作为锁
@@ -6,7 +15,7 @@
   - 对于静态同步方法，锁是当前类的`Class`对象
   - 对于同步方法块，锁是`synchronized`括号里配置的对象
 
-
+<!--more-->
 
 # 公平锁与非公平锁
 
