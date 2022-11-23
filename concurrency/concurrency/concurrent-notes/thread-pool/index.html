@@ -20,17 +20,21 @@
     var CONFIG = {"hostname":"aresning.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="线程池框架  Java 中的线程池是通过Executor框架实现的">
+<meta property="og:type" content="article">
 <meta property="og:title" content="线程池">
 <meta property="og:url" content="https://aresning.github.io/concurrency/concurrency/concurrent-notes/thread-pool/index.html">
 <meta property="og:site_name" content="AresNing&#39;s blog">
+<meta property="og:description" content="线程池框架  Java 中的线程池是通过Executor框架实现的">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-11-21T14:07:18.673Z">
-<meta property="article:modified_time" content="2022-11-21T14:48:35.000Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/thread-pool-framework.png">
+<meta property="article:published_time" content="2022-11-23T02:19:59.957Z">
+<meta property="article:modified_time" content="2022-11-23T02:19:59.957Z">
 <meta property="article:author" content="AresNing">
 <meta property="article:tag" content="Concurrency">
 <meta property="article:tag" content="Thread Pool">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/thread-pool-framework.png">
 
 <link rel="canonical" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/thread-pool/">
 
@@ -218,9 +222,8 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-11-21 22:07:18 / Modified: 22:48:35" itemprop="dateCreated datePublished" datetime="2022-11-21T22:07:18+08:00">2022-11-21</time>
+              <time title="Created: 2022-11-23 10:19:59" itemprop="dateCreated datePublished" datetime="2022-11-23T10:19:59+08:00">2022-11-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,14 +248,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -264,7 +267,65 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <span id="more"></span>
+        <h1>线程池框架</h1>
+<ul>
+<li>Java 中的线程池是通过<code>Executor</code>框架实现的</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/thread-pool-framework.png" alt="thread-pool-framework"></p>
+<span id="more"></span>
+<h1>线程池参数</h1>
+<blockquote>
+<p><strong>创建线程池推荐适用<code>ThreadPoolExecutor</code>及其 7 个参数手动创建</strong></p>
+</blockquote>
+<ul>
+<li><code>corePoolSize</code>：线程池的核心线程数</li>
+<li><code>maximumPoolSize</code>：能容纳的最大线程数</li>
+<li><code>keepAliveTime</code>：空闲线程存活时间</li>
+<li><code>unit</code>：存活的时间单位</li>
+<li><code>workQueue</code>：存放提交但未执行任务的队列</li>
+<li><code>threadFactory</code>：创建线程的工厂类</li>
+<li><code>handler</code>：等待队列满后的拒绝策略</li>
+</ul>
+<blockquote>
+<p>当提交的任务数大于（<code>workQueue.size()</code>+<code>maximumPoolSize</code>），就会触发线程池的拒绝策略</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// 创建线程池</span></span><br><span class="line">    <span class="type">ExecutorService</span> <span class="variable">threadPoolExecutor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(</span><br><span class="line">        <span class="number">3</span>,  <span class="comment">// corePoolSize</span></span><br><span class="line">        <span class="number">5</span>,  <span class="comment">// maximumPoolSize</span></span><br><span class="line">        <span class="number">10</span>,  <span class="comment">// keepAliveTime</span></span><br><span class="line">        TimeUnit.MICROSECONDS,  <span class="comment">// unit</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ArrayBlockingQueue</span>&lt;&gt;(<span class="number">3</span>),  <span class="comment">// workQueue</span></span><br><span class="line">        Executors.defaultThreadFactory(),  <span class="comment">// threadFactory</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.AbortPolicy());  <span class="comment">// handler</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="comment">// 执行任务</span></span><br><span class="line">            threadPoolExecutor.execute(() -&gt; &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">&quot;execute...&quot;</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">// 关闭线程池</span></span><br><span class="line">        threadPoolExecutor.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1>拒绝策略</h1>
+<ul>
+<li><code>CallerRunsPolicy</code>：当触发拒绝策略，只要线程池没有关闭的话，则使用调用线程直接运行任务。一般并发比较小，性能要求不高，不允许失败。但是，由于调用者自己运行任务，如果任务提交速度过快，可能导致程序阻塞，性能效率上必然的损失较大</li>
+<li><code>AbortPolicy</code>：丢弃任务，并抛出拒绝执行<code>RejectedExecutionException</code>异常 信息。线程池默认的拒绝策略。必须处理好抛出的异常，否则会打断当前的执行流程，影响后续的任务执行</li>
+<li><code>DiscardPolicy</code>：直接丢弃，无其他处理</li>
+<li><code>DiscardOldestPolicy</code>：当触发拒绝策略，只要线程池没有关闭的话，丢弃阻塞队列<code>workQueue</code>中最老的一个任务，并将新任务加入</li>
+</ul>
+<h1>线程池底层工作原理</h1>
+<ol>
+<li>在创建了线程池后，线程池中的线程数为零</li>
+<li>当调用<code>execute()</code>方法添加一个请求任务时，线程池会做出如下判断：
+<ul>
+<li>如果正在运行的线程数量小于<code>corePoolSize</code>，那么马上创建线程运行这个任务</li>
+<li>如果正在运行的线程数量大于或等于<code>corePoolSize</code>，那么将这个任务放入队列</li>
+<li>如果这个时候队列满了且正在运行的线程数量还小于<code>maximumPoolSize</code>，那么还是要创建非核心线程立刻运行这个任务</li>
+<li>如果队列满了且正在运行的线程数量大于或等于<code>maximumPoolSize</code>，那么线程池会启动饱和拒绝策略来执行</li>
+</ul>
+</li>
+<li>当一个线程完成任务时，它会从队列中取下一个任务来执行</li>
+<li>当一个线程无事可做超过一定的时间（<code>keepAliveTime</code>）时，线程会判断：</li>
+</ol>
+<ul>
+<li>如果当前运行的线程数大于<code>corePoolSize</code>，那么这个线程就被停掉</li>
+<li>所以线程池的所有任务完成后，它最终会收缩到<code>corePoolSize</code>的大小</li>
+</ul>
+<h1>注意</h1>
+<blockquote>
+<p>阿里巴巴 Java 开发手册</p>
+<p>【强制】线程池不允许使用<code>Executors</code>去创建，而是通过<code>ThreadPoolExecutor</code>的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险。<br>
+说明：<code>Executors</code>返回的线程池对象的弊端如下：<br>
+1）<code>FixedThreadPool</code>和<code>SingleThreadPool</code>:<br>
+允许的请求队列长度为<code>Integer.MAX_VALUE</code>，可能会堆积大量的请求，从而导致<code>OOM</code>。<br>
+2）<code>CachedThreadPool</code>和<code>ScheduledThreadPool</code>:<br>
+允许的创建线程数量为<code>Integer.MAX_VALUE</code>，可能会创建大量的线程，从而导致<code>OOM</code>。</p>
+</blockquote>
+
     </div>
 
     
@@ -284,12 +345,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/concurrency/concurrency/concurrent-notes/read-write-lock/" rel="prev" title="读写锁">
-      <i class="fa fa-chevron-left"></i> 读写锁
+    <a href="/concurrency/concurrency/concurrent-notes/three-auxiliary-classes-of-juc/" rel="prev" title="JUC的三大辅助类">
+      <i class="fa fa-chevron-left"></i> JUC的三大辅助类
     </a></div>
       <div class="post-nav-item">
-    <a href="/concurrency/concurrency/concurrent-notes/steps-of-multithread-development/" rel="next" title="多线程开发步骤">
-      多线程开发步骤 <i class="fa fa-chevron-right"></i>
+    <a href="/concurrency/concurrency/concurrent-notes/fork-join/" rel="next" title="Fork/Join 框架">
+      Fork/Join 框架 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -354,6 +415,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">线程池框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">线程池参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">拒绝策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">线程池底层工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">注意</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -367,7 +429,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -422,13 +484,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">11k</span>
+    <span title="Symbols count total">17k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">10 mins.</span>
+    <span title="Reading time total">15 mins.</span>
 </div>
 
         
