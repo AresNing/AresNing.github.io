@@ -12,8 +12,6 @@ tags:
 
 
 
-<!--more-->
-
 # Lambda表达式
 
 ## 本质
@@ -35,6 +33,8 @@ tags:
 - 右侧：
   - Lambda体应该用大括号`{}`包裹
   - 如果Lambda体只有一条执行语句（包括`return`语句），则大括号`{}`和`return`关键字都可以省略
+
+<!--more-->
 
 
 
@@ -67,6 +67,16 @@ tags:
 | `BiPredicate<T, U>`                                          | `T, U`                          | `boolean`                       | 确定类型为`T, U`的对象是否满足某约束，并返回`boolean`值，包含方法：`boolean test(T t, U u)` |
 | `ToIntFunction<T>`<br />`ToLongFunction<T>`<br />`ToDoubleFunction<T>` | `T`                             | `int`<br />`long`<br />`double` | 分别计算`int`、`long`、`double`值的函数                      |
 | `IntFunction<T>`<br />`LongFunction<T>`<br />`DoubleFunction<T>` | `int`<br />`long`<br />`double` | `R`                             | 参数分别为`int`、`long`、`double`类型的函数                  |
+
+## 总结
+
+| 函数式接口名称 | 方法名称 | 参数    | 返回值 |
+| -------------- | -------- | ------- | ------ |
+| `Runnable`     | `run`    | 无参数  | 无     |
+| `Function`     | `apply`  | 1个参数 | 有     |
+| `Consumer`     | `accept` | 1个参数 | 无     |
+| `BiConsumer`   | `accept` | 2个参数 | 无     |
+| `Supplier`     | `get`    | 无参数  | 有     |
 
 
 
