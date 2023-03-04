@@ -1,5 +1,5 @@
 ---
-title: fBigInteger & BigDecimal
+title: BigInteger & BigDecimal
 categories:
   - [Java Basics]
 tags:
