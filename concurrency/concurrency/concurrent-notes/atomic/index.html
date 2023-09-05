@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/AN_favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/AN_favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/AN_favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"aresning.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="原子类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="atomic">
+<meta property="og:url" content="https://aresning.github.io/concurrency/concurrency/concurrent-notes/atomic/index.html">
+<meta property="og:site_name" content="AresNing&#39;s blog">
+<meta property="og:description" content="原子类">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/atomic.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/alibaba-java.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/long-adder.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/alibaba-java.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/long-adder-diagram.png">
+<meta property="article:published_time" content="2023-09-05T03:58:15.527Z">
+<meta property="article:modified_time" content="2023-09-05T03:58:15.527Z">
+<meta property="article:author" content="AresNing">
+<meta property="article:tag" content="Concurrency">
+<meta property="article:tag" content="CAS">
+<meta property="article:tag" content="atomic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/atomic.png">
+
+<link rel="canonical" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/atomic/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>atomic | AresNing's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-vs.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AresNing's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/AresNing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/atomic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AresNing">
+      <meta itemprop="description" content="Hungry & Humble">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AresNing's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          atomic
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1>原子类</h1>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/atomic.png" alt="atomic"></p>
+<span id="more"></span>
+<h1>基本类型原子类</h1>
+<h2 id="包含">包含</h2>
+<ul>
+<li><code>AtomicInteger</code></li>
+<li><code>AtomicBoolean</code></li>
+<li><code>AtomicLong</code></li>
+</ul>
+<h2 id="示例">示例</h2>
+<ul>
+<li>50个线程，每个线程对<code>MyNumber</code>执行1000次自增，所有线程完成后输出结果</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyNumber</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">AtomicInteger</span> <span class="variable">atomicInteger</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addPlusPlus</span><span class="params">()</span> &#123;</span><br><span class="line">        atomicInteger.getAndIncrement();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AtomicAPITest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">SIZE</span> <span class="operator">=</span> <span class="number">50</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">MyNumber</span> <span class="variable">myNumber</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyNumber</span>();</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">countDownLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(SIZE);  <span class="comment">// 等待50个线程</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; SIZE; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">1000</span>; j++) &#123;</span><br><span class="line">                        myNumber.addPlusPlus();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    countDownLatch.countDown();  <span class="comment">// 计数减一</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();  <span class="comment">// 阻塞等待</span></span><br><span class="line"></span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot;\t&quot;</span> + myNumber.atomicInteger.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1>数组类型原子类</h1>
+<h2 id="包含-v2">包含</h2>
+<ul>
+<li><code>AtomicIntegerArray</code></li>
+<li><code>AtomicLongArray</code></li>
+<li><code>AtomicReferenceArray</code></li>
+</ul>
+<h1>引用类型原子类</h1>
+<h2 id="AtomicReference">AtomicReference</h2>
+<ul>
+<li>示例：手写自旋锁</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpinLockDemo</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> AtomicReference&lt;Thread&gt; atomicReference = <span class="keyword">new</span> <span class="title class_">AtomicReference</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">        System.out.println(thread.getName() + <span class="string">&quot; come in&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span> (!atomicReference.compareAndSet(<span class="literal">null</span>, thread)) &#123;  <span class="comment">// 自旋操作</span></span><br><span class="line">            System.out.println(thread.getName() + <span class="string">&quot; spin lock-----&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">        atomicReference.compareAndSet(thread, <span class="literal">null</span>);</span><br><span class="line">        System.out.println(thread.getName() + <span class="string">&quot; finished&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SpinLockDemo</span> <span class="variable">spinLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpinLockDemo</span>();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            spinLock.lock();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            spinLock.unlock();</span><br><span class="line">        &#125;, <span class="string">&quot;A&quot;</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.MICROSECONDS.sleep(<span class="number">10</span>);  <span class="comment">// 确保线程A先于线程B启动</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            spinLock.lock();</span><br><span class="line">            spinLock.unlock();</span><br><span class="line">        &#125;, <span class="string">&quot;B&quot;</span>).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="AtomicStampedReference">AtomicStampedReference</h2>
+<ul>
+<li>携带版本号（<code>version</code>）的引用类型原子类，可解决 CAS 的<code>ABA</code>问题
+<ul>
+<li><code>AtomicStampedReference(V initialRef,  int initialStamp)</code></li>
+</ul>
+</li>
+<li>解决修改过多少次的问题</li>
+<li>状态戳原子引用</li>
+</ul>
+<h2 id="AtomicMarkableReference">AtomicMarkableReference</h2>
+<ul>
+<li>携带标记位（<code>flag</code>）的引用类型原子类
+<ul>
+<li><code>AtomicMarkableReference(V initialRef,  boolean initialMark)</code></li>
+</ul>
+</li>
+<li>解决是否修改过的问题，将状态戳简化为<code>true/false</code>，一次性的标记</li>
+<li>状态戳（<code>true/false</code>）原子引用</li>
+</ul>
+<h1>对象的属性修改原子类</h1>
+<h2 id="包含-v3">包含</h2>
+<ul>
+<li><code>AtomicIntegerFieldUpdater</code>：原子更新对象中<code>volatile int</code>类型字段的值</li>
+<li><code>AtomicLongFieldUpdater</code>：原子更新对象中<code>volatile long</code>类型字段的值</li>
+<li><code>AtomicReferenceFieldUpdater</code>：原子更新对象中<code>volatile</code>引用类型字段的值</li>
+</ul>
+<h2 id="使用目的">使用目的</h2>
+<ul>
+<li>以线程安全的方式操作非线程安全对象内的某些字段</li>
+</ul>
+<h2 id="使用要求">使用要求</h2>
+<ul>
+<li>更新的对象属性必须使用<code>public volatile</code>修饰**（此处也是<code>volatile</code>的使用场景）**</li>
+<li>因为对象的属性修改原子类都是<strong>抽象类</strong>，所以每次使用都必须使用静态方法<code>newUpdater()</code>创建一个更新器，并且需要设置想要更新的类和属性</li>
+</ul>
+<h2 id="示例-v2">示例</h2>
+<ul>
+<li><code>AtomicIntegerFieldUpdater</code>为例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with Intellij IDEA</span></span><br><span class="line"><span class="comment"> * &lt;h3&gt;Concurrent&lt;h3&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : AresNing</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span> : 10个线程，每个线程转账1000次，不使用synchronized，使用AtomicIntegerFieldUpdater</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BankAccount</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">bankName</span> <span class="operator">=</span> <span class="string">&quot;CCB&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="type">int</span> <span class="variable">money</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    AtomicIntegerFieldUpdater&lt;BankAccount&gt; atomicIntegerFieldUpdater =</span><br><span class="line">            AtomicIntegerFieldUpdater.newUpdater(BankAccount.class, <span class="string">&quot;money&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">transfer</span><span class="params">()</span> &#123;</span><br><span class="line">        atomicIntegerFieldUpdater.getAndIncrement(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AtomicIntegerFieldUpdaterTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">BankAccount</span> <span class="variable">bankAccount</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BankAccount</span>();</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">countDownLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">1000</span>; j++) &#123;</span><br><span class="line">                        bankAccount.transfer();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    countDownLatch.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();</span><br><span class="line"></span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot;\t&quot;</span> + <span class="string">&quot;result: &quot;</span> + bankAccount.money);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>AtomicReferenceFieldUpdater</code>为例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with Intellij IDEA</span></span><br><span class="line"><span class="comment"> * &lt;h3&gt;Concurrent&lt;h3&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : AresNing</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span> : 多线程并发调用一个类的初始化方法，如果未被初始化过，将执行初始化工作，要求只能被初始化一次，只有一个线程操作成功</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyVar</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="type">Boolean</span> <span class="variable">isInit</span> <span class="operator">=</span> Boolean.FALSE;</span><br><span class="line"></span><br><span class="line">    AtomicReferenceFieldUpdater&lt;MyVar, Boolean&gt; referenceFieldUpdater =</span><br><span class="line">            AtomicReferenceFieldUpdater.newUpdater(MyVar.class, Boolean.class, <span class="string">&quot;isInit&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(referenceFieldUpdater.compareAndSet(<span class="built_in">this</span>, Boolean.FALSE, Boolean.TRUE)) &#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">&quot;\t&quot;</span> + <span class="string">&quot;----- start init&quot;</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">&quot;\t&quot;</span> + <span class="string">&quot;----- over init&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">&quot;\t&quot;</span> + <span class="string">&quot;----- other thread is working&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AtomicReferenceFieldUpdaterTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">MyVar</span> <span class="variable">myVar</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyVar</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(myVar::init, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1>原子操作增强类</h1>
+<h2 id="包含-v4">包含</h2>
+<ul>
+<li><code>DoubleAccumulator</code></li>
+<li><code>DoubleAdder</code></li>
+<li><code>LongAccumulator</code></li>
+<li><code>LongAdder</code></li>
+</ul>
+<h2 id="区别">区别</h2>
+<ul>
+<li><code>LongAdder</code>只能用来计算加减法，且从零开始计算</li>
+<li><code>LongAccumulator</code>则提供了<strong>自定义的函数操作</strong></li>
+</ul>
+<h2 id="阿里开发要求">阿里开发要求</h2>
+<blockquote>
+<p>如果是 JDK8，<strong>推荐使用<code>LongAdder</code>对象</strong>，比<code>AtomicLong</code>性能更好（减少乐观锁的重试次数）</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/alibaba-java.png" alt="alibaba-java"></p>
+<h2 id="示例-v3">示例</h2>
+<ul>
+<li>热点商品点赞计数器，点赞数加加统计，不要求实时精确
+<ul>
+<li>对比四种实现方法的性能：<code>synchronized</code>，<code>AtomicLong</code>，<code>LongAdder</code>，<code>LongAccumulator</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with Intellij IDEA</span></span><br><span class="line"><span class="comment"> * &lt;h3&gt;Concurrent&lt;h3&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : AresNing</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023-03-03 16:55</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span> : 50个线程，每个线程点赞100w次，计算总点赞数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ClickNumber</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">clickBySynchronized</span><span class="params">()</span> &#123;</span><br><span class="line">        number++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">AtomicLong</span> <span class="variable">atomicLong</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicLong</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clickByAtomicLong</span><span class="params">()</span> &#123;</span><br><span class="line">        atomicLong.getAndIncrement();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">LongAdder</span> <span class="variable">longAdder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LongAdder</span>();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clickByLongAdder</span><span class="params">()</span> &#123;</span><br><span class="line">        longAdder.increment();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">LongAccumulator</span> <span class="variable">longAccumulator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LongAccumulator</span>((x, y) -&gt; x + y, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clickByLongAccumulator</span><span class="params">()</span> &#123;</span><br><span class="line">        longAccumulator.accumulate(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AccumulatorCompareDemo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">_1W</span> <span class="operator">=</span> <span class="number">10000</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">threadNumber</span> <span class="operator">=</span> <span class="number">50</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ClickNumber</span> <span class="variable">clickNumber</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClickNumber</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> start;</span><br><span class="line">        <span class="type">long</span> end;</span><br><span class="line"></span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">countDownLatch1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(threadNumber);</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">countDownLatch2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(threadNumber);</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">countDownLatch3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(threadNumber);</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">countDownLatch4</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(threadNumber);</span><br><span class="line"></span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; threadNumber; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">100</span> * _1W; j++) &#123;</span><br><span class="line">                        clickNumber.clickBySynchronized();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    countDownLatch1.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch1.await();</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;costTime: &quot;</span> + (end - start) + <span class="string">&quot; ms&quot;</span> + <span class="string">&quot;\t clickBySynchronized: &quot;</span> + clickNumber.number);</span><br><span class="line"></span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; threadNumber; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">100</span> * _1W; j++) &#123;</span><br><span class="line">                        clickNumber.clickByAtomicLong();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    countDownLatch2.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch2.await();</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;costTime: &quot;</span> + (end - start) + <span class="string">&quot; ms&quot;</span> + <span class="string">&quot;\t clickByAtomicLong: &quot;</span> + clickNumber.atomicLong.get());</span><br><span class="line"></span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; threadNumber; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">100</span> * _1W; j++) &#123;</span><br><span class="line">                        clickNumber.clickByLongAdder();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    countDownLatch3.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch3.await();</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;costTime: &quot;</span> + (end - start) + <span class="string">&quot; ms&quot;</span> + <span class="string">&quot;\t clickByLongAdder: &quot;</span> + clickNumber.longAdder.sum());</span><br><span class="line"></span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; threadNumber; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">100</span> * _1W; j++) &#123;</span><br><span class="line">                        clickNumber.clickByLongAccumulator();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    countDownLatch4.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch4.await();</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;costTime: &quot;</span> + (end - start) + <span class="string">&quot; ms&quot;</span> + <span class="string">&quot;\t clickByLongAccumulator: &quot;</span> + clickNumber.longAccumulator.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">costTime: 933 ms	 clickBySynchronized: 50000000</span><br><span class="line">costTime: 586 ms	 clickByAtomicLong: 50000000</span><br><span class="line">costTime: 76 ms	 clickByLongAdder: 50000000</span><br><span class="line">costTime: 69 ms	 clickByLongAccumulator: 50000000</span><br></pre></td></tr></table></figure>
+<h2 id="LongAdder-源码分析">LongAdder 源码分析</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/long-adder.png" alt="long-adder"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/alibaba-java.png" alt="alibaba-java"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/long-adder-diagram.png" alt="long-adder-diagram"></p>
+<h3 id="LongAdder性能优于AtomicLong的原因">LongAdder性能优于AtomicLong的原因</h3>
+<ul>
+<li><code>LongAdder</code>的基本思路是<strong>分散热点</strong>，用空间换时间，将<code>value</code>值分散到一个<code>Cell</code>数组中，不同线程会命中到数组的不同槽中，各个线程只对自己槽中的那个值进行 CAS 操作，这样热点就被分散了，冲突的概率就小很多；如果要获取真正的<code>long</code>值，只要将各个槽中的变量值累加返回
+<ul>
+<li>在无竞争的情况下，<code>LongAdder</code>和<code>AtomicLong</code>一样，对同一个<code>base</code>进行操作</li>
+<li>多个线程需要同时对<code>value</code>进行操作时，可以对线程 id 进行 hash 得到 hash 值，再根据 hash 值映射到<code>Cell</code>数组的某个下标，再对该下标对应的值进行自增操作</li>
+<li>当所有线程操作完毕，将数组<code>Cell</code>的所有值和<code>base</code>都加起来作为最终结果</li>
+</ul>
+</li>
+<li><code>sum()</code>会将所有<code>Cell</code>数组中的<code>value</code>和<code>base</code>累加作为返回值，核心的思想就是将之前<code>AtomicLong</code>一个<code>value</code>的更新压力分散到多个<code>value</code>中去，从而降低更新热点
+<ul>
+<li><code>base</code>变量：低并发，直接累加到该变量上</li>
+<li><code>Cell[]</code>数组：高并发，累加进各个线程自己的槽<code>Cell[i]</code>中</li>
+<li>则最终的和为：$Value=Base+\sum_i^nCell[i]$</li>
+</ul>
+</li>
+</ul>
+<h3 id="longAdder-increment-为例">longAdder.increment() 为例</h3>
+<ol>
+<li>
+<p><code>add(1L)</code></p>
+<ul>
+<li>
+<p>如果<code>Cell[]</code>数组为空，尝试用 CAS 更新<code>base</code>字段，成功则退出；</p>
+</li>
+<li>
+<p>如果<code>Cell[]</code>数组为空，CAS 更新<code>base</code>字段失败，出现竞争，<code>uncontended</code>为<code>true</code>，调用<code>longAccumulate</code></p>
+</li>
+<li>
+<p>如果<code>Cell[]</code>非空，但当前线程映射的槽为空，<code>uncontended</code>为<code>true</code>，调用<code>longAccumulate</code></p>
+</li>
+<li>
+<p>如果<code>Cell[]</code>非空，且当前线程映射的槽非空，CAS 更新<code>Cell</code>的值，成功则返回，否则，<code>uncontended</code>为<code>false</code>，调用<code>longAccumulate</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>longAccumulate()</code></p>
+<ul>
+<li>首先给当前线程分配一个<code>hash</code>值，然后进入一个<code>for(;;)</code>自旋，这个自旋分为三个分支：
+<ul>
+<li>CASE 1：<code>Cell[]</code>数组已经初始化了</li>
+<li>CASE 2：<code>Cell[]</code>数组未初始化（首次新建），则尝试对它加锁，并初始化<code>Cell[]</code>数组</li>
+<li>CASE 3：<code>Cell[]</code>数组正在初始化中，则尝试直接在基数<code>base</code>上进行累加操作</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>sum()</code></p>
+<ul>
+<li>会将<code>Cell[]</code>数组中的<code>value</code>和<code>base</code>累加作为返回值</li>
+<li>其返回值不是原子性的快照，在并发情况下并非准确值</li>
+</ul>
+</li>
+</ol>
+<h3 id="LongAdder-与-AtomicLong-的对比">LongAdder 与 AtomicLong 的对比</h3>
+<ul>
+<li><code>AtomicLong</code>
+<ul>
+<li>线程安全，可允许一些性能损耗，要求高精度时可使用</li>
+<li><strong>保证精度，牺牲性能作为代价</strong></li>
+<li><code>AtomicLong</code>是多个线程针对单个热点值<code>value</code>进行原子操作</li>
+</ul>
+</li>
+<li><code>LongAdder</code>
+<ul>
+<li>当需要在高并发下有较好的性能表现，且对值的精确度要求不高时，可以使用</li>
+<li><strong>保证性能，牺牲精度作为代价</strong></li>
+<li><code>LongAdder</code>是每个线程拥有自己的槽，各个线程一般只对自己槽中的那个值进行 CAS 操作</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结">总结</h2>
+<h3 id="AtomicLong">AtomicLong</h3>
+<ul>
+<li>原理
+<ul>
+<li>CAS + 自旋</li>
+<li>常用方法为<code>incrementAndGet()</code></li>
+</ul>
+</li>
+<li>场景
+<ul>
+<li>低并发下的全局计算</li>
+<li><code>AtomicLong</code>能保证并发情况下计数的准确性，其内部通过 CAS 来解决并发安全性的问题</li>
+</ul>
+</li>
+<li>缺陷
+<ul>
+<li>高并发后性能急剧下降</li>
+<li>原因：<code>AtomicLong</code>的自旋会成为瓶颈，N个线程 CAS 操作修改值，每次只有一个成功过，其他N-1失败，失败的线程会不断自旋直到成功，这样大量失败自旋，会导致CPU占用率升高</li>
+</ul>
+</li>
+</ul>
+<h3 id="LongAdder">LongAdder</h3>
+<ul>
+<li>原理
+<ul>
+<li>CAS + Base + Cell数组分散热点</li>
+<li>空间换时间，并分散了热点数据</li>
+</ul>
+</li>
+<li>场景
+<ul>
+<li>高并发下的全局计算</li>
+</ul>
+</li>
+<li>缺陷
+<ul>
+<li><code>sum</code>求和后还有计算线程修改结果的话，最后jie’guo</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Concurrency/" rel="tag"><i class="fa fa-tag"></i> Concurrency</a>
+              <a href="/tags/CAS/" rel="tag"><i class="fa fa-tag"></i> CAS</a>
+              <a href="/tags/atomic/" rel="tag"><i class="fa fa-tag"></i> atomic</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/concurrency/concurrency/concurrent-notes/blocking-queue/" rel="prev" title="阻塞队列">
+      <i class="fa fa-chevron-left"></i> 阻塞队列
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/concurrency/concurrency/concurrent-notes/cas/" rel="next" title="CAS">
+      CAS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NzQ2NC8zMzkyOQ=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">原子类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">基本类型原子类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E5%90%AB"><span class="nav-number">2.1.</span> <span class="nav-text">包含</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">数组类型原子类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E5%90%AB-v2"><span class="nav-number">3.1.</span> <span class="nav-text">包含</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">引用类型原子类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AtomicReference"><span class="nav-number">4.1.</span> <span class="nav-text">AtomicReference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AtomicStampedReference"><span class="nav-number">4.2.</span> <span class="nav-text">AtomicStampedReference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AtomicMarkableReference"><span class="nav-number">4.3.</span> <span class="nav-text">AtomicMarkableReference</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">对象的属性修改原子类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E5%90%AB-v3"><span class="nav-number">5.1.</span> <span class="nav-text">包含</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%9B%AE%E7%9A%84"><span class="nav-number">5.2.</span> <span class="nav-text">使用目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%A6%81%E6%B1%82"><span class="nav-number">5.3.</span> <span class="nav-text">使用要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-v2"><span class="nav-number">5.4.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">原子操作增强类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E5%90%AB-v4"><span class="nav-number">6.1.</span> <span class="nav-text">包含</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">6.2.</span> <span class="nav-text">区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E5%BC%80%E5%8F%91%E8%A6%81%E6%B1%82"><span class="nav-number">6.3.</span> <span class="nav-text">阿里开发要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-v3"><span class="nav-number">6.4.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LongAdder-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">6.5.</span> <span class="nav-text">LongAdder 源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LongAdder%E6%80%A7%E8%83%BD%E4%BC%98%E4%BA%8EAtomicLong%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">6.5.1.</span> <span class="nav-text">LongAdder性能优于AtomicLong的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#longAdder-increment-%E4%B8%BA%E4%BE%8B"><span class="nav-number">6.5.2.</span> <span class="nav-text">longAdder.increment() 为例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LongAdder-%E4%B8%8E-AtomicLong-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">6.5.3.</span> <span class="nav-text">LongAdder 与 AtomicLong 的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.6.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicLong"><span class="nav-number">6.6.1.</span> <span class="nav-text">AtomicLong</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LongAdder"><span class="nav-number">6.6.2.</span> <span class="nav-text">LongAdder</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">AresNing</p>
+  <div class="site-description" itemprop="description">Hungry & Humble</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/AresNing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;AresNing" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-alien-8bit"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AresNing</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
