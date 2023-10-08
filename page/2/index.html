@@ -193,7 +193,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/thread-pool/">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/steps-of-multithread-development/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -207,7 +207,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/concurrency/concurrency/concurrent-notes/thread-pool/" class="post-title-link" itemprop="url">线程池</a>
+            <a href="/concurrency/concurrency/concurrent-notes/steps-of-multithread-development/" class="post-title-link" itemprop="url">多线程开发步骤</a>
         </h2>
 
         <div class="post-meta">
@@ -240,14 +240,96 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1>线程池框架</h1>
-<ul>
-<li>Java 中的线程池是通过<code>Executor</code>框架实现的</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/thread-pool-framework.png" alt="thread-pool-framework"></p>
+          <h1>基本步骤</h1>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/concurrency/concurrency/concurrent-notes/thread-pool/#more" rel="contents">
+              <a class="btn" href="/concurrency/concurrency/concurrent-notes/steps-of-multithread-development/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/read-write-lock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AresNing">
+      <meta itemprop="description" content="Hungry & Humble">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AresNing's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/concurrency/concurrency/concurrent-notes/read-write-lock/" class="post-title-link" itemprop="url">读写锁</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1>读写锁</h1>
+<ul>
+<li>
+<p>读写互斥，读读共享</p>
+<ul>
+<li>读锁：共享锁</li>
+<li>写锁：独占锁/排它锁</li>
+</ul>
+</li>
+<li>
+<p>无论读锁还是写锁，都会发生死锁（读-写死锁，写-写死锁）</p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/concurrency/concurrency/concurrent-notes/read-write-lock/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -430,7 +512,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/fork-join/">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/thread-pool/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -444,7 +526,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/concurrency/concurrency/concurrent-notes/fork-join/" class="post-title-link" itemprop="url">Fork/Join 框架</a>
+            <a href="/concurrency/concurrency/concurrent-notes/thread-pool/" class="post-title-link" itemprop="url">线程池</a>
         </h2>
 
         <div class="post-meta">
@@ -477,15 +559,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1>Fork/Join 框架</h1>
+          <h1>线程池框架</h1>
 <ul>
-<li>Fork：把一个复杂任务进行分拆</li>
-<li>Join：把分拆任务的结果进行合并</li>
+<li>Java 中的线程池是通过<code>Executor</code>框架实现的</li>
 </ul>
-<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/fork-join-framework.png" alt="fork-join-framework"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/thread-pool-framework.png" alt="thread-pool-framework"></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/concurrency/concurrency/concurrent-notes/fork-join/#more" rel="contents">
+              <a class="btn" href="/concurrency/concurrency/concurrent-notes/thread-pool/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -562,6 +643,85 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/concurrency/concurrency/concurrent-notes/inter-thread-communication/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/fork-join/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AresNing">
+      <meta itemprop="description" content="Hungry & Humble">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AresNing's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/concurrency/concurrency/concurrent-notes/fork-join/" class="post-title-link" itemprop="url">Fork/Join 框架</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1>Fork/Join 框架</h1>
+<ul>
+<li>Fork：把一个复杂任务进行分拆</li>
+<li>Join：把分拆任务的结果进行合并</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/fork-join-framework.png" alt="fork-join-framework"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/concurrency/concurrency/concurrent-notes/fork-join/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -820,172 +980,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/atomic/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="AresNing">
-      <meta itemprop="description" content="Hungry & Humble">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AresNing's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/concurrency/concurrency/concurrent-notes/atomic/" class="post-title-link" itemprop="url">atomic</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1>原子类</h1>
-<p><img src="https://cdn.jsdelivr.net/gh/AresNing/PrivateImg/img/atomic.png" alt="atomic"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/concurrency/concurrency/concurrent-notes/atomic/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/blocking-queue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="AresNing">
-      <meta itemprop="description" content="Hungry & Humble">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AresNing's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/concurrency/concurrency/concurrent-notes/blocking-queue/" class="post-title-link" itemprop="url">阻塞队列</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1><code>BlockingQueue</code></h1>
-<ul>
-<li><strong>阻塞：在某些情况下会挂起线程（即阻塞），一旦条件满足，被挂起的线程又会自动被唤起</strong>
-<ul>
-<li>当队列是空的，从队列中获取元素的操作将会被阻塞</li>
-<li>当队列是满的，从队列中添加元素的操作将会被阻塞</li>
-<li>试图从空的队列中获取元素的线程将会被阻塞，直到其他线程往空的队列插入新的元素</li>
-<li>试图向已满的队列中添加新元素的线程将会被阻塞，直到其他线程从队列中移除一个或多 个元素或者完全清空，使队列变得空闲起来并后续新增</li>
-</ul>
-</li>
-<li>使用阻塞队列的原因：多线程环境中，通过队列可以很容易实现<strong>数据共享</strong>
-<ul>
-<li><strong>经典的“生产者”和 “消费者”模型</strong>中，通过队列可以很便利地实现两者之间的数据共享</li>
-<li>当队列中没有数据的情况下，消费者端的所有线程都会被自动阻塞（挂起）， 直到有数据放入队列，消费线程被自动唤醒</li>
-<li>当队列中填满数据的情况下，生产者端的所有线程都会被自动阻塞（挂起）， 直到队列中有空的位置，生产线程被自动唤醒</li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/concurrency/concurrency/concurrent-notes/blocking-queue/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1055,7 +1049,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1068,7 +1062,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
