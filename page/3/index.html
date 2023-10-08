@@ -193,6 +193,86 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/cas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AresNing">
+      <meta itemprop="description" content="Hungry & Humble">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AresNing's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/concurrency/concurrency/concurrent-notes/cas/" class="post-title-link" itemprop="url">CAS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1>原理</h1>
+<ul>
+<li>CAS 是 JDK 提供的非阻塞原子性操作，其通过硬件保证了比较-更新的原子性</li>
+<li>实现方法：通过<code>Unsafe</code>提供的 CAS 方法（<code>compareAndSwapXxx</code>），底层实现是基于硬件平台的汇编指令，在 intel 的 CPU 中（x86机器上），使用的是汇编指令<code>cmpxchg</code>指令</li>
+<li>核心思想：比较要更新变量的值<code>V</code>和预期值<code>E</code>（compare），相等才会将<code>V</code>的值设为新值<code>N</code>（swap），如果不相等则自旋</li>
+<li>比起用<code>synchronized</code>重量级锁，CAS 的排他时间要短很多，因此在多线程情况下性能会比较好</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/concurrency/concurrency/concurrent-notes/cas/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/atomic/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -245,97 +325,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/concurrency/concurrency/concurrent-notes/atomic/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/blocking-queue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="AresNing">
-      <meta itemprop="description" content="Hungry & Humble">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AresNing's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/concurrency/concurrency/concurrent-notes/blocking-queue/" class="post-title-link" itemprop="url">阻塞队列</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1><code>BlockingQueue</code></h1>
-<ul>
-<li><strong>阻塞：在某些情况下会挂起线程（即阻塞），一旦条件满足，被挂起的线程又会自动被唤起</strong>
-<ul>
-<li>当队列是空的，从队列中获取元素的操作将会被阻塞</li>
-<li>当队列是满的，从队列中添加元素的操作将会被阻塞</li>
-<li>试图从空的队列中获取元素的线程将会被阻塞，直到其他线程往空的队列插入新的元素</li>
-<li>试图向已满的队列中添加新元素的线程将会被阻塞，直到其他线程从队列中移除一个或多 个元素或者完全清空，使队列变得空闲起来并后续新增</li>
-</ul>
-</li>
-<li>使用阻塞队列的原因：多线程环境中，通过队列可以很容易实现<strong>数据共享</strong>
-<ul>
-<li><strong>经典的“生产者”和 “消费者”模型</strong>中，通过队列可以很便利地实现两者之间的数据共享</li>
-<li>当队列中没有数据的情况下，消费者端的所有线程都会被自动阻塞（挂起）， 直到有数据放入队列，消费线程被自动唤醒</li>
-<li>当队列中填满数据的情况下，生产者端的所有线程都会被自动阻塞（挂起）， 直到队列中有空的位置，生产线程被自动唤醒</li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/concurrency/concurrency/concurrent-notes/blocking-queue/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -487,6 +476,97 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/concurrency/concurrency/concurrent-notes/completable-future/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/concurrency/concurrency/concurrent-notes/blocking-queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AresNing">
+      <meta itemprop="description" content="Hungry & Humble">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AresNing's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/concurrency/concurrency/concurrent-notes/blocking-queue/" class="post-title-link" itemprop="url">阻塞队列</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-05 11:58:15" itemprop="dateCreated datePublished" datetime="2023-09-05T11:58:15+08:00">2023-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Concurrency/" itemprop="url" rel="index"><span itemprop="name">Concurrency</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><code>BlockingQueue</code></h1>
+<ul>
+<li><strong>阻塞：在某些情况下会挂起线程（即阻塞），一旦条件满足，被挂起的线程又会自动被唤起</strong>
+<ul>
+<li>当队列是空的，从队列中获取元素的操作将会被阻塞</li>
+<li>当队列是满的，从队列中添加元素的操作将会被阻塞</li>
+<li>试图从空的队列中获取元素的线程将会被阻塞，直到其他线程往空的队列插入新的元素</li>
+<li>试图向已满的队列中添加新元素的线程将会被阻塞，直到其他线程从队列中移除一个或多 个元素或者完全清空，使队列变得空闲起来并后续新增</li>
+</ul>
+</li>
+<li>使用阻塞队列的原因：多线程环境中，通过队列可以很容易实现<strong>数据共享</strong>
+<ul>
+<li><strong>经典的“生产者”和 “消费者”模型</strong>中，通过队列可以很便利地实现两者之间的数据共享</li>
+<li>当队列中没有数据的情况下，消费者端的所有线程都会被自动阻塞（挂起）， 直到有数据放入队列，消费线程被自动唤醒</li>
+<li>当队列中填满数据的情况下，生产者端的所有线程都会被自动阻塞（挂起）， 直到队列中有空的位置，生产线程被自动唤醒</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/concurrency/concurrency/concurrent-notes/blocking-queue/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -668,7 +748,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
