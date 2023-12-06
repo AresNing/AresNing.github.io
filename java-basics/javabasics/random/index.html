@@ -20,17 +20,21 @@
     var CONFIG = {"hostname":"aresning.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Hungry &amp; Humble">
-<meta property="og:type" content="website">
-<meta property="og:title" content="AresNing&#39;s blog">
-<meta property="og:url" content="https://aresning.github.io/archives/2022/index.html">
+  <meta name="description" content="前言  ThreadLocalRandom 和 Random 类都是 Java 中用于生成随机数的类，但它们有一些区别和不同的使用场景">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Random与ThreadLocalRandom">
+<meta property="og:url" content="https://aresning.github.io/java-basics/javabasics/random/index.html">
 <meta property="og:site_name" content="AresNing&#39;s blog">
-<meta property="og:description" content="Hungry &amp; Humble">
+<meta property="og:description" content="前言  ThreadLocalRandom 和 Random 类都是 Java 中用于生成随机数的类，但它们有一些区别和不同的使用场景">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-12-06T02:55:36.425Z">
+<meta property="article:modified_time" content="2023-12-06T03:11:28.562Z">
 <meta property="article:author" content="AresNing">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Random">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://aresning.github.io/archives/2022/">
+<link rel="canonical" href="https://aresning.github.io/java-basics/javabasics/random/">
 
 
 <script id="page-configurations">
@@ -38,12 +42,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Archive | AresNing's blog</title>
+  <title>Random与ThreadLocalRandom | AresNing's blog</title>
   
 
 
@@ -187,56 +191,153 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">Um..! 28 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aresning.github.io/java-basics/javabasics/random/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AresNing">
+      <meta itemprop="description" content="Hungry & Humble">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AresNing's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Random与ThreadLocalRandom
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-12-06 10:55:36 / Modified: 11:11:28" itemprop="dateCreated datePublished" datetime="2023-12-06T10:55:36+08:00">2023-12-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Basics/" itemprop="url" rel="index"><span itemprop="name">Java Basics</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+        <h1>前言</h1>
+<ul>
+<li><code>ThreadLocalRandom</code> 和 <code>Random</code> 类都是 Java 中用于生成随机数的类，但它们有一些区别和不同的使用场景</li>
+</ul>
+<span id="more"></span>
+<h1>竞争与性能</h1>
+<h2 id="Random">Random</h2>
+<ol>
+<li><code>Random</code> 类是<strong>线程安全</strong>的，可以在多个线程中共享使用</li>
+<li>但是，在<strong>多线程环境</strong>下，由于 <code>Random</code> 类使用了同一个种子生成随机数序列，可能会导致竞争条件和性能问题
+<ul>
+<li><strong>竞争条件</strong>：如果多个线程同时使用同一个 <code>Random</code> 对象并且种子相同，它们将<strong>竞争生成随机数序列的访问权</strong>。这可能导致多个线程同时尝试修改或读取随机数序列，从而导致竞争条件和不确定的结果</li>
+<li><strong>性能问题</strong>：当多个线程同时使用同一个 <code>Random</code> 对象时，它们需要进行<strong>同步操作以确保线程安全</strong>。这涉及到锁定机制，会引入额外的开销和延迟，从而降低性能</li>
+</ul>
+</li>
+</ol>
+<h2 id="ThreadLoacalRandom">ThreadLoacalRandom</h2>
+<ol>
+<li><code>ThreadLocalRandom</code> 类是 Java 7中引入的，它提供了一种<strong>更高效且线程安全</strong>的随机数生成方式</li>
+<li>每个线程都有自己的 <code>ThreadLocalRandom</code> 实例，<strong>避免了多线程竞争问题</strong>，即避免多个线程同时访问同一个随机数生成器实例时的竞争，比使用同步机制的 <code>Random</code> 类在多线程环境下更高效</li>
+<li><code>ThreadLocalRandom</code> 的高性能主要体现在以下几个方面：
+<ul>
+<li><strong>无锁设计</strong>：<code>ThreadLocalRandom</code> 使用了无锁设计，避免了多线程竞争的开销，提高了性能</li>
+<li><strong>基于线程的随机数生成器</strong>：每个线程都有自己的随机数生成器实例，避免了线程间的竞争，提高了并发性能</li>
+<li><strong>使用高效的算法</strong>：<code>ThreadLocalRandom</code> 使用了高效的随机数生成算法，例如 XorShift 算法，这些算法具有良好的性能和随机性</li>
+<li><strong>缓存数据</strong>：<code>ThreadLocalRandom</code> 在每个线程中缓存了一些随机数，减少了每次生成随机数时的开销</li>
+</ul>
+</li>
+</ol>
+<h1>使用方式</h1>
+<h2 id="Random-v2">Random</h2>
+<ul>
+<li>通过创建 <code>Random</code> 实例，然后调用其方法生成随机数</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"><span class="type">int</span> <span class="variable">randomNumber</span> <span class="operator">=</span> random.nextInt(<span class="number">100</span>); <span class="comment">// 生成0到99之间的随机整数</span></span><br></pre></td></tr></table></figure>
+<h2 id="ThreadLoacalRandom-v2">ThreadLoacalRandom</h2>
+<ul>
+<li>直接通过静态方法调用生成随机数</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">randomNumber</span> <span class="operator">=</span> ThreadLocalRandom.current().nextInt(<span class="number">100</span>); <span class="comment">// 生成0到99之间的随机整数</span></span><br></pre></td></tr></table></figure>
+<h1>总结</h1>
+<ul>
+<li>一般来说，如果在<strong>单线程</strong>环境中使用随机数，可以选择使用 <code>Random</code> 类</li>
+<li>而在<strong>多线程</strong>环境中，为了避免竞争条件和性能问题，建议使用 <code>ThreadLocalRandom</code> 类</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-10-15T20:22:40+08:00"
-              content="2022-10-15">
-          10-15
-        </time>
-      </div>
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/Random/" rel="tag"><i class="fa fa-tag"></i> Random</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/cate3/cate4/test-blog/" itemprop="url">
-            <span itemprop="name">test-blog</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/uncategorized/programmingideas/cleancode/objects-and-data-structures/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NzQ2NC8zMzkyOQ=="></div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -283,6 +384,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">竞争与性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Random"><span class="nav-number">2.1.</span> <span class="nav-text">Random</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLoacalRandom"><span class="nav-number">2.2.</span> <span class="nav-text">ThreadLoacalRandom</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">使用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Random-v2"><span class="nav-number">3.1.</span> <span class="nav-text">Random</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLoacalRandom-v2"><span class="nav-number">3.2.</span> <span class="nav-text">ThreadLoacalRandom</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -423,6 +525,21 @@
 
   
 
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
 
 </body>
 </html>
