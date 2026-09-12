@@ -31,7 +31,7 @@ npm run server -- --port 4317
 | --- | --- | --- |
 | 搜索弹窗、手机导航 | [a11y-dialog 8.1.5](https://a11y-dialog.netlify.app/) | 共用 `.ui-dialog`、`.dialog-panel`；组件处理焦点约束、恢复、Esc 与遮罩关闭。 |
 | 文章搜索 | [Fuse.js 7.5.0](https://www.fusejs.io/) | 标题、标签和正文加权搜索，多关键词组合，支持轻微拼写错误；索引仍为本地 `search.xml`。 |
-| 代码复制 | [ClipboardJS 2.0.11](https://clipboardjs.com/) | 共用 `.ui-button`，以组件成功/失败事件显示结果；复制内容排除行号。 |
+| 代码与链接复制 | 原生 Clipboard API，兼容回退使用 [ClipboardJS 2.0.11](https://clipboardjs.com/) | 共用 `.ui-button`，显示实际复制结果；代码排除行号、保留换行。 |
 | 按钮、输入框、目录折叠 | 原生 `button`、`input`、`details` | 共用按钮、输入框和焦点样式；保留原生语义。 |
 
 组件版本精确锁定在 `package.json` / `package-lock.json`，分发文件来自 npm 官方源，生成到 `public/lib/paper/`。Fuse.js 在首次输入搜索时加载。升级时同时检查桌面/手机的配色、字体、间距、按钮热区、焦点循环、关闭恢复、加载失败重试和复制结果。
@@ -42,7 +42,9 @@ npm run server -- --port 4317
 
 ## 发布
 
-本次为本地实现，未执行提交、推送或部署。现有 `npm run deploy` 会产生远端写入，确认发布范围后再执行，并以构建后的 `public/` 为准。
+2026-09-13 已获授权推送并发布至 [GitHub Pages](https://aresning.github.io/)。源码保存在 `source`，线上使用 `main` 根目录；本轮静态发布提交为 `c8ed4a9`，Pages 构建状态为 `built`。
+
+后续发布先执行 `npm run clean && npm run verify`，再将 `public/` 同步到基于远端 `main` 的独立工作区，提交并正常推送，保留分支历史。发布需要明确授权；不要直接使用带强制推送行为的默认部署器。发布后核对 Pages 状态、公开页面和实际目标平台分享预览。
 
 ## 写作与分享
 
