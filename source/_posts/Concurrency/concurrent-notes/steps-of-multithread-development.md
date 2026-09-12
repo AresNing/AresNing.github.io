@@ -1,4 +1,8 @@
 ---
+description: "一份简短的多线程开发步骤笔记，用于梳理资源类、线程调用与同步控制的基本分工。"
+intro: "一份简短的多线程开发步骤笔记，用于梳理资源类、线程调用与同步控制的基本分工。"
+kind: note
+updated: 2026-09-13
 title: 多线程开发步骤
 categories:
   - [Concurrency]

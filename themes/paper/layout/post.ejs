@@ -1,0 +1,20 @@
+<% const content = paper_content(page); const contents = toc(content, {list_number: false, max_depth: 3}); %>
+<div class="reading-layout<%= contents ? ' has-toc' : '' %>">
+  <article class="reading-page">
+    <header class="article-header">
+      <nav class="breadcrumb" aria-label="当前位置"><a href="<%= url_for('/') %>">文章</a><% page.categories.each(function(category) { %><span aria-hidden="true">/</span><a href="<%= url_for(category.path) %>"><%= category.name %></a><% }); %></nav>
+      <h1><%= page.title || '无题' %></h1>
+      <div class="article-meta"><a href="<%= url_for('/about/') %>"><%= config.author %></a><span aria-hidden="true">·</span><span><%= paper_kind(page) %></span><% if (paper_has_date(page)) { %><span aria-hidden="true">·</span><time datetime="<%= date_xml(page.date) %>"><%= date(page.date, 'YYYY-MM-DD') %></time><% } %><% if (paper_has_updated(page)) { %><span>更新于 <time datetime="<%= date_xml(page.updated) %>"><%= date(page.updated, 'YYYY-MM-DD') %></time></span><% } %></div>
+      <% if (page.intro) { %><p class="article-intro"><%= page.intro %></p><% } %>
+    </header>
+    <% if (contents) { %><details class="mobile-toc"><summary>文章目录</summary><nav aria-label="文章目录"><%- contents %></nav></details><% } %>
+    <div class="prose"><% if (page.diagram) { %><figure class="article-figure"><picture><source media="(max-width: 600px)" srcset="<%= url_for(page.diagram.replace(/\.svg$/, '-mobile.svg')) %>" width="480" height="780"><img src="<%= url_for(page.diagram) %>" alt="<%= page.diagram_alt %>" width="960" height="540"></picture><figcaption><%= page.diagram_caption %></figcaption></figure><% } %><%- content %></div>
+    <% if (page.tags.length) { %><nav class="post-tags" aria-label="文章标签"><% page.tags.each(function(tag) { %><a href="<%= url_for(tag.path) %>"># <%= tag.name %></a><% }); %></nav><% } %>
+    <%- partial('_partial/share') %>
+    <%- partial('_partial/author') %>
+    <% const related = paper_related(page); if (related.length) { %>
+    <section class="related-posts" aria-labelledby="related-title"><h2 id="related-title">接着读</h2><ul><% related.forEach(function(post) { %><li><a href="<%= url_for(post.path) %>"><%= post.title %><span aria-hidden="true"> ↗</span></a><p><%= paper_summary(post) %></p></li><% }); %></ul></section>
+    <% } %>
+  </article>
+  <% if (contents) { %><aside class="desktop-toc"><nav aria-label="文章目录"><h2>目录</h2><%- contents %></nav></aside><% } %>
+</div>

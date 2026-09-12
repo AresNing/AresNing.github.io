@@ -1,4 +1,8 @@
 ---
+description: "梳理 Thread、ThreadLocal 与 ThreadLocalMap 的关系，记录弱引用、内存泄漏与使用注意事项。"
+intro: "梳理 Thread、ThreadLocal 与 ThreadLocalMap 的关系，记录弱引用、内存泄漏与使用注意事项。"
+kind: note
+updated: 2026-09-13
 title: ThreadLocal
 categories:
   - [Concurrency]

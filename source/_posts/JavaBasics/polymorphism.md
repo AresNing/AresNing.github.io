@@ -1,4 +1,8 @@
 ---
+description: "通过 Java 示例记录多态中的常见误区，重点关注私有方法、属性、静态方法以及构造器调用。"
+intro: "通过 Java 示例记录多态中的常见误区，重点关注私有方法、属性、静态方法以及构造器调用。"
+kind: note
+updated: 2026-09-13
 title: 多态
 categories:
   - [Java Basics]

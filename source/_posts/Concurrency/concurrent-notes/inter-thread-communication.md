@@ -1,4 +1,8 @@
 ---
+description: "整理线程间通信的几种方式：从 synchronized 的等待与通知，到 Lock、Condition 的条件等待和精准唤醒。"
+intro: "整理线程间通信的几种方式：从 synchronized 的等待与通知，到 Lock、Condition 的条件等待和精准唤醒。"
+kind: note
+updated: 2026-09-13
 title: 线程间通信
 categories:
   - [Concurrency]

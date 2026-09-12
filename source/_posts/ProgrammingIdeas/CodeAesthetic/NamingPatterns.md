@@ -1,5 +1,18 @@
 ---
-title: Naming Patterns
+title: "代码命名：让名字说明意图"
+description: "从单字母、缩写、单位到类名，整理代码命名的常见问题。好的名字应帮助读者理解用途，减少额外解释。"
+intro: "从单字母、缩写、单位到类名，整理代码命名的常见问题。好的名字应帮助读者理解用途，减少额外解释。"
+permalink: programming-ideas/programmingideas/codeaesthetic/namingpatterns/
+updated: 2026-09-13
+diagram: /images/diagrams/naming-intent.svg
+diagram_alt: 让名字承载读者需要的信息。用途；完整含义；量与单位。命名需要上下文；图示用于整理原则，不是机械规则。
+diagram_caption: 命名需要上下文；图示用于整理原则，不是机械规则。
+related:
+  - programming-ideas/programmingideas/cleancode/meaningful-names/
+  - programming-ideas/programmingideas/codeaesthetic/nervernester/
+featured: 3
+quote_attribution: 学习整理自 CodeAesthetic；引言署名 Phil Karlton
+kind: note
 categories:
   - [Programming Ideas]
 tags:

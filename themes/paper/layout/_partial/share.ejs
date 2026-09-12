@@ -1,0 +1,16 @@
+<section class="share-section" aria-label="分享文章" data-share-title="<%= page.title %>" data-quote-attribution="<%= page.quote_attribution || '' %>" data-share-description="<%= paper_summary(page) %>" data-share-url="<%= full_url_for(page.path) %>">
+  <h2>分享这篇<%= paper_kind(page) %></h2>
+  <div class="share-actions"><button class="ui-button outlined-button copy-link" type="button" data-clipboard-text="<%= full_url_for(page.path) %>" hidden>复制链接</button><button class="ui-button outlined-button native-share" type="button" hidden>系统分享</button><a class="ui-button outlined-button" href="<%= url_for(paper_card_path(page)) %>" download="AresNing-article.png">保存文章封面</a><button class="ui-button outlined-button quote-open" type="button" hidden>保存摘录图片</button></div>
+  <p class="share-status muted" role="status" aria-live="polite"></p>
+</section>
+<div class="ui-dialog" id="quote-dialog" aria-hidden="true" aria-labelledby="quote-title">
+  <div class="dialog-overlay" data-a11y-dialog-hide></div>
+  <div class="dialog-panel quote-panel" role="document">
+    <div class="dialog-heading"><h2 id="quote-title">保存摘录</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭摘录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label for="quote-select">选择内容</label><select class="ui-input" id="quote-select" autofocus></select>
+    <p class="muted">图片保留段落原文与出处；引用他人内容时，请保留原作者署名。</p>
+    <img class="quote-preview" alt="摘录图片预览" width="1080" height="1440" hidden>
+    <p class="quote-status muted" role="status" aria-live="polite"></p>
+    <a class="ui-button outlined-button quote-download" download="AresNing-excerpt.png" hidden>保存 PNG 图片</a>
+  </div>
+</div>

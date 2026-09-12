@@ -1,4 +1,8 @@
 ---
+description: "记录如何取有意义的名字：避免误导、支持搜索、区分类与方法，并为同一概念使用一致的词。"
+intro: "记录如何取有意义的名字：避免误导、支持搜索、区分类与方法，并为同一概念使用一致的词。"
+kind: note
+updated: 2026-09-13
 title: Meaningful Names
 categories:
   - [Programming Ideas]

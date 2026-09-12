@@ -1,4 +1,8 @@
 ---
+description: "从比较并交换的基本思路出发，记录 CAS、Unsafe 与原子更新的实现要点，以及这种方式的局限。"
+intro: "从比较并交换的基本思路出发，记录 CAS、Unsafe 与原子更新的实现要点，以及这种方式的局限。"
+kind: note
+updated: 2026-09-13
 title: CAS
 categories:
   - [Concurrency]

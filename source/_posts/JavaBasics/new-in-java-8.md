@@ -1,4 +1,8 @@
 ---
+description: "整理 Java 8 的 Lambda、函数式接口、Stream 与 Optional，通过示例理解函数式写法和集合处理。"
+intro: "整理 Java 8 的 Lambda、函数式接口、Stream 与 Optional，通过示例理解函数式写法和集合处理。"
+kind: note
+updated: 2026-09-13
 title: Java8新特性
 categories:
   - [Java Basics]

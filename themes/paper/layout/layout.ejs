@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="<%= config.language %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F5EF">
+  <script src="<%= url_for('/js/theme.js') %>"></script>
+  <% const pageTitle = page.category ? page.category : page.tag ? page.tag : page.archive ? '归档' : page.type === 'tags' ? '标签' : page.layout === 'post' ? page.title || '无题' : page.title; %>
+  <title><%= pageTitle ? pageTitle + ' · ' + config.title : config.title %></title>
+  <meta name="description" content="<%= page.layout === 'post' ? paper_summary(page) : config.description %>">
+  <% const socialPost = page.layout === 'post'; const socialRecord = socialPost ? page : {path: '', title: config.title, description: config.description}; const socialTitle = pageTitle || config.title; const socialDescription = socialPost ? paper_summary(page) : config.description; %>
+  <meta property="og:type" content="<%= socialPost ? 'article' : 'website' %>">
+  <meta property="og:title" content="<%= socialTitle %>">
+  <meta property="og:description" content="<%= socialDescription %>">
+  <meta property="og:url" content="<%= full_url_for(page.path || '') %>">
+  <meta property="og:site_name" content="<%= config.title %>">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="<%= full_url_for(paper_card_path(socialRecord)) %>">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="<%= socialRecord.title %> · <%= config.author %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= socialTitle %>">
+  <meta name="twitter:description" content="<%= socialDescription %>">
+  <meta name="twitter:image" content="<%= full_url_for(paper_card_path(socialRecord)) %>">
+  <meta name="twitter:image:alt" content="<%= socialRecord.title %> · <%= config.author %>">
+  <% if (socialPost) { %><meta property="article:author" content="<%= full_url_for('/about/') %>"><% if (paper_has_date(page)) { %><meta property="article:published_time" content="<%= date_xml(page.date) %>"><% } %><% if (paper_has_updated(page)) { %><meta property="article:modified_time" content="<%= date_xml(page.updated) %>"><% } %><% } %>
+  <link rel="canonical" href="<%= full_url_for(page.path || '') %>">
+  <link rel="icon" type="image/png" href="<%= url_for('/images/favicon-32x32.png') %>">
+  <link rel="stylesheet" href="<%= url_for('/css/paper.css') %>">
+  <script defer src="<%= url_for('/lib/paper/a11y-dialog.min.js') %>"></script>
+  <script defer src="<%= url_for('/lib/paper/clipboard.min.js') %>"></script>
+  <script defer src="<%= url_for('/js/paper.js') %>"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="<%= url_for('/') %>" aria-label="AresNing 首页">AresNing</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="<%= url_for('/') %>"<%- is_home() || is_post() ? ' aria-current="page"' : '' %>>文章</a>
+      <a href="<%= url_for('/archives/') %>"<%- is_archive() ? ' aria-current="page"' : '' %>>归档</a>
+      <a href="<%= url_for('/about/') %>"<%- page.path === 'about/index.html' ? ' aria-current="page"' : '' %>>关于</a>
+    </nav>
+    <div class="header-actions">
+      <label class="theme-control" hidden><span class="sr-only">外观</span><select class="ui-input" id="theme-select" aria-label="外观"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label>
+      <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      <button class="ui-button icon-button menu-toggle" type="button" aria-label="打开菜单" aria-controls="menu-dialog" aria-haspopup="dialog" data-a11y-dialog-show="menu-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1"><%- body %></main>
+  <footer class="site-footer shell">
+    <div><span class="footer-name">AresNing · Hungry &amp; Humble</span><small>© <%= theme.since %>–<%= new Date().getFullYear() %> AresNing · Powered by Hexo</small></div>
+    <a href="<%= theme.github %>" rel="me">GitHub <span aria-hidden="true">↗</span></a>
+  </footer>
+  <div class="ui-dialog" id="search-dialog" aria-hidden="true" aria-labelledby="search-title" data-search-url="<%= url_for('/search.xml') %>" data-fuse-url="<%= url_for('/lib/paper/fuse.min.mjs') %>">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+    <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="输入标题、关键词或标签" autocomplete="off" autofocus><button class="ui-button text-button search-clear" type="button">清空</button></div>
+    <p class="search-status" role="status" aria-live="polite">输入关键词，搜索所有文章。</p>
+    <ul class="search-results"></ul>
+    </div>
+  </div>
+  <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+      <div class="dialog-heading"><h2 id="menu-title">导航</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <a href="<%= url_for('/') %>"<%- is_home() || is_post() ? ' aria-current="page"' : '' %>>文章</a>
+        <a href="<%= url_for('/archives/') %>"<%- is_archive() ? ' aria-current="page"' : '' %>>归档</a>
+        <a href="<%= url_for('/categories/') %>"<%- page.type === 'categories' || page.category ? ' aria-current="page"' : '' %>>分类</a>
+        <a href="<%= url_for('/tags/') %>"<%- page.type === 'tags' || page.tag ? ' aria-current="page"' : '' %>>标签</a>
+        <a href="<%= url_for('/about/') %>"<%- page.path === 'about/index.html' ? ' aria-current="page"' : '' %>>关于</a>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>

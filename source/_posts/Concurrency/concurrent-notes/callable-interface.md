@@ -1,4 +1,8 @@
 ---
+description: "比较 Runnable 与 Callable 的返回值、异常和调用方法，并记录 Future 与 FutureTask 的基本用法。"
+intro: "比较 Runnable 与 Callable 的返回值、异常和调用方法，并记录 Future 与 FutureTask 的基本用法。"
+kind: note
+updated: 2026-09-13
 title: Runnable 接口与 Callable 接口
 categories:
   - [Concurrency]

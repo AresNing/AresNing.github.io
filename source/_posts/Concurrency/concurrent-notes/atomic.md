@@ -1,4 +1,8 @@
 ---
+description: "分类整理 Java 原子类的使用方式，涵盖基本类型、数组、引用及累加器，结合代码查阅不同原子更新场景。"
+intro: "分类整理 Java 原子类的使用方式，涵盖基本类型、数组、引用及累加器，结合代码查阅不同原子更新场景。"
+kind: note
+updated: 2026-09-13
 title: atomic
 categories:
   - [Concurrency]

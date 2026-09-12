@@ -1,4 +1,8 @@
 ---
+description: "通过示例对照 CountDownLatch、CyclicBarrier 与 Semaphore，区分等待完成、同步屏障和并发许可。"
+intro: "通过示例对照 CountDownLatch、CyclicBarrier 与 Semaphore，区分等待完成、同步屏障和并发许可。"
+kind: note
+updated: 2026-09-13
 title: JUC的三大辅助类
 categories:
   - [Concurrency]

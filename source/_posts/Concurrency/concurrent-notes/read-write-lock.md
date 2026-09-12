@@ -1,4 +1,8 @@
 ---
+description: "整理 ReentrantReadWriteLock 的读写互斥规则与锁降级，帮助理解共享读取和独占写入的区别。"
+intro: "整理 ReentrantReadWriteLock 的读写互斥规则与锁降级，帮助理解共享读取和独占写入的区别。"
+kind: note
+updated: 2026-09-13
 title: 读写锁
 categories:
   - [Concurrency]

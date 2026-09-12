@@ -1,0 +1,26 @@
+<div class="index-page">
+  <section class="masthead" aria-labelledby="site-title">
+    <h1 id="site-title"><%= config.title %></h1>
+    <div class="masthead-bottom"><p class="motto">Hungry &amp; Humble</p><p class="tagline"><%= theme.tagline %></p></div>
+  </section>
+  <% if (page.current === 1) { %>
+  <section class="featured-section" aria-labelledby="featured-title">
+    <div class="section-heading"><h2 id="featured-title">从这三篇开始</h2><a class="read-more" href="<%= url_for('/about/') %>">关于作者 ↗</a></div>
+    <ol class="featured-list"><% paper_featured().forEach(function(post) { %>
+      <li><span class="eyebrow"><%= paper_kind(post) %></span><h3><a href="<%= url_for(post.path) %>"><%= post.title %></a></h3><p><%= paper_summary(post) %></p></li>
+    <% }); %></ol>
+  </section>
+  <% } %>
+  <section aria-labelledby="articles-title">
+    <div class="section-heading"><h2 id="articles-title">全部文章与笔记</h2><div class="taxonomy-links"><a href="<%= url_for('/categories/') %>">分类</a><span aria-hidden="true"> / </span><a href="<%= url_for('/tags/') %>">标签 <span aria-hidden="true">→</span></a></div></div>
+    <% page.posts.each(function(post) { %>
+      <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind"><%= paper_kind(post) %></span><% post.categories.each(function(category) { %><a href="<%= url_for(category.path) %>"><%= category.name %></a><% }); %></div><% if (paper_has_date(post)) { %><time datetime="<%= date_xml(post.date) %>"><%= date(post.date, 'YYYY-MM-DD') %></time><% } %></div>
+        <h2><a href="<%= url_for(post.path) %>"><%= post.title || '无题' %></a></h2>
+        <% if (paper_summary(post)) { %><p class="article-summary"><%= paper_summary(post) %></p><% } %>
+        <a class="read-more" href="<%= url_for(post.path) %>" aria-label="阅读全文：<%= post.title || '无题' %>">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+    <% }); %>
+    <%- partial('_partial/pagination') %>
+  </section>
+</div>

@@ -6,12 +6,17 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server",
+    "verify": "npm run build && node tools/verify-paper.cjs"
   },
   "hexo": {
     "version": "5.4.2"
   },
   "dependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "a11y-dialog": "8.1.5",
+    "clipboard": "2.0.11",
+    "fuse.js": "7.5.0",
     "hexo": "^5.0.0",
     "hexo-deployer-git": "^3.0.0",
     "hexo-generator-archive": "^1.0.0",

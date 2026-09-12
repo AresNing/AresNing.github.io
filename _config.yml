@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: AresNing's blog
+title: AresNing
 subtitle: ""
-description: "Hungry & Humble"
+description: "记录 Java、并发编程与代码可读性的学习和实践。"
 keywords:
 author: AresNing
-language: en
+language: zh-CN
 timezone: ""
 
 # URL
@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: paper
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -145,4 +145,3 @@ search:
 permalink_pinyin:
   enable: true
   separator: "-" # default: '-'
-

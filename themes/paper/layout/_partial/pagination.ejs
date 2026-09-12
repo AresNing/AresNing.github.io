@@ -1,0 +1,3 @@
+<% if (page.total > 1) { %>
+<nav class="pagination" aria-label="文章分页"><%- paginator({prev_text: '←', next_text: '→', mid_size: 1, end_size: 1}).replace('class="page-number current"', 'class="page-number current" aria-current="page"').replace('class="extend prev"', 'class="extend prev" aria-label="上一页"').replace('class="extend next"', 'class="extend next" aria-label="下一页"') %></nav>
+<% } %>

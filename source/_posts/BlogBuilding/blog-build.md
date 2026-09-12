@@ -1,4 +1,8 @@
 ---
+description: "记录使用 Hexo 搭建博客的早期过程，包括环境准备、初始化、GitHub 部署与主题配置。部分配置属于当时的版本。"
+intro: "记录使用 Hexo 搭建博客的早期过程，包括环境准备、初始化、GitHub 部署与主题配置。部分配置属于当时的版本。"
+kind: note
+updated: 2026-09-13
 title: 基于 Hexo 的博客搭建
 categories:
   - [博客搭建]

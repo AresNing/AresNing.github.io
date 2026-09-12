@@ -1,4 +1,8 @@
 ---
+description: "区分 final 修饰数据、参数、方法和类时的含义，记录空白 final 与使用边界。"
+intro: "区分 final 修饰数据、参数、方法和类时的含义，记录空白 final 与使用边界。"
+kind: note
+updated: 2026-09-13
 title: final关键字
 categories:
   - [Java Basics]

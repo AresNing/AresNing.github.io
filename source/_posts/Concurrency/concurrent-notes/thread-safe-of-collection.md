@@ -1,4 +1,8 @@
 ---
+description: "记录集合遍历与并发修改的问题，以及常见集合的线程安全替代方案和 CopyOnWriteArrayList 的特点。"
+intro: "记录集合遍历与并发修改的问题，以及常见集合的线程安全替代方案和 CopyOnWriteArrayList 的特点。"
+kind: note
+updated: 2026-09-13
 title: 集合的线程安全
 categories:
   - [Concurrency]

@@ -1,4 +1,8 @@
 ---
+description: "整理函数设计的学习要点：短小、职责单一、抽象层级一致，以及名称、参数与副作用的取舍。"
+intro: "整理函数设计的学习要点：短小、职责单一、抽象层级一致，以及名称、参数与副作用的取舍。"
+kind: note
+updated: 2026-09-13
 title: Functions
 categories:
   - [Programming Ideas]

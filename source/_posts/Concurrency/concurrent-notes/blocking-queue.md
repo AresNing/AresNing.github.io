@@ -1,4 +1,8 @@
 ---
+description: "对照 BlockingQueue 的插入与读取方法，整理常见阻塞队列的特点，方便按等待与容量需求查阅。"
+intro: "对照 BlockingQueue 的插入与读取方法，整理常见阻塞队列的特点，方便按等待与容量需求查阅。"
+kind: note
+updated: 2026-09-13
 title: 阻塞队列
 categories:
   - [Concurrency]

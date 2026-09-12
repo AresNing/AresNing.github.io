@@ -1,5 +1,18 @@
 ---
-title: Comments
+title: "什么样的注释值得写？"
+description: "整理《代码整洁之道》中关于注释的学习要点：用代码表达意图，识别多余注释，并清理已经失效的注释代码。"
+intro: "整理《代码整洁之道》中关于注释的学习要点：用代码表达意图，识别多余注释，并清理已经失效的注释代码。"
+permalink: programming-ideas/programmingideas/cleancode/comments/
+updated: 2026-09-13
+diagram: /images/diagrams/comment-intent.svg
+diagram_alt: 写注释之前，先检查表达意图的方式。名字能说清楚吗？；代码能更直接吗？；还缺什么背景？。根据本篇学习要点整理；判断应结合具体代码。
+diagram_caption: 根据本篇学习要点整理；判断应结合具体代码。
+related:
+  - programming-ideas/programmingideas/cleancode/functions/
+  - programming-ideas/programmingideas/cleancode/meaningful-names/
+featured: 2
+quote_attribution: 学习整理自 Robert C. Martin《代码整洁之道》
+kind: note
 categories:
   - [Programming Ideas]
 tags:

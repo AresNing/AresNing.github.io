@@ -1,4 +1,8 @@
 ---
+description: "整理 synchronized、公平锁、非公平锁与可重入锁的概念，作为理解多线程同步的查阅笔记。"
+intro: "整理 synchronized、公平锁、非公平锁与可重入锁的概念，作为理解多线程同步的查阅笔记。"
+kind: note
+updated: 2026-09-13
 title: 多线程锁
 categories:
   - [Concurrency]

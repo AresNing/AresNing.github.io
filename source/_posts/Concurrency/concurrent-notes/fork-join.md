@@ -1,4 +1,8 @@
 ---
+description: "梳理 Fork/Join 的任务拆分、结果合并与线程池协作，结合示例理解 ForkJoinTask 和 ForkJoinPool 的关系。"
+intro: "梳理 Fork/Join 的任务拆分、结果合并与线程池协作，结合示例理解 ForkJoinTask 和 ForkJoinPool 的关系。"
+kind: note
+updated: 2026-09-13
 title: Fork/Join 框架
 categories:
   - [Concurrency]

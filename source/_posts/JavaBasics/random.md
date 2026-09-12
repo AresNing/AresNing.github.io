@@ -1,4 +1,8 @@
 ---
+description: "比较 Random 与 ThreadLocalRandom 的使用方式，记录并发场景中的竞争与性能考虑。"
+intro: "比较 Random 与 ThreadLocalRandom 的使用方式，记录并发场景中的竞争与性能考虑。"
+kind: note
+updated: 2026-09-13
 title: Random与ThreadLocalRandom
 categories:
   - [Java Basics]

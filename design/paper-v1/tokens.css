@@ -1,0 +1,79 @@
+/* 素纸 v1 — historical proposal snapshot, not imported by the blog.
+ * Current light/dark tokens: themes/paper/source/css/paper.css.
+ * Current authoring rules: design/paper-v1/design-system.md.
+ */
+:root {
+  --paper: #f7f5ef;
+  --paper-inset: #efebe3;
+  --ink: #292824;
+  --ink-muted: #68645e;
+  --rule: #dcd7cd;
+  --accent: #964d3b;
+  --selection: #e8d7c9;
+  --code-string: #47604d;
+
+  --font-editorial: Georgia, "Songti SC", STSong, serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-code: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-masthead: 3.5rem;
+  --text-title: 2.5rem;
+  --text-heading: 1.75rem;
+  --text-subheading: 1.3125rem;
+  --text-body: 1.0625rem;
+  --text-meta: 0.875rem;
+  --text-code: 0.875rem;
+  --leading-body: 1.9;
+  --leading-title: 1.3;
+  --leading-code: 1.7;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  --width-shell: 1120px;
+  --width-index: 880px;
+  --width-reading: 720px;
+  --width-toc: 160px;
+  --page-gutter: 48px;
+  --radius-small: 3px;
+  --rule-width: 1px;
+  --focus-ring: 2px solid var(--accent);
+  --focus-offset: 3px;
+  --touch-target: 44px;
+  --transition-color: 140ms ease;
+  --texture-opacity: 0.015;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --text-masthead: 2.25rem;
+    --text-title: 1.875rem;
+    --text-heading: 1.5rem;
+    --text-subheading: 1.25rem;
+    --text-body: 1rem;
+    --text-meta: 0.8125rem;
+    --text-code: 0.8125rem;
+    --leading-body: 1.85;
+    --leading-title: 1.35;
+    --page-gutter: 24px;
+  }
+}
+
+@media (max-width: 359px) {
+  :root { --page-gutter: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --transition-color: 0ms; }
+}
+
+@media (forced-colors: active) {
+  :root { --texture-opacity: 0; }
+}

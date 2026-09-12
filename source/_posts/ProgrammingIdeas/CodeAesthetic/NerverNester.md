@@ -1,4 +1,8 @@
 ---
+description: "通过条件反转与提炼子函数，整理减少代码嵌套的方法，让主要执行路径更容易阅读。"
+intro: "通过条件反转与提炼子函数，整理减少代码嵌套的方法，让主要执行路径更容易阅读。"
+kind: note
+updated: 2026-09-13
 title: Never Nester
 categories:
   - [Programming Ideas]

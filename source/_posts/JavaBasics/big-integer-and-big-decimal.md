@@ -1,4 +1,8 @@
 ---
+description: "整理 BigInteger 与 BigDecimal 的基本用途，重点记录 BigDecimal 的精度问题与数值比较方式。"
+intro: "整理 BigInteger 与 BigDecimal 的基本用途，重点记录 BigDecimal 的精度问题与数值比较方式。"
+kind: note
+updated: 2026-09-13
 title: BigInteger & BigDecimal
 categories:
   - [Java Basics]

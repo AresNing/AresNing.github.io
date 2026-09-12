@@ -1,0 +1,13 @@
+<div class="reading-layout"><article class="reading-page standalone-page">
+  <header class="article-header"><p class="eyebrow"><%= page.type === 'categories' ? 'CATEGORIES' : page.type === 'tags' ? 'TAGS' : 'ABOUT' %></p><h1><%= page.type === 'tags' ? '标签' : page.title %></h1></header>
+  <% if (page.type === 'categories') { %>
+    <nav class="taxonomy-links" aria-label="分类导航"><a href="<%= url_for('/archives/') %>">全部文章</a><a href="<%= url_for('/tags/') %>">查看标签 →</a></nav>
+    <div class="category-list-wrap"><%- list_categories({show_count: true}) %></div>
+  <% } else if (page.type === 'tags') { %>
+    <nav class="taxonomy-links" aria-label="标签导航"><a href="<%= url_for('/archives/') %>">全部文章</a><a href="<%= url_for('/categories/') %>">查看分类 →</a></nav>
+    <ul class="tag-list"><% site.tags.sort('name', 1).each(function(tag) { %><li><a href="<%= url_for(tag.path) %>"><%= tag.name %><span><%= tag.length %></span></a></li><% }); %></ul>
+  <% } else { %>
+    <div class="prose"><%- paper_content(page) %></div>
+    <% if (page.type === 'about') { %><p class="about-motto">Hungry &amp; Humble</p><p><a class="read-more" href="<%= theme.github %>">GitHub ↗</a></p><% } %>
+  <% } %>
+</article></div>

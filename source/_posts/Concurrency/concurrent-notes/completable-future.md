@@ -1,5 +1,17 @@
 ---
-title: CompletableFuture
+title: "CompletableFuture：异步任务的组合与异常处理"
+description: "从 Future 的局限出发，整理 CompletableFuture 的创建、结果转换、任务组合与异常处理，并对照常用方法的差异。"
+intro: "从 Future 的局限出发，整理 CompletableFuture 的创建、结果转换、任务组合与异常处理，并对照常用方法的差异。"
+permalink: concurrency/concurrency/concurrent-notes/completable-future/
+updated: 2026-09-13
+diagram: /images/diagrams/future-stages.svg
+diagram_alt: CompletableFuture：把任务连接成阶段。创建异步任务；转换或组合结果；观察与处理异常。阶段描述的是依赖关系，不保证每一步都新建线程。
+diagram_caption: 阶段描述的是依赖关系，不保证每一步都新建线程。
+related:
+  - concurrency/concurrency/concurrent-notes/callable-interface/
+  - concurrency/concurrency/concurrent-notes/thread-pool/
+featured: 1
+kind: note
 categories:
   - [Concurrency]
 tags:

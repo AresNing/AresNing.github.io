@@ -1,4 +1,8 @@
 ---
+description: "围绕线程池参数、任务处理顺序与拒绝策略，梳理线程池如何接收、排队和执行任务。"
+intro: "围绕线程池参数、任务处理顺序与拒绝策略，梳理线程池如何接收、排队和执行任务。"
+kind: note
+updated: 2026-09-13
 title: 线程池
 categories:
   - [Concurrency]
