@@ -67,4 +67,11 @@ assert(home.includes('从这三篇开始'));
 assert(!home.includes('test-blog') && !home.includes('无题'));
 const search = fs.readFileSync(path.join(root, 'public/search.xml'), 'utf8');
 assert(!search.includes('test-blog') && !search.includes('objects-and-data-structures'));
+const searchPaths = [...search.matchAll(/<url>([^<]+)<\/url>/g)].map(match => {
+  const url = new URL(unescapeHTML(match[1]).replace(/^\/+/, '/'), 'https://aresning.github.io');
+  const articlePath = decodeURI(url.pathname).replace(/^\//, '').replace(/index\.html$/, '');
+  assert(articlePaths.has(articlePath), `搜索结果不是公开文章：${match[1]}`);
+  return articlePath;
+});
+assert.deepEqual(new Set(searchPaths), articlePaths, '搜索索引必须覆盖全部公开文章路径');
 console.log(`通过：${posts.length} 篇公开文章、${htmlFiles.length} 个页面的分享信息、封面、日期来源、精选和草稿隔离。`);
