@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F5EF">
+  <script src="/js/theme.js"></script>
+  
+  <title>断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复 · AresNing</title>
+  <meta name="description" content="网络断开后，Agent 可能仍在执行。沿四个 Harness 的真实客户端与存储链路，比较快照、增量、分页、终态确认和历史过期，说明如何恢复可信进度而不重复提交任务。">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复">
+  <meta property="og:description" content="网络断开后，Agent 可能仍在执行。沿四个 Harness 的真实客户端与存储链路，比较快照、增量、分页、终态确认和历史过期，说明如何恢复可信进度而不重复提交任务。">
+  <meta property="og:url" content="https://aresning.github.io/agent-harness/12-client-recovery/">
+  <meta property="og:site_name" content="AresNing">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://aresning.github.io/images/share/aa8a0f11ae38f010.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复 · AresNing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复">
+  <meta name="twitter:description" content="网络断开后，Agent 可能仍在执行。沿四个 Harness 的真实客户端与存储链路，比较快照、增量、分页、终态确认和历史过期，说明如何恢复可信进度而不重复提交任务。">
+  <meta name="twitter:image" content="https://aresning.github.io/images/share/aa8a0f11ae38f010.png">
+  <meta name="twitter:image:alt" content="断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复 · AresNing">
+  <meta property="article:author" content="https://aresning.github.io/about/"><meta property="article:published_time" content="2026-09-13T16:00:00.000Z"><meta property="article:modified_time" content="2026-09-13T16:00:00.000Z">
+  <link rel="canonical" href="https://aresning.github.io/agent-harness/12-client-recovery/">
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png">
+  <link rel="stylesheet" href="/css/paper.css?v=20260914-share">
+  <script defer src="/lib/paper/a11y-dialog.min.js"></script>
+  <script defer src="/lib/paper/clipboard.min.js"></script>
+  
+  <script defer src="/lib/paper/floating-ui.core.min.js"></script>
+  <script defer src="/lib/paper/floating-ui.dom.min.js"></script>
+  
+  <script defer src="/js/paper.js?v=20260914-share"></script>
+<meta name="generator" content="Hexo 5.4.2"><link rel="stylesheet" href="/css/prism-vs.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="/" aria-label="AresNing 首页">AresNing</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="/" aria-current="page">文章</a>
+      <a href="/archives/">归档</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
+    <div class="header-actions">
+      <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      <button class="ui-button icon-button menu-toggle" type="button" aria-label="打开菜单" aria-controls="menu-dialog" aria-haspopup="dialog" data-a11y-dialog-show="menu-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+<div class="reading-layout has-toc">
+  <article class="reading-page">
+    <header class="article-header">
+      <nav class="breadcrumb" aria-label="当前位置"><a href="/">文章</a><span aria-hidden="true">/</span><a href="/categories/Agent-Harness/">Agent Harness</a></nav>
+      <h1>断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复</h1>
+      <div class="article-meta"><a href="/about/">AresNing</a><span aria-hidden="true">·</span><span>文章</span><span aria-hidden="true">·</span><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time><span>更新于 <time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></span></div>
+      <p class="article-intro">从半段文本、重连分页竞态到完成通知再次丢失，追踪四种恢复机制如何交接状态与事件，并给出有明确证据边界的实验和设计取舍。</p>
+    </header>
+    <details class="mobile-toc"><summary>文章目录</summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%B0%E5%BA%95%E8%A6%81%E6%8E%A5%E5%9B%9E%E4%BB%80%E4%B9%88%EF%BC%9A%E7%BB%93%E6%9E%9C%E3%80%81%E7%8A%B6%E6%80%81%E3%80%81%E5%8E%86%E5%8F%B2%E5%92%8C%E6%8C%81%E7%BB%AD%E8%A7%82%E5%AF%9F"><span class="toc-text">一、到底要接回什么：结果、状态、历史和持续观察</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%A8%E9%87%8F%E4%B8%8E%E5%A2%9E%E9%87%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%92%E7%9B%B8%E4%BC%A4%E5%AE%B3"><span class="toc-text">二、全量与增量为什么会互相伤害</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Codex%EF%BC%9A%E9%87%8D%E6%96%B0%E9%99%84%E7%9D%80%E7%BA%BF%E7%A8%8B%EF%BC%8C%E9%87%8D%E5%BB%BA%E8%A7%86%E5%9B%BE%EF%BC%8C%E5%B9%B6%E9%9A%94%E7%A6%BB%E6%97%A7%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%B0%BE%E5%B7%B4"><span class="toc-text">三、Codex：重新附着线程，重建视图，并隔离旧连接的尾巴</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%AE%9E%E9%99%85-TUI-%E9%87%8D%E8%BF%9E%E5%85%A5%E5%8F%A3%E8%BF%9B%E5%85%A5"><span class="toc-text">从实际 TUI 重连入口进入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E7%85%A7%E4%B8%8E%E5%AE%9E%E6%97%B6%E4%BA%8B%E4%BB%B6%E5%A6%82%E4%BD%95%E6%8E%A5%E4%B8%8A"><span class="toc-text">快照与实时事件如何接上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%BF%E5%8E%86%E5%8F%B2%E5%92%8C%E9%87%8D%E5%A4%8D%E5%86%85%E5%AE%B9%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86"><span class="toc-text">长历史和重复内容怎么处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Pi%EF%BC%9Adurable-Lane-%E6%8F%90%E4%BE%9B%E5%BF%AB%E7%85%A7%EF%BC%8B%E7%BC%93%E5%86%B2%EF%BC%8C%E4%BD%86%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%85%A8%E9%83%A8-Pi"><span class="toc-text">四、Pi：durable Lane 提供快照＋缓冲，但实验性客户端不等于全部 Pi</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E9%80%89%E5%AF%B9%E5%85%A5%E5%8F%A3"><span class="toc-text">先选对入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E7%85%A7%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BC%9A%E6%BC%8F%E5%9C%A8-watch-%E4%B8%AD%E9%97%B4"><span class="toc-text">快照从哪里来，为什么不会漏在 watch 中间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E2%80%9D%E7%9A%84%E5%BF%AB%E7%85%A7%E8%83%BD%E6%9C%89%E5%A4%9A%E5%AE%8C%E6%95%B4"><span class="toc-text">“正在运行”的快照能有多完整</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81DeepSeek%EF%BC%9A%E6%8C%81%E4%B9%85%E4%BA%8B%E4%BB%B6%E7%AA%97%E5%8F%A3%E5%92%8C%E5%AE%9E%E6%97%B6%E6%96%87%E6%9C%AC%E5%89%8D%E7%BC%80%EF%BC%8C%E5%90%84%E8%87%AA%E6%9C%89%E8%BF%9E%E7%BB%AD%E6%80%A7%E8%A7%84%E5%88%99"><span class="toc-text">五、DeepSeek：持久事件窗口和实时文本前缀，各自有连续性规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-%E8%B7%AF%E5%BE%84%E4%B8%8E-SDK-%E9%98%9F%E5%88%97%E5%88%86%E5%BC%80%E8%AF%BB"><span class="toc-text">Web 路径与 SDK 队列分开读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E6%9D%A1%E6%B5%81%EF%BC%8C%E4%B8%A4%E4%B8%AA%E5%88%87%E7%82%B9"><span class="toc-text">两条流，两个切点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E9%A1%B5%E6%AD%A3%E5%9C%A8%E5%9B%9E%E6%9D%A5%EF%BC%8C%E5%AE%9E%E6%97%B6%E4%BA%8B%E4%BB%B6%E5%8F%88%E5%88%B0%E4%BA%86"><span class="toc-text">历史页正在回来，实时事件又到了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E5%B8%A7%E5%8F%88%E4%B8%A2%E4%BA%86%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BB%8D%E5%8F%AF%E8%83%BD%E5%8D%A1%E4%BD%8F"><span class="toc-text">最后一帧又丢了，为什么仍可能卡住</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81Grok-Build%EF%BC%9A%E5%AE%9E%E9%99%85-pager-%E7%94%A8-load-%E8%A1%A5%E6%97%A5%E5%BF%97%EF%BC%8C%E5%86%8D%E5%88%87%E5%9B%9E%E5%AE%9E%E6%97%B6%E8%BE%93%E5%87%BA"><span class="toc-text">六、Grok Build：实际 pager 用 load 补日志，再切回实时输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%90%8D%E4%B8%8D%E8%83%BD%E6%9B%BF%E4%BB%A3%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-text">方法名不能替代调用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%BB%E5%AE%8C%E6%97%A5%E5%BF%97%E8%BF%98%E8%A6%81%E5%86%8D%E8%AF%BB%E4%B8%80%E6%AC%A1%E5%B0%BE%E5%B7%B4"><span class="toc-text">为什么读完日志还要再读一次尾巴</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cursor%E3%80%81%E5%8E%BB%E9%87%8D%E5%92%8C%E5%9B%9E%E6%94%BE%E4%B8%8D%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B"><span class="toc-text">cursor、去重和回放不是一回事</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E7%A1%AE%E5%AE%9E%E4%B8%8D%E6%89%BF%E8%AF%BA%E9%87%8D%E6%94%BE"><span class="toc-text">什么确实不承诺重放</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%8A%8A%E5%9B%9B%E5%AE%B6%E7%9A%84%E6%89%BF%E8%AF%BA%E6%94%BE%E5%88%B0%E5%90%8C%E4%B8%80%E5%BC%A0%E8%A1%A8%E9%87%8C"><span class="toc-text">七、把四家的承诺放到同一张表里</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E6%9C%AC%E8%A6%81%E9%87%8F%E5%9C%A8%E5%93%AA%E4%B8%80%E5%B1%82"><span class="toc-text">成本要量在哪一层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%80%9F%E9%89%B4%E7%9A%84%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B9%9F%E5%90%84%E6%9C%89%E8%BE%B9%E7%95%8C"><span class="toc-text">可借鉴的协议，也各有边界</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84-Harness%EF%BC%9A%E5%85%88%E6%81%A2%E5%A4%8D%E5%8F%AF%E4%BF%A1%E8%A7%86%E5%9B%BE%EF%BC%8C%E5%86%8D%E6%89%BF%E8%AF%BA%E8%BF%87%E7%A8%8B%E4%BF%9D%E7%9C%9F"><span class="toc-text">八、给自己的 Harness：先恢复可信视图，再承诺过程保真</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></details>
+    <div class="prose"><figure class="article-figure"><a href="/images/agent-harness/12/12.svg" target="_blank" rel="noopener" aria-label="查看完整配图：断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复：恢复观察，先确定状态与事件的交接点"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-mobile.svg"><img src="/images/agent-harness/12/12.svg" alt="断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复：恢复观察，先确定状态与事件的交接点" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p>屏幕上的回答停在“正在检查第二个文件”。网络断了，但服务端的工具还在运行。几秒后，客户端重连，开始拉取历史；就在旧分页响应返回前，新一段文本先到了。工具随后完成，最后一条完成通知却再次丢失。界面应该继续显示“运行中”，清空重画，还是提示用户再发一遍？</p>
+<p>这个场景里最危险的动作，是把“我没看到”当成“它没发生”。重发请求可能启动第二次执行，读一次历史又可能覆盖刚收到的新进度。连接恢复只是第一步；真正需要恢复的是一份有来源、有边界、还能继续更新的视图。</p>
+<p><a href="https://aresning.github.io/agent-harness/06-recovery/">第 06 篇</a>讨论执行失败之后，运行时凭什么继续、重放或拒绝；<a href="https://aresning.github.io/agent-harness/09-clients/">第 09 篇</a>讨论请求接纳、执行完成和客户端确认分别承诺什么。本篇沿着客户端、服务端与记录层，把“已经有任务身份，但观察链断了”继续拆下去。比较基于同一组<a href="/downloads/agent-harness/12/content/evidence/versions.json">固定源码</a>，补充审读及实验日期为 2026-09-14。Pi 与 DeepSeek 的实际模块实验、Codex 与 Grok 的原函数提取实验，以及作者设计的反例分别标明；没有运行四产品完整网络重连或真实模型任务。</p>
+<h2 id="一、到底要接回什么：结果、状态、历史和持续观察">一、到底要接回什么：结果、状态、历史和持续观察</h2>
+<p>先给开头的任务一个稳定身份 <code>operation-1</code>。它产生的东西至少有四类。</p>
+<p><strong>结果</strong>是该任务最后提交的回答、文件修改说明或错误。<strong>当前状态</strong>回答它此刻仍在执行、等待审批，还是已经结束。<strong>事件历史</strong>描述过程中发生过哪些变化。<strong>持续观察</strong>则是一项连接关系：当前客户端会不会继续收到后续变化。</p>
+<p>四者能够互相辅助，却不能互相替代。结果文件存在，不足以确定整个任务已经结束；当前状态是 completed，也不会还原所有中间文本；拿到完整历史，仍可能错过查询结束到订阅建立之间的事件。反过来，即使产品有意不保存每次工具进度，仍可以通过完整结果和当前状态恢复一个可用界面。</p>
+<table>
+<thead>
+<tr>
+<th>故障</th>
+<th>还活着的东西</th>
+<th>应先确认的事实</th>
+<th>不能默认采用的动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>客户端断连</td>
+<td>服务进程、任务与存储可能都还在</td>
+<td>原任务身份、最新状态、重新观察的起点</td>
+<td>再次提交相同任务</td>
+</tr>
+<tr>
+<td>服务进程重启</td>
+<td>只有已保存记录和独立存活的资源可能还在</td>
+<td>任务是否重建、结果是否耐受崩溃、工具是否仍被托管</td>
+<td>把旧 running 标记当成仍在运行</td>
+</tr>
+<tr>
+<td>历史被清理或压缩</td>
+<td>当前快照、结果和事件可能具有不同保留期</td>
+<td>哪些记录仍可查询，旧游标是否有效</td>
+<td>假装缺失区间已经完整补回</td>
+</tr>
+</tbody>
+</table>
+<p>本篇的主场景首先假设<strong>只有客户端连接中断</strong>。涉及进程重启或历史过期时再改变这个条件。这样才能避免一种常见混淆：某条重连路径能接回存活任务，不等于它能复活被杀死的工具；能恢复工具结果，也不等于能重新播放每一次百分比更新。</p>
+<h2 id="二、全量与增量为什么会互相伤害">二、全量与增量为什么会互相伤害</h2>
+<p>假设服务器先生成快照 <code>S(2) = &quot;AB&quot;</code>，其中已经包含事件 1 和 2；但它的网络响应很慢。客户端先收到事件 3，把文本推进到了 <code>&quot;ABC&quot;</code>，随后又用迟到的 <code>S(2)</code> 覆盖界面，文本退回 <code>&quot;AB&quot;</code>。如果改成“快照后把缓冲事件全加上”，事件 1、2 又可能被重复追加，变成 <code>&quot;ABAB…&quot;</code>。</p>
+<!-- harness-diagram:12-race -->
+<figure class="article-figure"><a href="/images/agent-harness/12/12-race.svg" target="_blank" rel="noopener" aria-label="查看完整配图：同一个快照切点，同时决定丢弃哪些旧事件和接纳哪些新事件"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-race-mobile.svg"><img src="/images/agent-harness/12/12-race.svg" alt="同一个快照切点，同时决定丢弃哪些旧事件和接纳哪些新事件" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 12 · 竞态：先建立缓冲，再取得快照切点。快照覆盖切点之前的内容，只接入切点之后的连续变化。本图是作者提出的协议模型，并非四家的统一实现。</em></p>
+<!-- /harness-diagram -->
+<p>这里需要的不是一个笼统的 <code>id</code>，而是明确区分不同字段承担的责任：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>能回答什么</th>
+<th>单独不能回答什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>task / turn / operation ID</td>
+<td>更新属于哪项工作</td>
+<td>哪个更新更晚、哪些更新已经应用</td>
+</tr>
+<tr>
+<td>item / message / toolCall ID</td>
+<td>应更新哪一个对象</td>
+<td>同一对象的新旧版本；只按 ID 去重可能误删更新</td>
+</tr>
+<tr>
+<td>事件序号或回放游标</td>
+<td>从哪里继续，或是否重复</td>
+<td>快照是否覆盖这个位置；是否已耐受崩溃</td>
+</tr>
+<tr>
+<td>状态版本 / 快照切点</td>
+<td>全量内容覆盖到哪里</td>
+<td>不同流是否共享同一个序列</td>
+</tr>
+<tr>
+<td>连接 generation / subscription ID</td>
+<td>是否来自当前观察关系</td>
+<td>全局业务顺序、任务有没有完成</td>
+</tr>
+<tr>
+<td>transport sequence</td>
+<td>传输层帧的位置</td>
+<td>业务事件是否已落盘，是否已经反映到界面</td>
+</tr>
+</tbody>
+</table>
+<p>对<strong>完整对象替换</strong>，重复应用同一份内容可能没有可见影响；对“追加一段文本”这样的 <strong>delta</strong>，重复一次就是重复字符。对有序事件序列，收到 105 不代表 103、104 已经收到。对旧世代分页响应，即使它本身内部一致，也不应覆盖新世代已经安装的视图。</p>
+<p>作者建议先定义一个能检验的交接契约：快照必须说明覆盖域和切点；订阅必须说明切点之后从哪里开始；客户端必须说明如何处理重复、缺口与旧世代。接下来会看到，四家并没有都提供一个公共 <code>snapshotVersion</code> 字段，而是用不同的串行边界、缓冲、回放门和局部序号完成其中一部分。</p>
+<h2 id="三、Codex：重新附着线程，重建视图，并隔离旧连接的尾巴">三、Codex：重新附着线程，重建视图，并隔离旧连接的尾巴</h2>
+<h3 id="从实际-TUI-重连入口进入">从实际 TUI 重连入口进入</h3>
+<p>这里分析的是连接外部 App Server 的 TUI。<code>reconnect</code> 明确拒绝 Embedded 情况，因为进程内会话没有远端连接可恢复。远端路径新建连接、执行 bootstrap，再对原 thread 调用 <code>resume_thread</code>；重试间隔为 0、1、2、4、8 秒，整个连接与历史恢复过程共用 120 秒预算。这个数字是该实现的重连预算，不是任务完成或历史加载的服务等级承诺。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app/reconnect.rs#L30-L125">重连入口</a></p>
+<p>如果初始请求可能已创建 thread，却连 thread ID 都没收到，代码会直接拒绝自动重试，并让用户先检查已有任务。这是很具体的安全选择：系统连应该观察哪项工作都无法确定时，不以“恢复网络”为理由重新创建工作。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app/reconnect.rs#L30-L125">同一分支</a></p>
+<!-- harness-diagram:12-codex -->
+<figure class="article-figure"><a href="/images/agent-harness/12/12-codex.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Codex 远端 TUI：重建连接、原线程 resume、历史与活动 turn 合并、隔离旧事件"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-codex-mobile.svg"><img src="/images/agent-harness/12/12-codex.svg" alt="Codex 远端 TUI：重建连接、原线程 resume、历史与活动 turn 合并、隔离旧事件" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 12 · Codex：恢复对象是原 thread 的视图。运行中线程的监听器负责组织 resume 响应与订阅交接，客户端随后继续补历史；不是重发原 prompt。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app/reconnect.rs#L30-L125">客户端入口</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/app-server/src/request_processors/thread_lifecycle.rs#L563-L774">服务端交接</a>。</em></p>
+<!-- /harness-diagram -->
+<h3 id="快照与实时事件如何接上">快照与实时事件如何接上</h3>
+<p><code>resume_thread</code> 根据历史能力选择分页模式，必要时走旧协议兼容路径；初始恢复并不强制装入整个会话。服务端对仍在运行的线程，使用监听器命令处理 resume：读取活动 turn 快照，把它合并进历史或首屏 turn 页，规范化状态，再把新连接加入订阅并发送响应。把这项操作放进线程监听器的命令路径，是它协调快照与后续通知的关键位置。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app_server_session/rollout_history.rs#L94-L207">客户端历史恢复</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/app-server/src/thread_state.rs#L45-L100">监听器命令</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/app-server/src/request_processors/thread_lifecycle.rs#L563-L774">活动 turn 与订阅处理</a></p>
+<p>这不等于数据库历史、所有工具瞬时输出和跨多次分页查询被一个全局事务同时冻结。这里可以确认的是<strong>运行中线程的 resume 交接路径</strong>；不能把它扩大为“任何 <code>thread/read</code> 后再监听都没有窗口”，更不能据此声称断线期间所有 delta 都会逐条重播。</p>
+<p>客户端也承担恢复责任。重连完成时换用新的事件通道、处理后台线程恢复状态，并隔离旧异步工作；否则旧连接尚未结束的分页或事件处理任务会继续污染新界面。重连要恢复的不只是 socket，还包括谁有权再写这份视图。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app/reconnect.rs#L255-L380">重连安装阶段</a></p>
+<h3 id="长历史和重复内容怎么处理">长历史和重复内容怎么处理</h3>
+<p>TUI 的首轮历史预算是 5 个 turn，item 页大小 100，初始扫描上限为 400 个 item；这是源码常量定义的装载预算，不代表每次恰好传输这些数量。历史分页检查加载标记及游标是否仍匹配，并记录已见游标，避免重复游标让扫描死循环。合并历史 item 时按已有 ID 判断是否插入，它不是一个按公共 <code>updatedVersion</code> 通用替换对象的同步器。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app_server_session/history.rs#L26-L122">分页预算与请求检查</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app_server_session/history.rs#L163-L300">历史合并</a></p>
+<p>服务端两条历史路径也不同。legacy <code>thread/turns/list</code> 每次可能重读整个 rollout 并重建 turn，注释明确提到 rollback、compaction 能改变前面的 turn。ThreadStore 的游标包含 thread 身份、rollout ordinal、是否包含锚点和查询范围；这是一种定位及范围检查，不是“整个会话被冻结在版本 V”的凭证。<code>thread/items/list</code> 走创建顺序，公开结果没有把内部更新 ordinal 作为通用更新水位返回。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/app-server/src/request_processors/thread_processor.rs#L3015-L3102">legacy 重建</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/thread-store/src/local/thread_history/read.rs#L31-L46">游标结构</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/thread-store/src/local/thread_history/read.rs#L249-L278">范围校验</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/app-server/src/request_processors/thread_processor.rs#L3374-L3433">item 查询</a></p>
+<p>还有一个容易被夸大的小机制：TUI 回放过滤器看到匹配的完整 <code>ItemCompleted</code> 时，可以抑制局部缓冲中已被它覆盖的 assistant 文本 delta。它依据 thread、turn、item 身份，且扫描有局部边界；这是一项减少重复渲染的优化，不是任意网络乱序下的日志去重协议。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/tui/src/app/replay_filter.rs#L75-L108">回放过滤</a></p>
+<p>回到开头：只要原 thread 可恢复，TUI 可以用历史和活动状态重新建立可信视图；完整 item 到达后，不必把缺失的每个字符都重演一遍。若最后的完成通知再丢失，恢复原 thread 并读取它的状态与记录，比重新 <code>turn/start</code> 更接近问题本身。本轮没有验证四种故障同时发生时的完整 TUI 行为，也没有证明所有工具进度都会进入可恢复历史。</p>
+<h2 id="四、Pi：durable-Lane-提供快照＋缓冲，但实验性客户端不等于全部-Pi">四、Pi：durable Lane 提供快照＋缓冲，但实验性客户端不等于全部 Pi</h2>
+<h3 id="先选对入口">先选对入口</h3>
+<p>第 09 篇分析的是 Pi 的 stdio RPC。这里为了研究可附着的状态视图，选择仓库中的 <strong>experimental mini 客户端</strong>和 durable Harness 的 Lane API。不能把 mini 的能力直接安到普通 RPC 上，也不能把实验目录里的实现写成整个产品的稳定公开承诺。</p>
+<p>mini <code>connect</code> 先建立 peer，调用 <code>Sessions.attach</code>，随后执行 <code>lane.watch(presentationId)</code>。拿到 <code>snapshot</code> 与 <code>subscriptionId</code> 后，先把快照安装到 UI，再调用 <code>lane.start(subscriptionId)</code> 释放后续事件；切换订阅时，旧订阅在新订阅启动后注销，客户端只接纳当前 subscription ID 的事件。遇到 reducer 返回 rebase，则重新取得一份快照。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/coding-agent/src/experimental/mini/tui/session.ts#L53-L111">mini 接入与替换</a></p>
+<!-- harness-diagram:12-pi -->
+<figure class="article-figure"><a href="/images/agent-harness/12/12-pi.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Pi experimental mini：先缓冲、捕获 Lane 快照、安装快照、start 释放事件"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-pi-mobile.svg"><img src="/images/agent-harness/12/12-pi.svg" alt="Pi experimental mini：先缓冲、捕获 Lane 快照、安装快照、start 释放事件" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 12 · Pi：watch 与快照位于 Lane 的串行读取路径，start 把已建立的观察关系交给 UI。subscription ID 负责排除旧订阅，并不是供磁盘日志回放的事件游标。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/lane.ts#L1705-L1770">Lane 快照</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/coding-agent/src/experimental/mini/tui/session.ts#L53-L111">mini 客户端</a>。</em></p>
+<!-- /harness-diagram -->
+<p>这个 <code>connect</code> 函数提供附着与重建过程；它本身没有展示一套自动物理断线重连循环。因此“重新调用这条路径能建立观察”与“产品会自动在几秒内重连”必须分开。本文没有测量后一种体验。</p>
+<h3 id="快照从哪里来，为什么不会漏在-watch-中间">快照从哪里来，为什么不会漏在 watch 中间</h3>
+<p>Lane 的 <code>readLane</code> 和状态修改都进入 session 的 mutation 串行线。<code>watch</code> 在这条线内先安装缓冲观察者，再读取快照；快照失败会取消观察者。这样避免在“读完状态、尚未开始监听”的空档遗漏下一项变更。服务端把 watch 句柄与随机 subscription ID 保存起来，<code>start</code> 再开始消费缓冲。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/lane.ts#L307-L386">串行读取</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/lane.ts#L1705-L1770">watch 顺序</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/coding-agent/src/experimental/mini/worker/lane-service.ts#L32-L82">服务端句柄</a></p>
+<p><code>resnapshot</code> 则比“再查一次”更细：事件总线切换 epoch，先丢弃将由新快照代表的旧阶段事件，在快照边界之后暂存新事件，安装快照后再释放。这里的边界需要调用者在一致的状态读取期间标记；只孤立地使用一个通用事件总线，不能自动获得 Lane 存储的串行保证。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/events.ts#L1-L286">事件总线</a></p>
+<p>实际运行原 <code>HarnessEventBus</code> 的实验确认：start 之前的事件被缓冲；resnapshot 切点之前的受控事件没有再次投递，切点之后的事件得到保留。也复现了失败边界：如果 resnapshot 抛错，已经压掉的旧阶段事件不会突然回来。调用者应重新取得可信快照，不能把这个观察者当作无缺口历史继续使用。<a href="/downloads/agent-harness/12/content/evidence/client-recovery-results.json">12 项原模块实验</a></p>
+<h3 id="“正在运行”的快照能有多完整">“正在运行”的快照能有多完整</h3>
+<p><code>captureLaneSnapshot</code> 复制 Lane 状态，沿当前分支读到 compaction 边界，读取队列、统计和最后一次 operation 的结果。未完成 assistant 消息可从保存的 frames 重建；工具处于 effect_pending 时读的是已保存的 <code>pendingToolOutput</code> 检查点，到了 outcome_ready 才使用已准备的结果。它没有保证每一次临时进度回调都进入这个快照。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/lane.ts#L1705-L1770">快照与结果</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/lane.ts#L1770-L1868">未完成操作</a></p>
+<p>这给出两个不同的保留边界：compaction 决定当前 transcript 的可见前缀；工具输出检查点决定正在运行的工具能重建到哪里。二者都不能简单写成“保留最近 N 天事件”。在这些路径中没有找到统一的、可直接承诺给客户端的历史 TTL；这表示本轮证据不足以给出该数字，不表示永不清理。</p>
+<p>reducer 对 <code>message_update</code> 用完整 message 替换，所以连续收到 <code>A</code>、<code>AB</code>、<code>AB</code>，最终仍是 <code>AB</code>；但 <code>entry_added</code> 直接追加 transcript，重复投递同一 entry 会留下两份。原 reducer 实验确实得到这个差异。它依赖有序、受控的 watch 交付关系，不是一套接受任意重复网络事件的通用折叠算法。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/reducer.ts#L1-L232">reducer</a>、<a href="/downloads/agent-harness/12/content/evidence/client-recovery-results.json">实验结果</a></p>
+<p>最后的 <code>run_end</code> 丢了怎么办？重新取得 Lane 快照可以重新确认当前 operation 与最后结果；如果关心的 operation 已经不是“最后一个”，底层还有按 operation ID 的 <code>getResult</code> 查询。这里说明的是 Harness 能力，不代表 mini 界面已暴露全部查询按钮。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/runtime/lane.ts#L270-L282">按 operation 查询</a></p>
+<p>代价也藏在这个设计里：重建快照需要读取当前分支和未完成操作材料；开始消费前需要保存缓冲。服务端源码还特别提醒，创建后一直不 start 的 watch 会持续积累事件。好用的原子交接需要配套订阅清理和资源预算，不能只看到“先缓冲”三个字。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/coding-agent/src/experimental/mini/worker/lane-service.ts#L32-L82">watch 生命周期</a></p>
+<h2 id="五、DeepSeek：持久事件窗口和实时文本前缀，各自有连续性规则">五、DeepSeek：持久事件窗口和实时文本前缀，各自有连续性规则</h2>
+<h3 id="Web-路径与-SDK-队列分开读">Web 路径与 SDK 队列分开读</h3>
+<p>这里选择 Web Session Controller，经 API Gateway 到 SessionQuery 的路径。第 09 篇的 SDK prompt/notification 通道仍然成立，但 SDK 本地通知队列并不能代表 Web 的恢复能力。</p>
+<p>Web 客户端打开 <code>SessionEventStream</code>，底层 <code>follow</code> 每次建立新的观察世代时，请求一份包含最近历史窗口的基线，并要求提供 assistant 流基线。服务端先安装 session/event 与 assistant-stream 监听器，再读取 session 观察结果；返回的 snapshot 同时带历史 cursor、records、hasMore、投影及当前 assistant 前缀。随后只发 snapshot cursor 之后的持久事件。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/client/sessions/session.ts#L600-L691">客户端入口</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/client/transport.ts#L138-L243">follow 适配</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L78-L244">服务端监听与基线</a></p>
+<!-- harness-diagram:12-deepseek -->
+<figure class="article-figure"><a href="/images/agent-harness/12/12-deepseek.svg" target="_blank" rel="noopener" aria-label="查看完整配图：DeepSeek Web：历史 seq 与实时 assistant 基线分开对齐，缺口修复后继续发布"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-deepseek-mobile.svg"><img src="/images/agent-harness/12/12-deepseek.svg" alt="DeepSeek Web：历史 seq 与实时 assistant 基线分开对齐，缺口修复后继续发布" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 12 · DeepSeek：历史窗口使用 durable seq；实时 assistant 使用 attempt、index 与 revision。连接 generation 用于淘汰旧连接工作，三者不能混成一个版本号。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L78-L244">服务端基线</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/client/transport.ts#L138-L243">客户端连续性</a>。</em></p>
+<!-- /harness-diagram -->
+<h3 id="两条流，两个切点">两条流，两个切点</h3>
+<p>持久事件有稠密的 session seq。服务端丢弃缓冲中已被 snapshot 覆盖的记录，遇到下一条 seq 不是预期值就报告错误。实时 assistant frames 则有自己的 revision，Host 中的累积器保存当前 attempt 的紧凑前缀。服务端在同步捕获这个前缀时，再记录本次监听中 assistant frame 的到达 ordinal；这个局部切点用于避免把旧 Agent 的更大 revision 当成新 Agent 的前缀继续拼接。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L78-L244">follow 的两种边界</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/assistant-stream.ts#L1-L102">Host 累积器</a></p>
+<p>所以“序号 20”必须追问是哪一种 20：历史 seq 20、assistant revision 20、chunk index 20，以及某一连接世代内的到达位置，彼此没有可直接比较的大小关系。Web 还会用小数形式的 seq 给 transient 片段安排显示位置，那只是 UI 排序占位，不是可持久恢复的 session 事件编号。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/client/sessions/assistant-stream.ts#L1-L209">assistant 显示折叠</a></p>
+<p>进程断开与连接断开在这里也不同。Host 的实时累积器是进程内状态；客户端连接重建时可以读取存活 Host 的前缀，但 Host 被杀死后，不能因为接口叫 baseline 就假设这份内存仍在。已提交会话记录能恢复哪些内容，还要服从具体 persistence 后端的保存与 flush 边界。第 06 篇讨论过这项差别；本文把“durable 事件”作为协议类别使用，不把“收到该事件”改写成“每一种后端都已经完成磁盘同步”。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/assistant-stream.ts#L1-L102">累积器生命周期</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/session/session-persistence/src/handle.ts#L1-L117">记录与 flush</a></p>
+<h3 id="历史页正在回来，实时事件又到了">历史页正在回来，实时事件又到了</h3>
+<p><code>RemoteJournalStream</code> 是客户端关键部件：每个新世代必须先打开一份基线；已应用游标之前的重复事件会被跳过；发现缺口则读页修复。在修复期间，后到事件可以继续进入缓冲，通知暂时延后；新世代打开后，旧世代仍在返回的分页不会重新覆盖新视图。修复也不是无限重试，无法接成连续窗口时要暴露失败。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/gateway/src/client/journal-stream.ts#L1-L260">窗口与 prepend</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/gateway/src/client/journal-stream.ts#L261-L560">缺口及世代切换</a></p>
+<p>本轮直接运行这份上游模块，用可控 carrier 提供已经解码的帧，用可控页源安排返回顺序。已有 0、1，先收到 3，修复页还没返回时又收到 5、4 和一条通知；修复页覆盖到 3 后，最终发布的窗口接到了 5，通知排在修复之后。另一个场景中，新世代已经到 4，旧页随后只返回到 2，它没有把视图拉回去。<strong>这些是原 journal 算法的受控执行结果，没有启动真实 WebSocket、API Gateway 或完整 Web 应用。</strong><a href="/downloads/agent-harness/12/content/evidence/client-recovery-results.json">原始观察</a></p>
+<p>向上翻页也有明确的界面：<code>page</code> 接收 <code>throughSeq</code>，限定本次查询的事件前缀，再用 <code>beforeSeq</code> 向前取页。源码验证源日志确实包含该前缀；翻页期间新的实时事件仍可以追加到已打开窗口。实验中，旧页查询使用 through=4，实时尾部已经推进到 5，最终是 prepend 旧记录，而不是重新 replace 整个窗口。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L78-L244">分页校验</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L384-L411">分页裁切</a></p>
+<p>这个固定前缀比按当前数组 offset 翻页更明确，但它也有作用域：约束的是编号事件日志，不是把正在更新的业务对象和每个实时 frame 全部冻结。页大小按消息数量控制，遇到依赖源事件会扩展切点；因此 <code>maxMessages=50</code> 不意味着响应恰好包含 50 个底层记录，更不意味着固定字节数。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L384-L411">分页依赖</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/client/sessions/session.ts#L391-L450">客户端加载限制</a></p>
+<h3 id="最后一帧又丢了，为什么仍可能卡住">最后一帧又丢了，为什么仍可能卡住</h3>
+<p>assistant 展示层不是“来了什么就立刻显示什么”。已知 attempt 正在流式输出时，收到匹配的持久 assistant 结算记录，会先把它放进 pending；随后对应 <code>end</code> 帧用 seq、事件类型和 chunk index 确认是哪份结果结束了这条流，再发布 settlement。重复 end 被忽略，已知 attempt 的 chunk index 出现缺口则要求 rebaseline。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/client/sessions/assistant-stream.ts#L1-L209">结算关联</a></p>
+<p>如果持久记录已到、end 静默丢失，且没有之后的断线或异常触发恢复，这个 reducer 自身不会凭空产生一个 end。原模块实验中，记录暂存而未发布；重新安装包含该记录的新基线后，完整结果才成为可见记录。它证明的是<strong>此模块需要外部恢复触发</strong>，不能由此直接判定完整产品永久卡死，也不能把实验里人工调用 replace 说成产品已经自动修复。<a href="/downloads/agent-harness/12/content/evidence/client-recovery-results.json">结算丢失实验</a></p>
+<p>对产品设计的建议因此更具体：长时间没有推进时，应使用同一会话身份重新确认状态或打开新基线，并明确展示“正在确认是否结束”；不要用另一次 prompt 当探针。历史记录已清理、页源缺失或观察失败时，应承认缺口。实验的“历史不可用”来自人为页源错误，仅验证客户端传播失败，没有验证 DeepSeek 的真实保留期。公开可读路径还不足以给出统一 TTL。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/api/session-controller/src/history.ts#L248-L283">观察数据源</a></p>
+<h2 id="六、Grok-Build：实际-pager-用-load-补日志，再切回实时输出">六、Grok Build：实际 pager 用 load 补日志，再切回实时输出</h2>
+<h3 id="方法名不能替代调用链">方法名不能替代调用链</h3>
+<p>Grok 的实际 pager 重连计划带上每个 session 自己的 cwd 和最后应用过的 event ID，并调用 <code>session/load</code>。这点很重要：同仓库的 attach policy 把 <code>session/resume</code> 配置成 <code>no_replay=true</code>，普通 load 才会按参数回放。若只搜索 resume 这个词，就会得到“没有重放”的错误总括。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/event_loop.rs#L292-L335">pager 计划</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L134-L158">Load / Resume 策略</a></p>
+<!-- harness-diagram:12-grok -->
+<figure class="article-figure"><a href="/images/agent-harness/12/12-grok.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Grok pager：带 cursor 的 load，暂停 live 输出，回放日志及新增尾部，再打开输出门"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-grok-mobile.svg"><img src="/images/agent-harness/12/12-grok.svg" alt="Grok pager：带 cursor 的 load，暂停 live 输出，回放日志及新增尾部，再打开输出门" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 12 · Grok：回放与实时输出的交接由 gateway gate、日志字节偏移和同步入队组织。日志中找不到可靠 cursor 时退回全量回放；并非逐条保留原始 UI 动画。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L1313-L1394">回放门</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/storage/replay.rs#L480-L558">cursor 回退</a>。</em></p>
+<!-- /harness-diagram -->
+<h3 id="为什么读完日志还要再读一次尾巴">为什么读完日志还要再读一次尾巴</h3>
+<p>对于仍 resident 的会话，准备回放时先关闭 gateway 实时输出门，并尝试 flush。初次回放读取 <code>updates.jsonl</code>，记住读取末尾的字节偏移。因为第一次回放期间任务可能还在写日志，随后再次 flush，从刚才的偏移补上新增尾部，同步排入发送队列，再重新打开 live gate。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L782-L870">关闭与 flush</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/replay.rs#L184-L353">初次回放</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L1313-L1394">补尾与开放</a></p>
+<p>尾部读取和入队有一个明确的实现前提：它是同步步骤，中间不 await，避免这条 LocalSet 执行路径在开放门之前又被另一个推进任务插入。因此它不像“查完历史后再单独订阅”，但也不是一个数据库级永久订阅事务。源码明确保留了失败分支：第二次 flush 失败时记录告警并跳过 delta replay，然后仍会进入后续流程，不能据成功路径宣称任何存储错误下都无缺口。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/replay.rs#L358-L424">同步补尾</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L1313-L1394">失败分支</a></p>
+<p>等待发送完成也不是等待 UI 应用确认。它只能证明所等待的发送链已结算，不能证明用户最后看到了哪一行。开头“最后通知又丢了”的问题依然需要重新确认原会话，而不是重新提交原 prompt。</p>
+<h3 id="cursor、去重和回放不是一回事">cursor、去重和回放不是一回事</h3>
+<p>日志处理先做 rewind 过滤，在仍包含进度记录的集合里定位 cursor，再省略可重建界面不需要的记录。这避免客户端的最后 event ID 恰好来自一条被省略进度时，错误地把它判成不存在。若 cursor 找不到，或 cursor 之后仍有必须回放但没有 event ID 的行，就退回全量回放，并给回放内容加标记。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/storage/replay.rs#L480-L558">cursor 定位与回退</a></p>
+<p>客户端对全量与增量也有不同提交方式：全量成功后用重建视图替换暂存旧视图；增量成功后把新尾部接回旧内容；失败则恢复旧视图及原先的去重水位。新连接回复中存在 runningPromptId 时，可以采纳原运行身份，而不必发起新 prompt。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/agent_view/session.rs#L837-L930">视图事务</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/agent_view/session.rs#L665-L697">采纳已有 prompt</a></p>
+<p>一个看起来微小、实际上会丢文本的选择，是 ACP 与 xAI 通知分别维护去重水位。两条流并不按统一 event ID 次序送达：一个较大的 xAI ID 可以先于仍排队的较小 ACP 文本。若共用 maxSeen 去重，后者就会被误判为旧消息。源码的实际处理器按各自流检查水位，回放及部分 durable lifecycle 又有例外。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/agent_view/mod.rs#L775-L795">两个水位</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/acp_handler/mod.rs#L167-L229">ACP 分支</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/acp_handler/session_notification.rs#L255-L291">xAI 分支</a></p>
+<p>重新 load 使用的 <code>last_seen_event_id</code> 则只前进：较低计数不会把它拉回去。提取原函数的实验先喂 2，再喂 5，水位就到 5，并不会记录 3、4 是否缺失；因此它表示最高已应用位置，<strong>不能单独充当跨两条流的连续 ACK 证明</strong>。本轮没有构造完整 pager、两路 gateway 和断连同时竞争的产品实验，不据此推断那条端到端路径必然丢数据。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-pager/src/app/agent_view/session.rs#L44-L63">原函数</a>、<a href="/downloads/agent-harness/12/content/evidence/client-recovery-mechanism-results.json">提取实验</a></p>
+<h3 id="什么确实不承诺重放">什么确实不承诺重放</h3>
+<p>回放主动过滤 InProgress 工具更新，并把部分工具调用折叠为适合恢复界面的结果。因此“日志可以 replay”不等于工具曾显示过的 17%、31%、68% 都会回来。历史的用途是重建可读状态，不是原样录屏。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/storage/replay.rs#L97-L150">工具折叠</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/storage/replay.rs#L480-L558">过滤规则</a></p>
+<p>这四条研究路径里，Grok 还给出了一个明确可见的本地清理配置：会话文件按 mtime 清理，默认 30 天，可由正整数 <code>storage.cleanup_ttl_days</code> 覆盖；本次会话目录可被跳过，清理受进程内 once 控制。这是本地文件清理策略，不是所有云端会话、每一条 event 的统一“保存 30 天”承诺。文件已删时，cursor 回退全量也没有能力凭空找回它。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/persistence.rs#L3185-L3245">TTL 清理</a></p>
+<h2 id="七、把四家的承诺放到同一张表里">七、把四家的承诺放到同一张表里</h2>
+<p>下面比较的是各节明确选定的入口，不是对整个品牌打功能勾。</p>
+<table>
+<thead>
+<tr>
+<th>同一个问题</th>
+<th>Codex 远端 TUI</th>
+<th>Pi experimental mini / Lane</th>
+<th>DeepSeek Web Controller</th>
+<th>Grok pager / ACP load</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接回谁</td>
+<td>原 thread</td>
+<td>原 session 的 Lane</td>
+<td>原 session 地址</td>
+<td>原 session、cwd、prompt 身份</td>
+</tr>
+<tr>
+<td>恢复基线</td>
+<td>历史＋活动 turn</td>
+<td>Lane 状态、分支、未完成操作和最后结果</td>
+<td>历史窗口＋投影＋assistant 前缀</td>
+<td>updates 日志重放和会话状态</td>
+</tr>
+<tr>
+<td>基线到实时的交接</td>
+<td>运行中线程 listener 命令组织 resume</td>
+<td>mutation 内 watch＋snapshot，start 释放缓冲</td>
+<td>先监听后基线，历史 cursor 与 assistant 切点分开</td>
+<td>live gate 关闭，日志回放＋偏移补尾后打开</td>
+</tr>
+<tr>
+<td>长历史</td>
+<td>turn/item 分页；旧路径可重建全部 rollout</td>
+<td>当前分支读至 compaction 边界；此快照不是统一页协议</td>
+<td>throughSeq 限定事件前缀，beforeSeq 翻页</td>
+<td>初次仍读取全日志；cursor 主要减少发送与回放尾部</td>
+</tr>
+<tr>
+<td>合并约束</td>
+<td>item 身份、局部回放过滤、旧通道隔离</td>
+<td>全量 message 替换；entry 追加依赖 watch 次序</td>
+<td>seq 缺口修复、世代隔离、attempt 结算关联</td>
+<td>分流水位、全量/增量回放、失败恢复旧视图</td>
+</tr>
+<tr>
+<td>过程保真边界</td>
+<td>不据恢复历史承诺全部 delta</td>
+<td>工具只保证快照所读检查点</td>
+<td>实时前缀与持久记录分层；Host 内存不同于落盘</td>
+<td>有意过滤部分工具 InProgress 更新</td>
+</tr>
+<tr>
+<td>历史失效</td>
+<td>校验 thread/游标范围；本轮未确认统一 TTL</td>
+<td>compaction 改变可见分支；未确认统一 TTL</td>
+<td>页源必须含指定前缀；未确认统一 TTL</td>
+<td>cursor 不可靠则全量；本地文件默认按 30 天 mtime 清理</td>
+</tr>
+</tbody>
+</table>
+<p>这张表的价值在于选择条件。如果只需要让用户拿到最终结果，短事件日志加长期结果存储可能已经够用；如果要解释每次审批、工具输出或审计责任，就必须另外定义哪些事件长期保留。若核心目标是离线后无缝补回正在输出的文字，还得承担未完成前缀保存、跨连接结算和过期回退的复杂度。</p>
+<h3 id="成本要量在哪一层">成本要量在哪一层</h3>
+<p>“增量比全量省”只有在说明计算、读取、传输和渲染分别发生什么时才有用。Grok 的 cursor 能减少回放尾部，却不自动免去读完整日志的成本；Codex 首屏分页限制装载，但兼容路径仍可能重复重建历史；Pi 快照可以直接给 UI 完整对象，但完整文本替换也会重复传输已有前缀；DeepSeek 的连续性修复需要保留缓冲，页返回前还可能有新事件到达。</p>
+<p>可以用四个量估算作者自己系统的代价：历史总字节 <code>H</code>、未见尾部字节 <code>D</code>、快照构造时间 <code>T</code>、期间事件速率 <code>λ</code>。重读全量的读取成本可随 <code>H</code> 增长，尾部传输可随 <code>D</code> 增长；先监听再快照至少要考虑约 <code>λ×T</code> 条待交接事件，还应计入快照安装和消费者变慢的时间。若一段长度为 L 的文本按单字符增长、每次都发送完整前缀，发送字符总量为 <code>L(L+1)/2</code>；实际实现可以合并和节流，不能拿这个极端公式冒充产品实测。</p>
+<p>本轮独立计量使用 10,000 条合成 JSON 记录，每条 80 个 ASCII 文本字符；完整日志为 1,028,891 字节，100 条尾部为 10,301 字节，而包含全部文本的单个快照仍有 800,025 字节。这只是可复现的序列化字节数，未测压缩、网络延迟、内存峰值或任何产品吞吐。它提醒我们：从“1 万条事件”变成“1 个对象”，并不必然让内容变小。<a href="/downloads/agent-harness/12/content/evidence/client-recovery-mechanism-results.json">计量输入与结果</a></p>
+<h3 id="可借鉴的协议，也各有边界">可借鉴的协议，也各有边界</h3>
+<p>SSE 的 <code>Last-Event-ID</code> 能让重连请求携带已记录的事件 ID，但服务端如何保存、解释及回放这段历史，仍需应用实现；浏览器重新建立流不等于服务端拥有事件仓库。<a target="_blank" rel="noopener" href="https://html.spec.whatwg.org/multipage/server-sent-events.html">WHATWG SSE 规范</a></p>
+<p>Kubernetes 的 list/watch 和 resourceVersion 提供了“先有一致列表，再从版本接事件”的成熟参照，同时明确处理旧版本不再可用的情况。可借鉴的是把失效和重新列举写进协议，而不是照搬字段名就获得同等语义。<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/using-api/api-concepts/">Kubernetes API 概念</a></p>
+<p>AI SDK 的恢复流方案则要求应用管理活动 stream ID 与消息存储，并接入 resumable stream 存储；文档也说明恢复与中止存在相互影响。它适合帮助应用延续正在生成的流，不能自动替代 Agent 工具状态、业务结果查询和任务幂等设计。以上外部材料核对于 2026-09-14，不作为四个固定提交的实现证据。<a target="_blank" rel="noopener" href="https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-resume-streams">AI SDK 恢复流</a></p>
+<h2 id="八、给自己的-Harness：先恢复可信视图，再承诺过程保真">八、给自己的 Harness：先恢复可信视图，再承诺过程保真</h2>
+<!-- harness-diagram:12-summary -->
+<figure class="article-figure"><a href="/images/agent-harness/12/12-summary.svg" target="_blank" rel="noopener" aria-label="查看完整配图：恢复决策：确认原任务、安装有边界的基线、接上连续事件、确认终态或明确缺口"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/12/12-summary-mobile.svg"><img src="/images/agent-harness/12/12-summary.svg" alt="恢复决策：确认原任务、安装有边界的基线、接上连续事件、确认终态或明确缺口" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 12 · 总结：恢复协议的终点是重新获得可信观察。已完成、仍运行、历史有缺口和无法确认，应当是不同的可见状态。本图为作者的设计建议。</em></p>
+<!-- /harness-diagram -->
+<p>我的设计判断是，先实现一个小而完整的恢复契约，优先覆盖开头那个场景。</p>
+<ol>
+<li><strong>创建时尽早返回稳定任务身份，并允许按该身份查询。</strong> 请求幂等键解决重复提交；观察游标解决重复读取，分别设计。若初次接纳响应丢失，应通过幂等键或任务检索确认是否已创建。</li>
+<li><strong>给快照一个明确覆盖边界。</strong> 可以是统一版本，也可以像各家那样使用有约束的 listener、watch 或 gate；必须说清哪些对象和哪些流被覆盖。快照尚未安装时保留旧视图，并标明它可能过时。</li>
+<li><strong>给事件定义可验证的合并方式。</strong> 全量按对象身份及版本替换，delta 按所属 attempt 和连续序号追加；旧连接结果直接失效。顺序不成立时补页或重新取基线，不能只用全局 maxSeen 把所有较小事件丢掉。</li>
+<li><strong>把终态做成可再次查询的事实。</strong> 最后通知丢失后，用同一 operation ID 查结果和状态；结果已确认就结束等待，仍运行就继续观察，未知就明确显示未知。无需再次执行任务来判断第一次是否结束。</li>
+<li><strong>公开保留和降级规则。</strong> 事件过期后若结果还在，可以显示最终结果并标注“部分过程不可恢复”；结果也不可得时应报告不可用。遇到缓冲上限，宁可切换重新同步，也不能静默丢掉一段后仍宣称连续。</li>
+</ol>
+<p>界面上建议至少区分“连接已断，任务状态待确认”“正在同步历史”“已接上实时进度”“结果已确认，部分过程缺失”和“无法确认原任务”。这些文案对应不同的恢复动作，避免一个永远旋转的 loading 把网络、执行和一致性问题全藏起来。</p>
+<p>本轮新增 18 个受控检查记录：12 个直接调用 Pi / DeepSeek 原模块；5 个作者机制反例或计量；1 个 Rust 提取程序执行 Codex 游标和 Grok 水位原函数。它们验证了本文声称的局部行为，也刻意保留了重复 entry、终态待结算、回放失败等反例。没有启动四产品完成真正的“网络断开—工具继续—重连—再次丢终态”验收；真实网络、进程重启、存储清理和多客户端同时恢复，仍需在产品环境按这些不变量进一步检验。<a href="/agent-harness/12-reproduce/">复现说明</a>、<a href="/agent-harness/12-evidence/">实验边界</a></p>
+<p>断线恢复最终考验的不是连接能否重建，而是系统还能拿出什么证据：这是原来的任务，这份状态覆盖到这里，后面的更新仍连续；如果其中一项无法成立，就明确告诉观察者缺了什么。四个 Harness 给出的具体做法不同，但只有把这些边界落实到代码、存储和界面，进度条的再次移动才有可靠含义。</p>
+<h2 id="配套材料">配套材料</h2>
+<p><a href="/agent-harness/12-evidence/">阅读实验说明</a> · <a href="/agent-harness/12-reproduce/">阅读复现入口</a> · <a href="/downloads/agent-harness/12/agent-harness-12.zip">下载正文、原图与实验材料</a>（<a href="/downloads/agent-harness/12/agent-harness-12.zip.sha256">SHA-256</a>）。</p>
+<p>下载包保留最终正文、7 张原图、固定版本记录、筛选实验源码与结果。18 项检查的运行对象和未验证范围见实验说明；不含上游源码或依赖。</p>
+<!-- harness-series-nav -->
+<h2 id="系列阅读">系列阅读</h2>
+<p><a href="/agent-harness/11-design/">上一篇：从四种 Harness 到自己的设计：用离线查看器检验取舍</a> · <a href="/agent-harness/00-overview/">返回系列导读</a></p>
+<!-- /harness-series-nav -->
+</div>
+    <nav class="post-tags" aria-label="文章标签"><a href="/tags/Agent-Harness/"># Agent Harness</a><a href="/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"># 源码阅读</a><a href="/tags/Coding-Agent/"># Coding Agent</a></nav>
+    <section class="share-section" aria-label="分享文章" data-share-title="断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复" data-quote-attribution="" data-share-description="网络断开后，Agent 可能仍在执行。沿四个 Harness 的真实客户端与存储链路，比较快照、增量、分页、终态确认和历史过期，说明如何恢复可信进度而不重复提交任务。" data-share-url="https://aresning.github.io/agent-harness/12-client-recovery/">
+  <h2>分享这篇文章</h2>
+  <div class="share-actions">
+    <button class="ui-button share-trigger" type="button" popovertarget="article-share-options" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-4 4 4-4 4 4M7 11H4v10h16V11h-3"/></svg>
+      分享文章<svg class="share-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+    </button>
+    <div class="share-popover" id="article-share-options" role="group" aria-label="分享方式">
+      <button class="ui-button share-option copy-link" type="button" data-clipboard-text="https://aresning.github.io/agent-harness/12-client-recovery/" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 13 4-4m-6 5-2 2a3 3 0 0 0 4 4l4-4a3 3 0 0 0 0-4m2-2 2-2a3 3 0 0 0-4-4l-4 4a3 3 0 0 0 0 4"/></svg><span>复制链接</span>
+      </button>
+      <a class="ui-button share-option share-x" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Faresning.github.io%2Fagent-harness%2F12-client-recovery%2F&amp;text=%E6%96%AD%E7%BA%BF%E4%B9%8B%E5%90%8E%EF%BC%8CAgent%20%E7%9A%84%E8%BF%9B%E5%BA%A6%E5%A6%82%E4%BD%95%E6%8E%A5%E4%B8%8A%EF%BC%9F%E5%9B%9B%E4%B8%AA%20Harness%20%E7%9A%84%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%81%A2%E5%A4%8D" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4l12 16h-4L4 4Zm16 0-7 8m-2 2-7 6"/></svg><span>分享到 X</span>
+      </a>
+      <a class="ui-button share-option" href="/images/share/aa8a0f11ae38f010.png" download="AresNing-article.png">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 17 6-6 5 5 3-3 4 4"/><circle cx="16" cy="8" r="1"/></svg><span>保存文章封面</span>
+      </a>
+      <button class="ui-button share-option native-share" type="button" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>更多方式…<small>打开系统分享</small></span>
+        <svg class="share-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L11 13M10 5H4v15h15v-6"/></svg>
+      </button>
+    </div>
+    <button class="ui-button outlined-button quote-open" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 17 6-6 5 5 3-3 4 4"/><circle cx="16" cy="8" r="1"/></svg>保存摘录图片</button>
+  </div>
+  <p class="share-status muted" role="status" aria-live="polite"></p>
+</section>
+<div class="ui-dialog" id="quote-dialog" aria-hidden="true" aria-labelledby="quote-title">
+  <div class="dialog-overlay" data-a11y-dialog-hide></div>
+  <div class="dialog-panel quote-panel" role="document">
+    <div class="dialog-heading"><h2 id="quote-title">保存摘录</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭摘录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label for="quote-select">选择内容</label><select class="ui-input" id="quote-select" autofocus></select>
+    <p class="muted">图片保留段落原文与出处；引用他人内容时，请保留原作者署名。</p>
+    <img class="quote-preview" alt="摘录图片预览" width="1080" height="1440" hidden>
+    <p class="quote-status muted" role="status" aria-live="polite"></p>
+    <a class="ui-button outlined-button quote-download" download="AresNing-excerpt.png" hidden>保存 PNG 图片</a>
+  </div>
+</div>
+
+    <aside class="author-note" aria-label="关于作者"><a class="author-name" href="/about/">AresNing</a><p>我是 AresNing，关注 Agent 系统与 Harness 的设计和实现。在这里记录源码阅读、实验与工程思考，探索 Agent 如何使用工具、管理上下文并可靠地完成任务。</p><a class="read-more" target="_blank" href="https://github.com/AresNing" rel="me noopener">在 GitHub 关注 ↗</a></aside>
+
+    
+    <section class="related-posts" aria-labelledby="related-title"><h2 id="related-title">接着读</h2><ul><li><a href="/agent-harness/00-overview/">一次 Agent 任务经过哪些层？从四种 Harness 看责任边界<span aria-hidden="true"> ↗</span></a><p>从一次“修复失败测试”出发，沿 Codex、Pi、DeepSeek Harness 与 Grok Build 的固定源码，比较输入接纳、工具执行、状态保存和任务结束的责任边界，区分源码推演与局部实验。</p></li><li><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界<span aria-hidden="true"> ↗</span></a><p>一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p></li></ul></section>
+    
+  </article>
+  <aside class="desktop-toc"><nav aria-label="文章目录"><h2>目录</h2><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%B0%E5%BA%95%E8%A6%81%E6%8E%A5%E5%9B%9E%E4%BB%80%E4%B9%88%EF%BC%9A%E7%BB%93%E6%9E%9C%E3%80%81%E7%8A%B6%E6%80%81%E3%80%81%E5%8E%86%E5%8F%B2%E5%92%8C%E6%8C%81%E7%BB%AD%E8%A7%82%E5%AF%9F"><span class="toc-text">一、到底要接回什么：结果、状态、历史和持续观察</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%A8%E9%87%8F%E4%B8%8E%E5%A2%9E%E9%87%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%92%E7%9B%B8%E4%BC%A4%E5%AE%B3"><span class="toc-text">二、全量与增量为什么会互相伤害</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Codex%EF%BC%9A%E9%87%8D%E6%96%B0%E9%99%84%E7%9D%80%E7%BA%BF%E7%A8%8B%EF%BC%8C%E9%87%8D%E5%BB%BA%E8%A7%86%E5%9B%BE%EF%BC%8C%E5%B9%B6%E9%9A%94%E7%A6%BB%E6%97%A7%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%B0%BE%E5%B7%B4"><span class="toc-text">三、Codex：重新附着线程，重建视图，并隔离旧连接的尾巴</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%AE%9E%E9%99%85-TUI-%E9%87%8D%E8%BF%9E%E5%85%A5%E5%8F%A3%E8%BF%9B%E5%85%A5"><span class="toc-text">从实际 TUI 重连入口进入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E7%85%A7%E4%B8%8E%E5%AE%9E%E6%97%B6%E4%BA%8B%E4%BB%B6%E5%A6%82%E4%BD%95%E6%8E%A5%E4%B8%8A"><span class="toc-text">快照与实时事件如何接上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%BF%E5%8E%86%E5%8F%B2%E5%92%8C%E9%87%8D%E5%A4%8D%E5%86%85%E5%AE%B9%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86"><span class="toc-text">长历史和重复内容怎么处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Pi%EF%BC%9Adurable-Lane-%E6%8F%90%E4%BE%9B%E5%BF%AB%E7%85%A7%EF%BC%8B%E7%BC%93%E5%86%B2%EF%BC%8C%E4%BD%86%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%85%A8%E9%83%A8-Pi"><span class="toc-text">四、Pi：durable Lane 提供快照＋缓冲，但实验性客户端不等于全部 Pi</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E9%80%89%E5%AF%B9%E5%85%A5%E5%8F%A3"><span class="toc-text">先选对入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E7%85%A7%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BC%9A%E6%BC%8F%E5%9C%A8-watch-%E4%B8%AD%E9%97%B4"><span class="toc-text">快照从哪里来，为什么不会漏在 watch 中间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E2%80%9D%E7%9A%84%E5%BF%AB%E7%85%A7%E8%83%BD%E6%9C%89%E5%A4%9A%E5%AE%8C%E6%95%B4"><span class="toc-text">“正在运行”的快照能有多完整</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81DeepSeek%EF%BC%9A%E6%8C%81%E4%B9%85%E4%BA%8B%E4%BB%B6%E7%AA%97%E5%8F%A3%E5%92%8C%E5%AE%9E%E6%97%B6%E6%96%87%E6%9C%AC%E5%89%8D%E7%BC%80%EF%BC%8C%E5%90%84%E8%87%AA%E6%9C%89%E8%BF%9E%E7%BB%AD%E6%80%A7%E8%A7%84%E5%88%99"><span class="toc-text">五、DeepSeek：持久事件窗口和实时文本前缀，各自有连续性规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-%E8%B7%AF%E5%BE%84%E4%B8%8E-SDK-%E9%98%9F%E5%88%97%E5%88%86%E5%BC%80%E8%AF%BB"><span class="toc-text">Web 路径与 SDK 队列分开读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E6%9D%A1%E6%B5%81%EF%BC%8C%E4%B8%A4%E4%B8%AA%E5%88%87%E7%82%B9"><span class="toc-text">两条流，两个切点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E9%A1%B5%E6%AD%A3%E5%9C%A8%E5%9B%9E%E6%9D%A5%EF%BC%8C%E5%AE%9E%E6%97%B6%E4%BA%8B%E4%BB%B6%E5%8F%88%E5%88%B0%E4%BA%86"><span class="toc-text">历史页正在回来，实时事件又到了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E5%B8%A7%E5%8F%88%E4%B8%A2%E4%BA%86%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BB%8D%E5%8F%AF%E8%83%BD%E5%8D%A1%E4%BD%8F"><span class="toc-text">最后一帧又丢了，为什么仍可能卡住</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81Grok-Build%EF%BC%9A%E5%AE%9E%E9%99%85-pager-%E7%94%A8-load-%E8%A1%A5%E6%97%A5%E5%BF%97%EF%BC%8C%E5%86%8D%E5%88%87%E5%9B%9E%E5%AE%9E%E6%97%B6%E8%BE%93%E5%87%BA"><span class="toc-text">六、Grok Build：实际 pager 用 load 补日志，再切回实时输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%90%8D%E4%B8%8D%E8%83%BD%E6%9B%BF%E4%BB%A3%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-text">方法名不能替代调用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%BB%E5%AE%8C%E6%97%A5%E5%BF%97%E8%BF%98%E8%A6%81%E5%86%8D%E8%AF%BB%E4%B8%80%E6%AC%A1%E5%B0%BE%E5%B7%B4"><span class="toc-text">为什么读完日志还要再读一次尾巴</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cursor%E3%80%81%E5%8E%BB%E9%87%8D%E5%92%8C%E5%9B%9E%E6%94%BE%E4%B8%8D%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B"><span class="toc-text">cursor、去重和回放不是一回事</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E7%A1%AE%E5%AE%9E%E4%B8%8D%E6%89%BF%E8%AF%BA%E9%87%8D%E6%94%BE"><span class="toc-text">什么确实不承诺重放</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%8A%8A%E5%9B%9B%E5%AE%B6%E7%9A%84%E6%89%BF%E8%AF%BA%E6%94%BE%E5%88%B0%E5%90%8C%E4%B8%80%E5%BC%A0%E8%A1%A8%E9%87%8C"><span class="toc-text">七、把四家的承诺放到同一张表里</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E6%9C%AC%E8%A6%81%E9%87%8F%E5%9C%A8%E5%93%AA%E4%B8%80%E5%B1%82"><span class="toc-text">成本要量在哪一层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%80%9F%E9%89%B4%E7%9A%84%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B9%9F%E5%90%84%E6%9C%89%E8%BE%B9%E7%95%8C"><span class="toc-text">可借鉴的协议，也各有边界</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84-Harness%EF%BC%9A%E5%85%88%E6%81%A2%E5%A4%8D%E5%8F%AF%E4%BF%A1%E8%A7%86%E5%9B%BE%EF%BC%8C%E5%86%8D%E6%89%BF%E8%AF%BA%E8%BF%87%E7%A8%8B%E4%BF%9D%E7%9C%9F"><span class="toc-text">八、给自己的 Harness：先恢复可信视图，再承诺过程保真</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></aside>
+</div>
+</main>
+  <footer class="site-footer shell">
+    <div><span class="footer-name">AresNing · Hungry &amp; Humble</span><small>© 2022–2026 AresNing · Powered by Hexo</small></div>
+    <a target="_blank" href="https://github.com/AresNing" rel="me noopener">GitHub <span aria-hidden="true">↗</span></a>
+  </footer>
+  <div class="ui-dialog" id="search-dialog" aria-hidden="true" aria-labelledby="search-title" data-search-url="/search.xml" data-fuse-url="/lib/paper/fuse.min.mjs">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+    <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
+    </div>
+  </div>
+  <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+      <div class="dialog-heading"><h2 id="menu-title">导航</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <a href="/" aria-current="page">文章</a>
+        <a href="/archives/">归档</a>
+        <a href="/categories/">分类</a>
+        <a href="/tags/">标签</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>

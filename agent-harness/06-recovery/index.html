@@ -77,6 +77,7 @@
 <blockquote>
 <p>版本与证据：源码基线固定于 2026-09-12，实验记录来自 2026-09-12 至 13 日；本文于 2026-09-14 润色，未重新执行实验。源码事实、局部实验观察与设计判断分别表述，不代表四产品端到端验收。详见<a href="/agent-harness/06-evidence/">本篇实验说明</a>。</p>
 </blockquote>
+<p>延伸阅读：本篇关注执行失败后的重试、检查点与恢复。如果服务端仍在运行，只是客户端断线，问题会转为如何重新确认状态、补历史并接回实时进度，见<a href="https://aresning.github.io/agent-harness/12-client-recovery/">第 12 篇：断线之后，Agent 的进度如何接上？</a>。</p>
 <h2 id="用故障窗口替代一个含糊的“已保存”">用故障窗口替代一个含糊的“已保存”</h2>
 <p>工具执行至少经过以下状态：意图被记录、实际执行开始、外部效果提交、结果被 Harness 接纳、结果达到后端声明的持久性边界、结果进入可供下一轮使用的历史。实现可以合并其中某些边界，却不能假定所有边界天然原子。</p>
 <figure class="article-figure"><a href="/images/agent-harness/06/06-structure.svg" target="_blank" rel="noopener" aria-label="查看完整配图：外部效果与本地记录之间的故障窗口"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/06/06-structure-mobile.svg"><img src="/images/agent-harness/06/06-structure.svg" alt="外部效果与本地记录之间的故障窗口" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>

@@ -80,72 +80,72 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
+        <h2><a href="/agent-harness/12-client-recovery/">断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复</a></h2>
+        <p class="article-summary">网络断开后，Agent 可能仍在执行。沿四个 Harness 的真实客户端与存储链路，比较快照、增量、分页、终态确认和历史过期，说明如何恢复可信进度而不重复提交任务。</p>
+        <a class="read-more" href="/agent-harness/12-client-recovery/" aria-label="阅读全文：断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+  
+    <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/00-overview/">一次 Agent 任务经过哪些层？从四种 Harness 看责任边界</a></h2>
         <p class="article-summary">从一次“修复失败测试”出发，沿 Codex、Pi、DeepSeek Harness 与 Grok Build 的固定源码，比较输入接纳、工具执行、状态保存和任务结束的责任边界，区分源码推演与局部实验。</p>
         <a class="read-more" href="/agent-harness/00-overview/" aria-label="阅读全文：一次 Agent 任务经过哪些层？从四种 Harness 看责任边界">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界</a></h2>
         <p class="article-summary">一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p>
         <a class="read-more" href="/agent-harness/01-turn-boundaries/" aria-label="阅读全文：Agent 的一轮何时结束？四种 Harness 的执行边界">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/02-model-streams/">模型流何时可以执行工具？四种 Harness 的终态与重试</a></h2>
         <p class="article-summary">工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。</p>
         <a class="read-more" href="/agent-harness/02-model-streams/" aria-label="阅读全文：模型流何时可以执行工具？四种 Harness 的终态与重试">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/05-permissions/">一次批准改变了什么？四种 Harness 的权限与沙箱</a></h2>
         <p class="article-summary">用户批准命令后，执行仍可能被沙箱或网络策略拒绝。比较四种 Harness 的批准对象、逐调用提权、重试资格与决策来源，区分授权判断和实际执行隔离。</p>
         <a class="read-more" href="/agent-harness/05-permissions/" aria-label="阅读全文：一次批准改变了什么？四种 Harness 的权限与沙箱">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/04-tools/">工具并发怎样保持顺序？四种 Harness 的准备、执行与提交</a></h2>
         <p class="article-summary">多个工具同时运行，不代表审批、后处理和历史提交也能并发。沿四种 Harness 的调度器比较屏障、执行池、锁和结果顺序，解释快工具为什么仍会等待。</p>
         <a class="read-more" href="/agent-harness/04-tools/" aria-label="阅读全文：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/03-context/">上下文压缩如何保持一致？切点、替换与请求重建</a></h2>
         <p class="article-summary">原始日志里保留了要求，不代表下一次模型请求包含它。比较四种 Harness 的上下文切点、摘要替换与请求重建，区分结构合法性、预算估算和约束保留质量。</p>
         <a class="read-more" href="/agent-harness/03-context/" aria-label="阅读全文：上下文压缩如何保持一致？切点、替换与请求重建">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/07-extensions/">多个 Hook 如何协作？四种 Harness 的扩展与卸载</a></h2>
         <p class="article-summary">两个 Hook 同时修改参数时，谁的结果生效？比较四种 Harness 的原始输入、顺序变换和失败聚合，再追踪插件卸载如何等待尚未完成的初始化与资源清理。</p>
         <a class="read-more" href="/agent-harness/07-extensions/" aria-label="阅读全文：多个 Hook 如何协作？四种 Harness 的扩展与卸载">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/06-recovery/">失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略</a></h2>
         <p class="article-summary">工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。</p>
         <a class="read-more" href="/agent-harness/06-recovery/" aria-label="阅读全文：失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
-    
-      <article class="article-row">
+  
+    <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/08-subagents/">子 Agent 何时才算结束？创建、接纳与资源回收</a></h2>
         <p class="article-summary">spawn 返回错误不一定表示子任务从未创建，子任务给出结果也不一定已经退出。比较四种 Harness 的配置继承、首条输入、取消和资源回收，检查每个阶段的责任归属。</p>
         <a class="read-more" href="/agent-harness/08-subagents/" aria-label="阅读全文：子 Agent 何时才算结束？创建、接纳与资源回收">阅读全文 <span aria-hidden="true">↗</span></a>
-      </article>
-    
-      <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
-        <h2><a href="/agent-harness/09-clients/">界面显示已完成时，Harness 承诺了什么？</a></h2>
-        <p class="article-summary">请求成功、运行结束和客户端看到结果，是不同的确认。比较四种 Harness 的应答、输出背压与断连处理，解释为什么超时不等于任务取消，收到通知也不等于状态已经应用。</p>
-        <a class="read-more" href="/agent-harness/09-clients/" aria-label="阅读全文：界面显示已完成时，Harness 承诺了什么？">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
     

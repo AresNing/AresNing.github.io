@@ -1,0 +1,1105 @@
+{
+  "figures": 7,
+  "layout": "single-column; designed for 390px display width",
+  "geometry": "estimated widths checked; rendered visual review recorded separately",
+  "diagrams": [
+    {
+      "name": "12",
+      "title": "断线之后，进度如何接上？",
+      "path": "diagrams/12.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "断线之后，进度如何接上？",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 504
+        },
+        {
+          "text": "同一任务的五个观察时刻",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 308
+        },
+        {
+          "text": "01  客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "已收到半段文本",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 238
+        },
+        {
+          "text": "任务身份已知；界面显示运行中",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "02  连接中断",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "工具仍在服务端执行",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "看不到更新，不等于任务停止",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 390
+        },
+        {
+          "text": "03  重新观察",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "旧历史与新事件交错",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "迟到快照不能覆盖新进度",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 330
+        },
+        {
+          "text": "04  第二次遗漏",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 194.4
+        },
+        {
+          "text": "最后的完成通知丢失",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "应查询原任务，确认结果与状态",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "05  恢复目标",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "可信视图＋持续更新",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "缺失的过程必须明确标记",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 330
+        },
+        {
+          "text": "场景假设：服务进程存活，只有客户端断连。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 640
+        },
+        {
+          "text": "作者场景 · 具体实现与边界见正文",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 359.9
+        }
+      ],
+      "svgSha256": "c5f3f6eff0f49daa5b8438e9e4986eb518c841cd20c6b92d348f6c4ff7123fd7",
+      "renderedPngSha256": "576d25521370c93ef1e75a470019a2c714f6e761cba46bab8b35ec44b7bade88"
+    },
+    {
+      "name": "12-race",
+      "title": "快照与事件，共用一个切点",
+      "path": "diagrams/12-race.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "快照与事件，共用一个切点",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 504
+        },
+        {
+          "text": "作者设计的交接协议；不是四家统一接口",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 504
+        },
+        {
+          "text": "01  服务端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "先建立事件缓冲",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 238
+        },
+        {
+          "text": "准备快照时，继续接收后续事件",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "02  服务端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "取得快照 S(2) = AB",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 323.0
+        },
+        {
+          "text": "快照已覆盖事件 1、2",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 289.5
+        },
+        {
+          "text": "03  客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "先安装快照及切点 2",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 309.4
+        },
+        {
+          "text": "旧连接的响应不再有权改写视图",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "04  客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "只接入连续的切点后事件",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 374
+        },
+        {
+          "text": "丢弃 1、2；接入 3=C；去重重复 3",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 478.5
+        },
+        {
+          "text": "05  客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "得到 ABC；仍检查缺口",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 346.8
+        },
+        {
+          "text": "若先收到 5 而缺 4，补页或重建",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 442.5
+        },
+        {
+          "text": "没有切点：全量可能覆盖新进度，",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 480
+        },
+        {
+          "text": "增量可能重复追加文字。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1268,
+          "estimatedWidth": 352
+        },
+        {
+          "text": "作者机制实验 · controlled schedule",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 416.3
+        }
+      ],
+      "svgSha256": "a3299cda386ac42c8746fed1fc5ebad9113df3df7fae15d2d5e9a1a2a0f957cc",
+      "renderedPngSha256": "f815f1e9a376845cd5f7ca0dc7e4a5d5af8d7b8b0c98b82b199fcdcbb30e10ec"
+    },
+    {
+      "name": "12-codex",
+      "title": "Codex：重新附着原线程",
+      "path": "diagrams/12-codex.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "Codex：重新附着原线程",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 451.5
+        },
+        {
+          "text": "远端 TUI → App Server → 历史与活动 turn",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 581.0
+        },
+        {
+          "text": "01  TUI",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 103.9
+        },
+        {
+          "text": "新连接＋bootstrap",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 304.3
+        },
+        {
+          "text": "已知 thread ID；不自动重发 prompt",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 520.5
+        },
+        {
+          "text": "02  TUI → App Server",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 297.0
+        },
+        {
+          "text": "调用 thread/resume",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 329.8
+        },
+        {
+          "text": "读取历史；为运行中线程准备交接",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 450
+        },
+        {
+          "text": "03  线程监听器",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 194.4
+        },
+        {
+          "text": "合并活动 turn，加入订阅",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 399.5
+        },
+        {
+          "text": "resume 命令组织快照与通知边界",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 445.5
+        },
+        {
+          "text": "04  TUI",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 103.9
+        },
+        {
+          "text": "安装新通道和线程视图",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 340
+        },
+        {
+          "text": "隔离旧工作；分页补足较早的内容",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 450
+        },
+        {
+          "text": "05  历史＋实时事件",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 248.4
+        },
+        {
+          "text": "继续更新原 thread",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 300.9
+        },
+        {
+          "text": "局部全文覆盖 delta，不是通用回放",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 489.0
+        },
+        {
+          "text": "分页游标用于定位；",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 288
+        },
+        {
+          "text": "不等于冻结整个历史版本。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1268,
+          "estimatedWidth": 384
+        },
+        {
+          "text": "固定源码 C12 / C12c / C12f / C12k",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 408.3
+        }
+      ],
+      "svgSha256": "e39faad37632de229c33cb7ce9314205ffbf54c89044bfd92785a7cf4624851f",
+      "renderedPngSha256": "d03f8e3943183bcac15134319fb18eb9b034e99d154f4aba34de9c945447d6f4"
+    },
+    {
+      "name": "12-pi",
+      "title": "Pi：快照安装后再放行事件",
+      "path": "diagrams/12-pi.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "Pi：快照安装后再放行事件",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 508.2
+        },
+        {
+          "text": "experimental mini → Lane → durable Harness",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 646.8
+        },
+        {
+          "text": "01  mini 客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 214.6
+        },
+        {
+          "text": "Sessions.attach → lane.watch",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 523.6
+        },
+        {
+          "text": "取得新 subscription ID 与快照",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 460.5
+        },
+        {
+          "text": "02  Lane 串行线",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 214.6
+        },
+        {
+          "text": "先装观察者，再读快照",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 340
+        },
+        {
+          "text": "分支、队列、operation、最后结果",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 478.5
+        },
+        {
+          "text": "03  事件总线",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "暂存快照交接后的事件",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 340
+        },
+        {
+          "text": "resnapshot 用边界划分新旧阶段",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 451.5
+        },
+        {
+          "text": "04  mini 客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 214.6
+        },
+        {
+          "text": "先安装 snapshot，再 start",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 450.5
+        },
+        {
+          "text": "新订阅开始后移除旧订阅",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 330
+        },
+        {
+          "text": "05  当前订阅",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "完整 message 替换＋事件折叠",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 474.3
+        },
+        {
+          "text": "重复 entry 并不自动去重",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 355.5
+        },
+        {
+          "text": "工具恢复到所存检查点；",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 352
+        },
+        {
+          "text": "本入口未承诺自动重连。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1268,
+          "estimatedWidth": 352
+        },
+        {
+          "text": "固定源码 P12 / P12c / P12e / P12f",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 408.3
+        }
+      ],
+      "svgSha256": "d30946b22b8464e5fc384a15babcb100f1835b80a527ad249de0af1108443b05",
+      "renderedPngSha256": "4f24b1347e29c5328787df0691fec11df25869517ff5bc4b5caa55d0f8430a9c"
+    },
+    {
+      "name": "12-deepseek",
+      "title": "DeepSeek：两条流分别对齐",
+      "path": "diagrams/12-deepseek.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "DeepSeek：两条流分别对齐",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 520.8
+        },
+        {
+          "text": "Web Controller → Gateway → SessionQuery",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 600.6
+        },
+        {
+          "text": "01  服务端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "先监听，再读取会话基线",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 374
+        },
+        {
+          "text": "持久历史窗口＋实时 assistant 前缀",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 511.5
+        },
+        {
+          "text": "02  历史事件流",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 194.4
+        },
+        {
+          "text": "以 session seq 维持连续",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 413.1
+        },
+        {
+          "text": "基线前事件丢弃；缺口触发补页",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "03  实时文本流",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 194.4
+        },
+        {
+          "text": "attempt＋index＋revision",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 442.0
+        },
+        {
+          "text": "基线前缀与后续 chunk 连续衔接",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 445.5
+        },
+        {
+          "text": "04  Web 客户端",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 199.8
+        },
+        {
+          "text": "新 generation 淘汰旧页",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 394.4
+        },
+        {
+          "text": "翻旧页可与新事件追加并行",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 360
+        },
+        {
+          "text": "05  结算显示",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "durable 记录等待匹配 end",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 428.4
+        },
+        {
+          "text": "end 丢失需恢复触发；新基线可确认",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 486.0
+        },
+        {
+          "text": "Host 实时前缀在内存中；它不等于磁盘历史。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 664.0
+        },
+        {
+          "text": "固定源码 D12b / D12f / D12g / D12h",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 420.9
+        }
+      ],
+      "svgSha256": "8ec7511565546c095fe2abd15cb87eccb23477b4808c4d0b9e0ef00bf69823b4",
+      "renderedPngSha256": "65593ecd47c162b55da58206e897892e0a13a677209778d69df61f2eebd62114"
+    },
+    {
+      "name": "12-grok",
+      "title": "Grok：回放尾部接上实时输出",
+      "path": "diagrams/12-grok.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "Grok：回放尾部接上实时输出",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 554.4
+        },
+        {
+          "text": "pager → ACP session/load → updates.jsonl",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 616.0
+        },
+        {
+          "text": "01  pager",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 133.6
+        },
+        {
+          "text": "以原 session＋cursor 发起 load",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 544.0
+        },
+        {
+          "text": "这里用 load；resume 可跳过回放",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 468.0
+        },
+        {
+          "text": "02  resident 会话",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 247.0
+        },
+        {
+          "text": "关闭 live gate，尝试 flush",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 469.2
+        },
+        {
+          "text": "任务可能继续；先协调对外输出",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "03  日志回放",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 167.4
+        },
+        {
+          "text": "读取日志，记下末尾字节位置",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 442
+        },
+        {
+          "text": "cursor 可靠则补尾，否则全量回放",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 475.5
+        },
+        {
+          "text": "04  日志 → gateway",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 261.9
+        },
+        {
+          "text": "再次 flush，同步入队新增尾部",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 486.2
+        },
+        {
+          "text": "完成交接后，重新打开 live gate",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 465.0
+        },
+        {
+          "text": "05  pager",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 133.6
+        },
+        {
+          "text": "提交全量或增量视图",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "失败恢复旧视图；两条流分别去重",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 450
+        },
+        {
+          "text": "回放过滤部分 InProgress；flush 失败另有",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 651.2
+        },
+        {
+          "text": "降级。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1268,
+          "estimatedWidth": 96
+        },
+        {
+          "text": "固定源码 G12 / G12f / G12i / G12k",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 408.3
+        }
+      ],
+      "svgSha256": "c21860ec95c50bd5c6f0b71f02020c63bbba8023b1aecdd1fde42f4670fbd8e7",
+      "renderedPngSha256": "a0c18f81c77925fec6a2519659fdef5a8d68bf01ffbcc949f108b6d174d20bed"
+    },
+    {
+      "name": "12-summary",
+      "title": "恢复协议要交代五件事",
+      "path": "diagrams/12-summary.svg",
+      "viewBox": "0 0 780 1370",
+      "contentFontMin": 30,
+      "mobileAt390ContentMinPx": 15,
+      "textGeometry": [
+        {
+          "text": "AGENT HARNESS / 12",
+          "fontSize": 25,
+          "x": 40,
+          "y": 53,
+          "estimatedWidth": 247.5
+        },
+        {
+          "text": "恢复协议要交代五件事",
+          "fontSize": 42,
+          "x": 40,
+          "y": 111,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "作者建议：每一个承诺都要有验证方法",
+          "fontSize": 28,
+          "x": 40,
+          "y": 157,
+          "estimatedWidth": 476
+        },
+        {
+          "text": "01  身份",
+          "fontSize": 27,
+          "x": 55,
+          "y": 235,
+          "estimatedWidth": 113.4
+        },
+        {
+          "text": "这是原来的任务",
+          "fontSize": 34,
+          "x": 55,
+          "y": 282,
+          "estimatedWidth": 238
+        },
+        {
+          "text": "不拿重新执行来探测旧任务的状态",
+          "fontSize": 30,
+          "x": 55,
+          "y": 324,
+          "estimatedWidth": 450
+        },
+        {
+          "text": "02  基线",
+          "fontSize": 27,
+          "x": 55,
+          "y": 429,
+          "estimatedWidth": 113.4
+        },
+        {
+          "text": "这份视图覆盖到哪里",
+          "fontSize": 34,
+          "x": 55,
+          "y": 476,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "状态、结果、事件各自声明覆盖域",
+          "fontSize": 30,
+          "x": 55,
+          "y": 518,
+          "estimatedWidth": 450
+        },
+        {
+          "text": "03  连续性",
+          "fontSize": 27,
+          "x": 55,
+          "y": 623,
+          "estimatedWidth": 140.4
+        },
+        {
+          "text": "后续更新有没有缺口",
+          "fontSize": 34,
+          "x": 55,
+          "y": 670,
+          "estimatedWidth": 306
+        },
+        {
+          "text": "重复去重；乱序缓冲；失效则重建",
+          "fontSize": 30,
+          "x": 55,
+          "y": 712,
+          "estimatedWidth": 450
+        },
+        {
+          "text": "04  终态",
+          "fontSize": 27,
+          "x": 55,
+          "y": 817,
+          "estimatedWidth": 113.4
+        },
+        {
+          "text": "结束是可以再次查询的事实",
+          "fontSize": 34,
+          "x": 55,
+          "y": 864,
+          "estimatedWidth": 408
+        },
+        {
+          "text": "通知丢失后，按原身份确认结果",
+          "fontSize": 30,
+          "x": 55,
+          "y": 906,
+          "estimatedWidth": 420
+        },
+        {
+          "text": "05  降级",
+          "fontSize": 27,
+          "x": 55,
+          "y": 1011,
+          "estimatedWidth": 113.4
+        },
+        {
+          "text": "哪些过程已经不可恢复",
+          "fontSize": 34,
+          "x": 55,
+          "y": 1058,
+          "estimatedWidth": 340
+        },
+        {
+          "text": "结果仍在可展示；缺口不能冒充完整",
+          "fontSize": 30,
+          "x": 55,
+          "y": 1100,
+          "estimatedWidth": 480
+        },
+        {
+          "text": "连接恢复、执行恢复、历史恢复分别验证。",
+          "fontSize": 32,
+          "x": 55,
+          "y": 1226,
+          "estimatedWidth": 608
+        },
+        {
+          "text": "作者设计判断 · 非四产品完整验收结论",
+          "fontSize": 23,
+          "x": 40,
+          "y": 1340,
+          "estimatedWidth": 405.9
+        }
+      ],
+      "svgSha256": "bd521d134ed7b1bda473943b2f583a0abe78c955f5598a25a8bf16cf0642033c",
+      "renderedPngSha256": "9b18b0fe074ce47c7cebe2ff2d66c213cb6caf53601b471fc59258dbfb157e4e"
+    }
+  ],
+  "visualReview": {
+    "date": "2026-09-14",
+    "method": "All seven SVGs rendered to 390x685 PNGs and inspected in a full-resolution contact sheet; orphan punctuation corrected and final render rechecked.",
+    "outcome": "No clipping or overlap observed; body text readable at 390px figure width.",
+    "browserAcceptance": "Not performed here; delegated to publisher."
+  }
+}

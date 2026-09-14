@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="1370" viewBox="0 0 780 1370" role="img" aria-labelledby="title desc">
+<title id="title">恢复协议要交代五件事</title><desc id="desc">作者建议：每一个承诺都要有验证方法。身份:这是原来的任务，不拿重新执行来探测旧任务的状态；基线:这份视图覆盖到哪里，状态、结果、事件各自声明覆盖域；连续性:后续更新有没有缺口，重复去重；乱序缓冲；失效则重建；终态:结束是可以再次查询的事实，通知丢失后，按原身份确认结果；降级:哪些过程已经不可恢复，结果仍在可展示；缺口不能冒充完整。连接恢复、执行恢复、历史恢复分别验证。</desc>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#292824}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#968A7A" stroke-width="1.5"/></marker></defs>
+<rect width="780" height="1370" rx="20" fill="#F7F5EF"/>
+<text x="40" y="53" font-size="25" font-weight="600" style="fill:#964D3B">AGENT HARNESS / 12</text>
+<text x="40" y="111" font-size="42" font-weight="700" style="fill:#292824">恢复协议要交代五件事</text>
+<text x="40" y="157" font-size="28" font-weight="400" style="fill:#68645E">作者建议：每一个承诺都要有验证方法</text>
+<rect x="32" y="196" width="716" height="158" rx="18" fill="white" stroke="#DCD7CD" stroke-width="2"/>
+<text x="55" y="235" font-size="27" font-weight="650" style="fill:#964D3B">01  身份</text>
+<text x="55" y="282" font-size="34" font-weight="650" style="fill:#292824">这是原来的任务</text>
+<text x="55" y="324" font-size="30" font-weight="400" style="fill:#68645E">不拿重新执行来探测旧任务的状态</text>
+<path d="M390 354 L390 380" stroke="#968A7A" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="390" width="716" height="158" rx="18" fill="white" stroke="#DCD7CD" stroke-width="2"/>
+<text x="55" y="429" font-size="27" font-weight="650" style="fill:#964D3B">02  基线</text>
+<text x="55" y="476" font-size="34" font-weight="650" style="fill:#292824">这份视图覆盖到哪里</text>
+<text x="55" y="518" font-size="30" font-weight="400" style="fill:#68645E">状态、结果、事件各自声明覆盖域</text>
+<path d="M390 548 L390 574" stroke="#968A7A" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="584" width="716" height="158" rx="18" fill="white" stroke="#DCD7CD" stroke-width="2"/>
+<text x="55" y="623" font-size="27" font-weight="650" style="fill:#964D3B">03  连续性</text>
+<text x="55" y="670" font-size="34" font-weight="650" style="fill:#292824">后续更新有没有缺口</text>
+<text x="55" y="712" font-size="30" font-weight="400" style="fill:#68645E">重复去重；乱序缓冲；失效则重建</text>
+<path d="M390 742 L390 768" stroke="#968A7A" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="778" width="716" height="158" rx="18" fill="white" stroke="#DCD7CD" stroke-width="2"/>
+<text x="55" y="817" font-size="27" font-weight="650" style="fill:#964D3B">04  终态</text>
+<text x="55" y="864" font-size="34" font-weight="650" style="fill:#292824">结束是可以再次查询的事实</text>
+<text x="55" y="906" font-size="30" font-weight="400" style="fill:#68645E">通知丢失后，按原身份确认结果</text>
+<path d="M390 936 L390 962" stroke="#968A7A" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="972" width="716" height="158" rx="18" fill="white" stroke="#DCD7CD" stroke-width="2"/>
+<text x="55" y="1011" font-size="27" font-weight="650" style="fill:#964D3B">05  降级</text>
+<text x="55" y="1058" font-size="34" font-weight="650" style="fill:#292824">哪些过程已经不可恢复</text>
+<text x="55" y="1100" font-size="30" font-weight="400" style="fill:#68645E">结果仍在可展示；缺口不能冒充完整</text>
+<rect x="32" y="1180" width="716" height="116" rx="18" fill="#EFEBE3"/>
+<text x="55" y="1226" font-size="32" font-weight="600" style="fill:#292824">连接恢复、执行恢复、历史恢复分别验证。</text>
+<text x="40" y="1340" font-size="23" font-weight="400" style="fill:#68645E">作者设计判断 · 非四产品完整验收结论</text>
+</svg>
