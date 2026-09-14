@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Codex：等待、执行与结果收集分别推进</title>
+<desc id="desc">result_ready 早于调用者编码或有序收集，不表示已进入下次模型输入。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#6b8592"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#6b8592;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#f5f8fa"/>
+<text x="64" y="53" font-size="19" fill="#007b70" text-anchor="start" font-weight="400">AGENT HARNESS   /   04   /   Codex</text>
+<text x="64" y="130" font-size="42" fill="#17313d" text-anchor="start" font-weight="700">Codex：等待、执行与结果收集分别推进</text>
+<text x="64" y="166" font-size="21" fill="#536c78" text-anchor="start" font-weight="400">调用 / 数据的推进路径</text>
+<rect x="174" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="206" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">01</text>
+<rect x="64" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="64" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="88" y="367" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">等待 runtime</text>
+<text x="88" y="401" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">ready</text>
+<text x="88" y="436" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">运行环境先准备好</text>
+<path class="edge" d="M352 414 L386 414"/>
+<rect x="506" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="538" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">02</text>
+<rect x="396" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="396" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="420" y="366" font-size="27" fill="#17313d" text-anchor="start" font-weight="650">共享 / 独占准入锁</text>
+<text x="420" y="401" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">决定并发资格</text>
+<path class="edge" d="M684 414 L718 414"/>
+<rect x="838" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="870" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">03</text>
+<rect x="728" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="728" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="752" y="366" font-size="27" fill="#17313d" text-anchor="start" font-weight="650">handler 执行完成</text>
+<text x="752" y="401" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">记录 result_ready</text>
+<path class="edge" d="M1016 414 L1050 414"/>
+<rect x="1170" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="1202" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">04</text>
+<rect x="1060" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="1060" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="1084" y="367" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">调用者有序收集</text>
+<text x="1084" y="402" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">再组织模型可用结果</text>
+<text x="132" y="619" font-size="27" fill="#536c78" text-anchor="start" font-weight="400">读图时沿箭头寻找交接点，再回到正文核对输入、结果与失败分支。</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#e5f2ee" stroke="#c7dfd6"/>
+<text x="87" y="784" font-size="25" fill="#17313d" text-anchor="start" font-weight="500">result_ready 早于调用者编码或有序收集，不表示已进入下次模型输入。</text>
+<text x="64" y="869" font-size="18" fill="#536c78" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#536c78" text-anchor="end" font-weight="400">C04 · C10</text>
+</svg>

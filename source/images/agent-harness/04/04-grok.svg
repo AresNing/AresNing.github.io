@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Grok：局部路径互斥，不等于业务依赖顺序</title>
+<desc id="desc">完成序后处理与模型最初调用顺序是不同维度。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#968A7A"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#968A7A;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<text x="64" y="53" font-size="19" fill="#964D3B" text-anchor="start" font-weight="400">AGENT HARNESS   /   04   /   Grok Build</text>
+<text x="64" y="130" font-size="42" fill="#292824" text-anchor="start" font-weight="700">Grok：局部路径互斥，不等于业务依赖顺序</text>
+<text x="64" y="166" font-size="21" fill="#68645E" text-anchor="start" font-weight="400">分支关系示意，不表示耗时比例</text>
+<rect x="480" y="193" width="480" height="119" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="480" y="211" width="5" height="83" rx="2" fill="#964D3B"/>
+<text x="504" y="236" font-size="28" fill="#292824" text-anchor="start" font-weight="650">一批可调度工具</text>
+<text x="504" y="271" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">建立本批所需路径约束</text>
+<rect x="100" y="370" width="540" height="132" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="100" y="388" width="5" height="96" rx="2" fill="#964D3B"/>
+<text x="124" y="413" font-size="28" fill="#292824" text-anchor="start" font-weight="650">路径相关的调用</text>
+<text x="124" y="448" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">竞争相应局部锁</text>
+<rect x="800" y="370" width="540" height="132" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="800" y="388" width="5" height="96" rx="2" fill="#964D3B"/>
+<text x="824" y="413" font-size="28" fill="#292824" text-anchor="start" font-weight="650">互不冲突的调用</text>
+<text x="824" y="448" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">可以并发推进</text>
+<rect x="400" y="582" width="640" height="125" rx="16" fill="#eef4fb" stroke="#DCD7CD"/>
+<rect x="400" y="600" width="5" height="89" rx="2" fill="#964D3B"/>
+<text x="424" y="625" font-size="28" fill="#292824" text-anchor="start" font-weight="650">完成序 drainer</text>
+<text x="424" y="660" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">每项完成即进入，不等全部</text>
+<path class="edge" d="M720 316 L720 340 L370 340 L370 362"/>
+<path class="edge" d="M370 506 L370 540 L720 540 L720 574"/>
+<path class="edge" d="M720 316 L720 340 L1070 340 L1070 362"/>
+<path class="edge" d="M1070 506 L1070 540 L720 540 L720 574"/>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="87" y="784" font-size="25" fill="#292824" text-anchor="start" font-weight="500">完成序后处理与模型最初调用顺序是不同维度。</text>
+<text x="64" y="869" font-size="18" fill="#68645E" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#68645E" text-anchor="end" font-weight="400">G04d · G04c</text>
+</svg>

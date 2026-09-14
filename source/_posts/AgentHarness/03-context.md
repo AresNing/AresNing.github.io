@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/03-context/
-related: ["agent-harness/02-model-streams/"]
+related: ["agent-harness/02-model-streams/", "agent-harness/04-tools/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/03/03.svg" target="_blank" rel="noopener" aria-label="查看完整配图：上下文构造与压缩：检查模型实际输入，才知道是否遗漏"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-mobile.svg"><img src="/images/agent-harness/03/03.svg" alt="上下文构造与压缩：检查模型实际输入，才知道是否遗漏" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -261,10 +261,11 @@ shell 捕获带 `context_overflow` 的 FullReplaceError 后，才推进输入阶
 
 下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。
 
+
 <!-- harness-series-nav -->
 
 ## 系列阅读
 
-[上一篇：模型流何时可以执行工具？四种 Harness 的终态与重试](/agent-harness/02-model-streams/)
+[上一篇：模型流何时可以执行工具？四种 Harness 的终态与重试](/agent-harness/02-model-streams/) · [下一篇：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交](/agent-harness/04-tools/)
 
 <!-- /harness-series-nav -->
