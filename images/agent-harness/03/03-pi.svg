@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Pi：预算约束还要服从合法切点</title>
+<desc id="desc">近期 token 预算是近似目标，合法切点可能让实际保留量偏离。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#968A7A"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#968A7A;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<text x="64" y="53" font-size="19" fill="#964D3B" text-anchor="start" font-weight="400">AGENT HARNESS   /   03   /   Pi</text>
+<text x="64" y="130" font-size="42" fill="#292824" text-anchor="start" font-weight="700">Pi：预算约束还要服从合法切点</text>
+<text x="64" y="166" font-size="21" fill="#68645E" text-anchor="start" font-weight="400">条件不同，后续责任不同</text>
+<rect x="480" y="190" width="480" height="119" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="480" y="208" width="5" height="83" rx="2" fill="#964D3B"/>
+<text x="504" y="233" font-size="28" fill="#292824" text-anchor="start" font-weight="650">估算近期 token</text>
+<text x="504" y="268" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">从候选保留范围开始</text>
+<rect x="480" y="360" width="480" height="119" rx="16" fill="#E8D7C9" stroke="#DCD7CD"/>
+<rect x="480" y="378" width="5" height="83" rx="2" fill="#964D3B"/>
+<text x="504" y="403" font-size="28" fill="#292824" text-anchor="start" font-weight="650">切点是否拆开当前 turn？</text>
+<text x="504" y="438" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">同时维护消息结构</text>
+<path class="edge" d="M720 313 L720 353"/>
+<rect x="100" y="554" width="540" height="136" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="100" y="572" width="5" height="100" rx="2" fill="#964D3B"/>
+<text x="124" y="597" font-size="28" fill="#292824" text-anchor="start" font-weight="650">split-turn 路径</text>
+<text x="124" y="632" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">分别处理被拆开的片段</text>
+<path class="edge" d="M720 483 L720 513 L370 513 L370 546"/>
+<rect x="400.0" y="480" width="290" height="29" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="545.0" y="503" font-size="21" fill="#964D3B" text-anchor="middle" font-weight="400">拆开 turn</text>
+<rect x="800" y="554" width="540" height="136" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="800" y="572" width="5" height="100" rx="2" fill="#68645E"/>
+<text x="824" y="597" font-size="28" fill="#292824" text-anchor="start" font-weight="650">整 turn 切点</text>
+<text x="824" y="632" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">保留合法历史后缀</text>
+<path class="edge" d="M720 483 L720 513 L1070 513 L1070 546"/>
+<rect x="750.0" y="480" width="290" height="29" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="895.0" y="503" font-size="21" fill="#68645E" text-anchor="middle" font-weight="400">未拆开</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="87" y="784" font-size="25" fill="#292824" text-anchor="start" font-weight="500">近期 token 预算是近似目标，合法切点可能让实际保留量偏离。</text>
+<text x="64" y="869" font-size="18" fill="#68645E" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#68645E" text-anchor="end" font-weight="400">P03</text>
+</svg>

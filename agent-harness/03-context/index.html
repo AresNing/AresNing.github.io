@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F5EF">
+  <script src="/js/theme.js"></script>
+  
+  <title>上下文压缩如何保持一致？切点、替换与请求重建 · AresNing</title>
+  <meta name="description" content="原始日志里保留了要求，不代表下一次模型请求包含它。比较四种 Harness 的上下文切点、摘要替换与请求重建，区分结构合法性、预算估算和约束保留质量。">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="上下文压缩如何保持一致？切点、替换与请求重建">
+  <meta property="og:description" content="原始日志里保留了要求，不代表下一次模型请求包含它。比较四种 Harness 的上下文切点、摘要替换与请求重建，区分结构合法性、预算估算和约束保留质量。">
+  <meta property="og:url" content="https://aresning.github.io/agent-harness/03-context/">
+  <meta property="og:site_name" content="AresNing">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://aresning.github.io/images/share/e2a4580b807c258b.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="上下文压缩如何保持一致？切点、替换与请求重建 · AresNing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="上下文压缩如何保持一致？切点、替换与请求重建">
+  <meta name="twitter:description" content="原始日志里保留了要求，不代表下一次模型请求包含它。比较四种 Harness 的上下文切点、摘要替换与请求重建，区分结构合法性、预算估算和约束保留质量。">
+  <meta name="twitter:image" content="https://aresning.github.io/images/share/e2a4580b807c258b.png">
+  <meta name="twitter:image:alt" content="上下文压缩如何保持一致？切点、替换与请求重建 · AresNing">
+  <meta property="article:author" content="https://aresning.github.io/about/"><meta property="article:published_time" content="2026-09-13T16:00:00.000Z"><meta property="article:modified_time" content="2026-09-13T16:00:00.000Z">
+  <link rel="canonical" href="https://aresning.github.io/agent-harness/03-context/">
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png">
+  <link rel="stylesheet" href="/css/paper.css">
+  <script defer src="/lib/paper/a11y-dialog.min.js"></script>
+  <script defer src="/lib/paper/clipboard.min.js"></script>
+  <script defer src="/js/paper.js"></script>
+<meta name="generator" content="Hexo 5.4.2"><link rel="stylesheet" href="/css/prism-vs.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="/" aria-label="AresNing 首页">AresNing</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="/" aria-current="page">文章</a>
+      <a href="/archives/">归档</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
+    <div class="header-actions">
+      <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      <button class="ui-button icon-button menu-toggle" type="button" aria-label="打开菜单" aria-controls="menu-dialog" aria-haspopup="dialog" data-a11y-dialog-show="menu-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+<div class="reading-layout has-toc">
+  <article class="reading-page">
+    <header class="article-header">
+      <nav class="breadcrumb" aria-label="当前位置"><a href="/">文章</a><span aria-hidden="true">/</span><a href="/categories/Agent-Harness/">Agent Harness</a></nav>
+      <h1>上下文压缩如何保持一致？切点、替换与请求重建</h1>
+      <div class="article-meta"><a href="/about/">AresNing</a><span aria-hidden="true">·</span><span>文章</span><span aria-hidden="true">·</span><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time><span>更新于 <time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></span></div>
+      <p class="article-intro">Agent 违反早先约束时，问题可能出在历史选取、摘要替换、请求装配或模型遵守。本文沿四套固定源码逐层追查，并用 Pi 的切点反例说明近期预算为何只是近似目标。</p>
+    </header>
+    <details class="mobile-toc"><summary>文章目录</summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%AE%9A%E4%B9%89%E4%B8%89%E4%BB%BD%E6%95%B0%E6%8D%AE%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E6%AC%A1%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%88%90%E5%8A%9F%E6%9D%A1%E4%BB%B6"><span class="toc-text">先定义三份数据，以及一次压缩的成功条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pi%EF%BC%9A%E8%AF%B7%E6%B1%82%E6%97%B6%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8E%8B%E7%BC%A9%EF%BC%8C%E4%B8%8D%E5%BA%94%E6%B7%B7%E6%88%90%E4%B8%80%E4%B8%AA%E6%8E%A5%E5%8F%A3"><span class="toc-text">Pi：请求时变换与持久压缩，不应混成一个接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#transformContext-%E4%B8%8D%E8%87%AA%E5%8A%A8%E4%BF%AE%E6%94%B9%E5%8E%9F%E5%A7%8B%E4%BC%9A%E8%AF%9D"><span class="toc-text">transformContext 不自动修改原始会话</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E7%82%B9%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7%EF%BC%9A%E4%B8%8D%E8%83%BD%E4%BB%8E-toolResult-%E5%BC%80%E5%A7%8B%E4%BF%9D%E7%95%99"><span class="toc-text">切点的合法性：不能从 toolResult 开始保留</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E4%B8%80%E7%AE%97%E6%B3%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B9%9F%E5%8F%AF%E8%83%BD%E4%BF%9D%E7%95%99%E5%BE%97%E6%AF%94%E9%A2%84%E7%AE%97%E5%A4%9A"><span class="toc-text">同一算法为什么也可能保留得比预算多</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#split-turn-%E6%91%98%E8%A6%81%E8%A1%A5%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%E4%BF%A1%E6%81%AF"><span class="toc-text">split turn 摘要补的是什么信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepSeek%EF%BC%9A%E6%91%98%E8%A6%81%E6%98%AF%E4%B8%80%E5%9C%BA%E5%B8%A6%E6%9D%A5%E6%BA%90%E6%A0%A1%E9%AA%8C%E7%9A%84%E5%BC%82%E6%AD%A5%E6%9B%BF%E6%8D%A2%E4%BA%8B%E5%8A%A1"><span class="toc-text">DeepSeek：摘要是一场带来源校验的异步替换事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%AF%94%E8%BE%83%E5%BD%93%E5%89%8D%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84%E5%86%85%E5%AE%B9%E4%B8%8E%E4%BD%8D%E7%BD%AE"><span class="toc-text">为什么需要比较当前上下文的内容与位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E7%A8%B3%E5%AE%9A%E6%80%A7%E7%AD%96%E7%95%A5%EF%BC%8C%E5%85%81%E8%AE%B8%E7%9A%84%E5%B9%B6%E5%8F%91%E4%BF%AE%E6%94%B9%E4%B8%8D%E5%90%8C"><span class="toc-text">两种稳定性策略，允许的并发修改不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%83%BD%E7%94%A8%E6%91%98%E8%A6%81%E6%AD%A3%E6%96%87%E9%95%BF%E5%BA%A6%E8%AF%81%E6%98%8E%E5%8E%8B%E7%BC%A9%E6%9C%89%E6%95%88"><span class="toc-text">不能用摘要正文长度证明压缩有效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E8%B5%B7%E6%AD%A2%E8%AE%B0%E5%BD%95%E6%80%8E%E6%A0%B7%E5%B8%AE%E5%8A%A9%E8%AF%86%E5%88%AB%E4%B8%8D%E5%AE%8C%E6%95%B4%E6%9B%BF%E6%8D%A2"><span class="toc-text">事务起止记录怎样帮助识别不完整替换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codex-remote-v2%EF%BC%9A%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8E%8B%E7%BC%A9%E8%BE%93%E5%87%BA%E4%B9%8B%E5%A4%96%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%98%E9%87%8D%E5%BB%BA%E5%93%AA%E4%BA%9B%E5%86%85%E5%AE%B9"><span class="toc-text">Codex remote v2：服务端压缩输出之外，客户端还重建哪些内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E9%AA%8C%E8%AF%81%E5%93%8D%E5%BA%94%E5%BD%A2%E7%8A%B6%EF%BC%8C%E5%86%8D%E8%B0%88%E6%91%98%E8%A6%81%E5%AE%89%E8%A3%85"><span class="toc-text">先验证响应形状，再谈摘要安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E5%90%8E%E7%9A%84%E5%8E%86%E5%8F%B2%E4%B8%8D%E6%98%AF%E5%8F%AA%E6%9C%89%E4%B8%80%E4%B8%AA%E9%BB%91%E7%9B%92%E6%91%98%E8%A6%81"><span class="toc-text">压缩后的历史不是只有一个黑盒摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#retained-budget-%E6%9C%89%E4%B8%8A%E9%99%90%EF%BC%8C%E4%BD%86%E2%80%9C%E4%BF%9D%E7%95%99%E7%94%A8%E6%88%B7%E6%B6%88%E6%81%AF%E2%80%9D%E4%B8%8D%E4%BB%A3%E8%A1%A8%E5%8E%9F%E6%96%87%E6%B0%B8%E4%B8%8D%E4%B8%A2"><span class="toc-text">retained budget 有上限，但“保留用户消息”不代表原文永不丢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grok%EF%BC%9A%E5%8C%BA%E5%88%86%E2%80%9C%E5%90%8C%E4%B8%80%E8%BE%93%E5%85%A5%E5%86%8D%E9%87%87%E6%A0%B7%E2%80%9D%E5%92%8C%E2%80%9C%E6%8D%A2%E4%B8%80%E4%BB%BD%E6%9B%B4%E5%B0%8F%E7%9A%84%E8%BE%93%E5%85%A5%E2%80%9D"><span class="toc-text">Grok：区分“同一输入再采样”和“换一份更小的输入”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%BC%95%E6%93%8E%E5%A4%84%E7%90%86%E9%87%8D%E9%87%87%E6%A0%B7%EF%BC%8Cshell-%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E9%80%80%E5%8C%96"><span class="toc-text">共享引擎处理重采样，shell 处理输入退化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E6%8E%89%E6%A8%A1%E5%9E%8B%E8%8D%89%E7%A8%BF%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E9%AA%8C%E8%AF%81%E6%91%98%E8%A6%81%E8%AF%AD%E4%B9%89"><span class="toc-text">去掉模型草稿，不等于验证摘要语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%BB%BA%E5%99%A8%E6%8A%8A%E4%B8%80%E4%BA%9B%E4%BA%8B%E5%AE%9E%E6%94%BE%E5%9C%A8%E6%91%98%E8%A6%81%E4%B9%8B%E5%A4%96"><span class="toc-text">重建器把一些事实放在摘要之外</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E5%A5%97%E7%AD%96%E7%95%A5%E5%88%B0%E5%BA%95%E4%BF%9D%E4%BD%8F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-text">四套策略到底保住了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E5%8F%AF%E5%A4%8D%E7%8E%B0%E5%88%87%E7%82%B9%E5%8F%8D%E4%BE%8B%E7%BA%A6%E6%9D%9F%E7%BB%93%E8%AE%BA"><span class="toc-text">用可复现切点反例约束结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%88%A4%E6%96%AD%EF%BC%9A%E5%AF%B9%E5%86%85%E5%AE%B9%E5%81%9A%E6%91%98%E8%A6%81%EF%BC%8C%E5%AF%B9%E5%A5%91%E7%BA%A6%E5%81%9A%E6%98%BE%E5%BC%8F%E4%BF%9D%E5%AD%98"><span class="toc-text">我的设计判断：对内容做摘要，对契约做显式保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></details>
+    <div class="prose"><figure class="article-figure"><a href="/images/agent-harness/03/03.svg" target="_blank" rel="noopener" aria-label="查看完整配图：上下文构造与压缩：检查模型实际输入，才知道是否遗漏"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-mobile.svg"><img src="/images/agent-harness/03/03.svg" alt="上下文构造与压缩：检查模型实际输入，才知道是否遗漏" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p>任务开始时，用户要求“不修改配置文件，输出必须是 JSON”。几十次工具调用以后，Agent 违反了其中一条。直觉上可以说模型忘了，但修复前必须区分：原文还在日志里吗，压缩后的上下文还包含它吗，最终发出的请求包含它吗，模型收到后遵守了吗？</p>
+<p>四个问题对应四种证据。原始日志里搜到一句话，不能证明本轮模型见过它；摘要里写了“遵守要求”，不能证明每条约束被准确保留；一次回答正确，也不能证明恢复与压缩的结构契约都没问题。</p>
+<p>本文沿<a href="/downloads/agent-harness/03/content/evidence/versions.json">固定提交</a>追查四种上下文构造与压缩路径。本文讨论公开源码中的客户端及运行时算法与状态，不推测闭源压缩服务的内部语义模型。2026-09-13 的实验调用了 Pi 切点算法的原始纯函数及边界用例，没有运行真实摘要模型。</p>
+<blockquote>
+<p>版本与证据：源码基线固定于 2026-09-12，实验记录来自 2026-09-12 至 13 日；本文于 2026-09-14 润色，未重新执行实验。源码事实、局部实验观察与设计判断分别表述，不代表四产品端到端验收。详见<a href="/agent-harness/03-evidence/">本篇实验说明</a>。</p>
+</blockquote>
+<h2 id="先定义三份数据，以及一次压缩的成功条件">先定义三份数据，以及一次压缩的成功条件</h2>
+<p>用 L 表示追加记录，S 表示当前被选中的可见上下文，R 表示经过模型协议转换的实际请求。最简单的依赖是 <code>L → S → R</code>，但长期记忆、工作区指令和实时工具集合还可能在 R 构造时进入。</p>
+<p>压缩通常改变当前可见上下文 S，原始追加记录 L 则可能继续保留。一次成功压缩至少需要满足四个不同条件：</p>
+<ol>
+<li><strong>选取合法。</strong> 不把仍需配对的工具调用/结果拆开，不破坏请求协议结构。</li>
+<li><strong>替换一致。</strong> 摘要描述的源区段与提交时被覆盖的区段仍是同一份材料。</li>
+<li><strong>预算有效。</strong> 新视图能降低下一次请求压力；同时明确计量是估算还是 provider 实测。</li>
+<li><strong>重建可解释。</strong> 后续恢复能知道哪些原文被替换、保留了哪些提示与元数据。</li>
+</ol>
+<p>语义保留质量是第五个独立问题，需要任务与模型实验。前四个条件即使都满足，也可能得到结构合法但遗漏关键内容的摘要；反过来，一段好摘要也可能被错误地覆盖到已变化的会话上。</p>
+<h2 id="Pi：请求时变换与持久压缩，不应混成一个接口">Pi：请求时变换与持久压缩，不应混成一个接口</h2>
+<h3 id="transformContext-不自动修改原始会话"><code>transformContext</code> 不自动修改原始会话</h3>
+<!-- harness-diagram:03-pi -->
+<figure class="article-figure"><a href="/images/agent-harness/03/03-pi.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Pi：预算约束还要服从合法切点"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-pi-mobile.svg"><img src="/images/agent-harness/03/03-pi.svg" alt="Pi：预算约束还要服从合法切点" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 03 · Pi：近期 token 预算是近似目标，合法切点可能让实际保留量偏离。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/compaction/compaction.ts#L311-L418">P03</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p>core 的 <code>streamAssistantResponse</code> 先取 <code>context.messages</code>，可选执行 <code>transformContext</code>，再经 <code>convertToLlm</code> 构造 provider 输入。前者仍处理 <code>AgentMessage</code>，后者才负责 provider 可接受的消息形态。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/agent-loop.ts#L279-L319">实际调用顺序</a></p>
+<p>一个变换函数可以每轮重注入约束、裁剪旧内容，调用方也可以捕获最终 streamFn 输入。但返回一个新数组并不等于创建持久化 compaction entry；如果函数原地修改传入对象，那又会产生另一种共享状态影响。不能仅凭“存在 transformContext”就断言原始历史永远不受影响。</p>
+<p>此前的局部实验采用新数组，确认第二次 provider 输入包含显式约束且短于当前完整消息集合。它只证明“发送了约束”，没有真实模型，所以不证明“记住了约束”。持久压缩还需要继续进入 Harness 层。</p>
+<h3 id="切点的合法性：不能从-toolResult-开始保留">切点的合法性：不能从 toolResult 开始保留</h3>
+<p><code>findValidCutPoints</code> 允许 user、assistant 及部分产品消息成为切点，排除 toolResult。<code>findCutPoint</code> 从末尾累加估算 token，达到 keepRecentTokens 后，寻找索引大于或等于该位置的合法切点；若切在用户 turn 内，还向前寻找 turnStartIndex。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/compaction/compaction.ts#L311-L418">切点实现</a></p>
+<p>这个“向右寻找合法切点”值得单独推导。考虑四项历史：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0 user：任务</span><br><span class="line">1 assistant：调用工具 A</span><br><span class="line">2 toolResult：很长的 A 结果</span><br><span class="line">3 assistant：短结论</span><br></pre></td></tr></table></figure>
+<p>从后向前累计时，预算阈值可能落在 2。因为 2 不能作保留起点，算法选择 3，保留的近期内容可能比目标少。此时 <code>isSplitTurn=true</code>、<code>turnStartIndex=0</code>，告诉后续摘要流程：保留尾部失去了发起这一 turn 的上下文，需要补一段 turn prefix summary。</p>
+<p>2026-09-13 的原函数实验把预算设为 10，阈值落在一份 100 个估算 token 的工具结果上，得到切点 3，仅保留估算 1 token 的短结论。这个结果直接反驳“至少保留 keepRecentTokens 个 token”的误读。<a href="/downloads/agent-harness/03/content/evidence/protocol-context-results.json">切点实测</a></p>
+<h3 id="同一算法为什么也可能保留得比预算多">同一算法为什么也可能保留得比预算多</h3>
+<p>把上例最后的 assistant 短结论去掉，历史以 toolResult 结束。阈值仍落在工具结果位置，却找不到更靠右的合法切点。当前实现保留初始化的 <code>cutPoints[0]</code>，本实验中就是 0，于是整段都保留。</p>
+<p>这不是模型摘要质量问题，而是切点选择规则。相同预算 10，返回的 retained estimate 大于 100。<code>keepRecentTokens</code> 因此是<strong>近似目标，不是严格上下限</strong>。这段纯函数的结果是否导致完整产品随后重试、跳过或进一步压缩，还需要连同调用方验证，不能据一个切点测试直接断言产品陷入无限循环。</p>
+<p>另一个限制是 token 估算：这里的文本按字符启发式估算，图片使用固定估算值；它不是目标模型 tokenizer 的精确计价。阈值结果必须结合协议包装、工具 schema 和 provider usage 解读。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/compaction/compaction.ts#L245-L310">计量函数</a></p>
+<h3 id="split-turn-摘要补的是什么信息">split turn 摘要补的是什么信息</h3>
+<p><code>prepareCompaction</code> 把材料分为历史 messagesToSummarize、当前 turn 的 turnPrefixMessages、原样保留的 retainedTail。若存在前次 compaction，还会把此前 retainedTail 展开成虚拟 entries，与后来消息一起参与新切点选择；previousSummary 则作为摘要输入继续传递。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/compaction/compaction.ts#L636-L707">准备阶段</a></p>
+<p>生成时，split turn 分支分别处理较早历史和当前 turn prefix，将两份结果组合，再附加读过/修改过的文件列表。并不是简单地“取数组前半部分总结，后半部分保留”。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/compaction/compaction.ts#L774-L821">生成与文件信息</a></p>
+<p>从设计上看，这种结构有助于让模型在保留近期细节时，仍知道这些细节属于什么未完任务。代价是可能多一次摘要调用，以及 previous summary 随多次压缩累计失真的风险。文件列表保留操作索引，也不等于文件当前内容已经重新读取；恢复时依旧需要核对工作区事实。</p>
+<h2 id="DeepSeek：摘要是一场带来源校验的异步替换事务">DeepSeek：摘要是一场带来源校验的异步替换事务</h2>
+<h3 id="为什么需要比较当前上下文的内容与位置">为什么需要比较当前上下文的内容与位置</h3>
+<!-- harness-diagram:03-deepseek -->
+<figure class="article-figure"><a href="/images/agent-harness/03/03-deepseek.svg" target="_blank" rel="noopener" aria-label="查看完整配图：DeepSeek：异步摘要是一场带校验的替换"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-deepseek-mobile.svg"><img src="/images/agent-harness/03/03-deepseek.svg" alt="DeepSeek：异步摘要是一场带校验的替换" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 03 · DeepSeek：摘要等待期间历史可能改变；安装前必须核对所声明的 surface 范围。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L416-L453">D03f</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L1-L110">D03</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p>DeepSeek 把会话日志与当前可见上下文（surface）分开。surface 用序号（seq）指向当前参与请求的记录。压缩选择使用当前 surface positions 对应的 seq，准备时同时取得按当前路由计量 token 后的 selected nodes、原始 seq 范围和摘要输入。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L111-L155">选择与准备</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L336-L414">定价快照</a></p>
+<p>只记录日志长度无法证明一致性：一个工具结果可能被重新投影、一个区段可能被替换，即使目标 seq 数量没变，所代表的输入或预算也可能变了。因此，摘要生成后的检查需要比较具体节点及其计量结果，仅检查数量不足以确认一致性。</p>
+<p>自动选择近期保留区时，它从尾部累计 tokens，再把保留边界向左移动到工具配对平衡的位置。与 Pi 的合法切点向右选不同，这种方向可能保留更多原始交互。不能在没有同一语料和计量器的前提下，宣称哪一种“更节省 token”；先应确认它们保全的结构单位不同。</p>
+<h3 id="两种稳定性策略，允许的并发修改不同">两种稳定性策略，允许的并发修改不同</h3>
+<p><code>whole-surface</code> 在摘要完成后重测整个 surface，要求 nodes 与先前 measurement 深相等。任何被计入这份测量的变化都可能使摘要失效。</p>
+<p><code>selected-span</code> 只要求目标仍存在、连续、工具配对平衡，seq 列表与定价后的 selected nodes 都不变。目标之外追加的内容可以继续存在，不必把正在生成的摘要废掉。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L416-L453">两种稳定性检查</a></p>
+<p>用一个简单交错即可看出它们的设计差异：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">开始摘要区段 [A, B]</span><br><span class="line">摘要期间追加 C</span><br><span class="line">whole-surface：如果 C 改变整体测量，拒绝旧摘要提交</span><br><span class="line">selected-span：[A,B] 仍保持原状时，可以替换成 summary，保留 C</span><br></pre></td></tr></table></figure>
+<p>这相当于不同范围的乐观并发校验。检查范围越大，推理越简单，但不相干追加也会浪费已完成的摘要工作；范围越小，允许并发更多，就越需要精确的身份、位置、配对和token 计量不变量。</p>
+<p>注意源码不是简单比较一个 generation 整数。一个节点 seq 相同但内容或计价变化，同样可能导致拒绝。因此“区段没移动”不足以证明它仍是同一个有效替换对象。</p>
+<h3 id="不能用摘要正文长度证明压缩有效">不能用摘要正文长度证明压缩有效</h3>
+<p>准备阶段分别记录 heuristic token count 与 route-priced token count。前者服务日志投影的 shadow-price 协议，后者参与保留选择和缩减比较。这里的 price/cost 指 token 计量，用于估算上下文压力，不是货币费用。摘要生成后，还要把它包装成真实 checkpoint message，再估算这个包装后的成本，并要求它严格小于原选中区段的 route cost。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L336-L414">缩减检查</a></p>
+<p>如果只看 summary 字符串短了多少，会漏掉来源标记和 carrier 格式等开销。反过来，将两种不同单位的计价混用，也可能让“缩短了”与下一次请求是否更轻互相矛盾。</p>
+<p>即便通过这项检查，也只证明估算压力下降。它不证明摘要完整保留了业务约束，更不保证下一次请求的全部工具/系统提示都已计入某个严格上限。</p>
+<h3 id="事务起止记录怎样帮助识别不完整替换">事务起止记录怎样帮助识别不完整替换</h3>
+<p><code>compactSurfaceRegion</code> 在首次 await 摘要前，先同步校验 owner 与已有锁，再写 compaction/start。这条未闭合 start 成为会话层的忙碌标记。摘要完成并验证稳定性后，写 compaction/summary、带 replace surfaceOp 的 user/message，再写 compaction/end。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L173-L275">事务驱动</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L456-L508">替换体</a></p>
+<p>替换消息的 provenance 指向 start、summary 和被遮蔽的源 seq。这使后续解释器能够回答：这段摘要覆盖了什么材料、来自哪次事务，而不是从自然语言里猜。</p>
+<p>失败处理中，summary 阶段、commit 阶段、关闭失败和 flush 失败被区分。如果 end 写入失败，代码故意让未配对 start 留在记录中，便于后续识别不完整事务。manual compaction 还会按可选 flush 的结果报告 persistence 错误。</p>
+<p>这里“没有 await 地连续 append”最多减少异步插入的窗口，不等于底层存储在断电时具备数据库事务原子性。一次部分写入仍需要恢复逻辑解释。不能把函数名 transaction 或日志中的 end 直接当成磁盘持久保证。</p>
+<h2 id="Codex-remote-v2：服务端压缩输出之外，客户端还重建哪些内容">Codex remote v2：服务端压缩输出之外，客户端还重建哪些内容</h2>
+<h3 id="先验证响应形状，再谈摘要安装">先验证响应形状，再谈摘要安装</h3>
+<!-- harness-diagram:03-codex -->
+<figure class="article-figure"><a href="/images/agent-harness/03/03-codex.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Codex remote v2：压缩结果还要经过客户端安装"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-codex-mobile.svg"><img src="/images/agent-harness/03/03-codex.svg" alt="Codex remote v2：压缩结果还要经过客户端安装" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 03 · Codex：服务端返回的摘要，不是下一次模型请求的全部内容。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L484-L583">C03c</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L1-L140">C03</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p>本文研究的是 remote v2 路径，不代表 Codex 所有压缩实现。客户端消费压缩流时要求看到 response.completed，并要求恰好一个 Compaction output item；数量不对属于 fatal，流先结束则报 stream error。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L423-L481">输出验收</a></p>
+<p>这只验证客户端能依赖的协议结构。Compaction item 的内部语义压缩方式不是这份代码能证明的内容。把它称作“客户端完成了某种自然语言摘要算法”，会越过公开证据边界。</p>
+<h3 id="压缩后的历史不是只有一个黑盒摘要">压缩后的历史不是只有一个黑盒摘要</h3>
+<p><code>build_v2_compacted_history</code> 先按规则筛选保留项，执行预算裁剪，然后把 compaction output 追加进去。用户/Hook 消息、受功能开关与 client-authored metadata 约束的 developer 消息、部分 AgentMessage 都有具体保留条件；普通 assistant 对话和工具输出不自动原样保留。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L484-L583">筛选与组装</a></p>
+<p>AgentMessage 还区分子任务进度、完成信息和其它消息，并设置大小门槛。这说明保留策略利用来源与用途，不只是按时间删掉最旧 N 条。</p>
+<p>随后客户端重建 initial context，并将它插入最后真实用户消息或 summary 之前；同时设置 reference context item、world-state baseline 和窗口 metadata，再调用 replace_compacted_history。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L299-L357">安装阶段</a></p>
+<p>因此，恢复下一轮模型输入需要两类东西：压缩后的内容，以及决定当前环境/工具/上下文基线的结构信息。只有摘要文字却没有正确基线，可能让已改变的工具或环境以错误增量重新装配。</p>
+<h3 id="retained-budget-有上限，但“保留用户消息”不代表原文永不丢">retained budget 有上限，但“保留用户消息”不代表原文永不丢</h3>
+<p>固定版本给 retained messages <a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L73-L77">64,000 token 的预算</a>；裁剪从新到旧按 source 与 attached notice 的 group 处理。一个 group 能放下就整体放入，边界处尝试截断，最后恢复正向顺序。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L599-L693">保留预算与裁剪</a></p>
+<p>把 notice 与来源一起处理的意义是保留解释关系。如果内容还在而说明它来源或限制的附属说明被独立删掉，模型可能以错误信任级别解读它。图像预算和 client-authored developer message 的计价又有单独分支，不能把 64,000 当成所有格式都按纯文本长度精确计算的总请求上限。</p>
+<p>一旦 retained budget 耗尽，旧用户原文也可能不再保留。因此，“客户端偏向保留用户约束”与“开头每一条要求永久逐字保留”是两个不同主张。需要硬约束的产品仍应在结构化状态与实际执行门中保留规则，而不是仅寄望摘要和历史保留策略。</p>
+<h2 id="Grok：区分“同一输入再采样”和“换一份更小的输入”">Grok：区分“同一输入再采样”和“换一份更小的输入”</h2>
+<h3 id="共享引擎处理重采样，shell-处理输入退化">共享引擎处理重采样，shell 处理输入退化</h3>
+<!-- harness-diagram:03-grok -->
+<figure class="article-figure"><a href="/images/agent-harness/03/03-grok.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Grok：输入退化与同输入重试是两个维度"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-grok-mobile.svg"><img src="/images/agent-harness/03/03-grok.svg" alt="Grok：输入退化与同输入重试是两个维度" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 03 · Grok Build：不要把请求次数的增加，都算作“模型用同样上下文再试一次”。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/compaction.rs#L1080-L1196">G03e</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/acp_session_impl/sampler_turn.rs#L1-L165">G02</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p>共享 <code>sample_summary_with_retries</code> 接收已经准备好的 turns 和 compaction prompt。非空且不退化的摘要立即成功；空或退化结果可以在预算内重试；确定性错误与 context overflow 则立即返回，因为同一份过大输入再次发送不会自然变小。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/common/xai-grok-compaction/src/code_compaction/sample.rs#L82-L194">共享采样循环</a></p>
+<p>shell 捕获带 <code>context_overflow</code> 的 FullReplaceError 后，才推进输入阶梯：<code>Verbatim → VerbatimFitted → Lossy</code>。VerbatimFitted 保持相应输入表示并按预算 fit；Lossy 则重新使用有损 summarization 表示及另一套预算。每次前进记录降级原因与阶段；阶梯耗尽后，直接报告失败，不再使用普通重试处理同一溢出。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/compaction.rs#L1080-L1196">实际输入阶梯</a></p>
+<p>两个循环分开承担这两类责任：内层处理相同输入的随机或暂时失败，外层处理输入本身不满足限制。若只把它们都记为“压缩重试”，就无法解释本次成功究竟来自第二次模型采样，还是因为丢弃了更多原始细节。</p>
+<p>代价也必须保留：有损阶梯提高可继续性，却可能影响证据精度。生产诊断应显示使用了哪个输入阶段，以及原始记录是否仍可检索，而不是只显示一个“压缩成功”。</p>
+<h3 id="去掉模型草稿，不等于验证摘要语义">去掉模型草稿，不等于验证摘要语义</h3>
+<p>共享 summary formatter 会清理特定的开头 analysis/summary 包装，并处理正文中回显的控制标记；退化检查对清理后的 seed 长度设下限。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/common/xai-grok-compaction/src/code_compaction/summary.rs#L18-L126">清理与退化判断</a></p>
+<p>这能防止模型只返回一小段模板或空壳，却不能判断摘要是否保留了“不修改配置文件”。一个足够长的错误摘要仍可能通过长度门；一段简洁但完整的摘要也可能触发重试。这里的规则应被理解为结构和退化防线，不是自动语义正确性评分。</p>
+<h3 id="重建器把一些事实放在摘要之外">重建器把一些事实放在摘要之外</h3>
+<p>共享 assembler 接受明确的 parts，构造类似 <code>[system, user prefix, project instructions?, last query?, recent…, summary, reminder?]</code> 的历史。近期消息放在摘要之前；项目指令与最后查询有各自的 carrier，不依赖摘要模型重新猜出来。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/common/xai-grok-compaction/src/code_compaction/assemble.rs#L1-L98">历史重建器</a></p>
+<p>这与“把所有历史全部压成一条 system prompt”不同。保留稳定指令、近期事实和继续摘要的独立身份，便于后续区分来源，也有利于恢复和去重。但 caller 提供的 project instructions 是否来自最新文件，仍要看上层刷新策略；共享纯组装函数本身没有读取工作区的能力。</p>
+<h2 id="四套策略到底保住了什么">四套策略到底保住了什么</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>Pi Harness</th>
+<th>DeepSeek compaction-basic</th>
+<th>Codex remote v2</th>
+<th>Grok full-replace 路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>选择压缩材料</td>
+<td>近期估算预算 + 合法消息切点 + split turn</td>
+<td>route 计价 surface + 配对平衡边界</td>
+<td>远端输入与客户端保留项策略</td>
+<td>shell 准备输入，溢出时推进阶梯</td>
+</tr>
+<tr>
+<td>哪些内容原样保留</td>
+<td>retainedTail，后续可展开为虚拟 entries</td>
+<td>选中区段外的 surface</td>
+<td>符合规则及预算的消息、重建的 initial context</td>
+<td>project instructions、last query、recent 等独立 parts</td>
+</tr>
+<tr>
+<td>异步替换的一致性</td>
+<td>需结合会话提交路径；本篇只实测切点</td>
+<td>whole-surface / selected-span 后验校验</td>
+<td>安装摘要和 reference/world-state 基线</td>
+<td>sampler/assembler 与 shell 状态管理分层</td>
+</tr>
+<tr>
+<td>“压缩有效”的局部判断</td>
+<td>近似切点，生成结果与错误传播</td>
+<td>包装 checkpoint 的估算成本严格下降</td>
+<td>compaction 协议形状与 retained budget</td>
+<td>非空/非退化；输入溢出另行退化</td>
+</tr>
+<tr>
+<td>不能据此保证</td>
+<td>近期 token 严格上限</td>
+<td>摘要语义完整、断电原子提交</td>
+<td>客户端可知远端语义算法、旧用户原文永存</td>
+<td>长摘要必然正确、所有环境信息都最新</td>
+</tr>
+</tbody>
+</table>
+<p>比较时需要先说明每个机制实际保护的对象，再判断应用还需要补充哪些保证。对长代码任务，结构合法性和工作区可回查通常同样关键；对高约束流程，还需要把授权与不可违反规则从自然语言摘要中独立出来。</p>
+<h2 id="用可复现切点反例约束结论">用可复现切点反例约束结论</h2>
+<p>2026-09-13 补充的三项 Pi 纯算法实验分别验证：阈值落在 toolResult 时向右选合法切点；没有更靠右切点时保留量可能超过目标；在 user 边界切开时不标 split turn。构建器通过 TypeScript AST 从固定文件提取原样函数和常量，记录文件哈希与行范围，不改算法。<a href="/downloads/agent-harness/03/content/evidence/protocol-context-extraction.json">提取清单</a>、<a href="/downloads/agent-harness/03/content/evidence/protocol-context-results.json">实际结果</a></p>
+<p>这组实验没有加载完整 Pi Harness 的压缩提交与摘要调用，所以只能证明切点选择。DeepSeek 的 transaction、Codex remote v2 和 Grok 的完整阶梯在本轮为源码审读；不把清晰的控制流分析冒充端到端运行。</p>
+<p>若继续测语义保留率，应先保存 L、压缩前 S、替换后 S 和实际 R，再用确定断言判断输出或副作用。否则“模型忘记了”的统计会把输入装配遗漏、摘要丢失、格式转换损失和模型不遵守四种原因混在一起。</p>
+<h2 id="我的设计判断：对内容做摘要，对契约做显式保存">我的设计判断：对内容做摘要，对契约做显式保存</h2>
+<p>我会把硬约束、授权与当前目标保存为有来源和覆盖规则的结构化状态，在请求装配和执行门重复核对。摘要承担对历史证据与进度的浓缩，不能成为唯一授权来源。这样做的代价是需要处理旧约束过期和用户新指令覆盖，而不是永久累加所有要求。</p>
+<p>压缩接口则应返回来源区段、使用的模型/路由、输入阶段、估算变化和安装身份。需要并发追加时，参考 selected-span 的精细稳定性契约；需要更简单的实现时，可以选择 whole-surface 校验，但应接受频繁重做的成本。</p>
+<p>最后，上下文检查器应展示请求发送边界上的实际内容，而不只展示聊天记录。它应让读者看见哪些内容被投影、裁剪、摘要或重新注入，并能回到原始来源。只有这条链完整，“Agent 为什么忘了”才能从一个笼统评价变成可以定位和修复的工程问题。</p>
+<!-- harness-diagram:03-summary -->
+<figure class="article-figure"><a href="/images/agent-harness/03/03-summary.svg" target="_blank" rel="noopener" aria-label="查看完整配图：压缩不是统一的“把旧消息变短”"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/03/03-summary-mobile.svg"><img src="/images/agent-harness/03/03-summary.svg" alt="压缩不是统一的“把旧消息变短”" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 03 · 本篇总结：必须同时交代保留范围、替换时机和后续请求使用的新基线。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/compact_remote_v2.rs#L484-L583">C03c</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/harness/compaction/compaction.ts#L311-L418">P03</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/compaction/compaction-basic/src/region.ts#L416-L453">D03f</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/compaction.rs#L1080-L1196">G03e</a>。跨实现比较 · 根据本篇已引源码与明确的实验范围。</p>
+<!-- /harness-diagram -->
+<h2 id="配套材料">配套材料</h2>
+<p><a href="/agent-harness/03-evidence/">阅读实验说明</a> · <a href="/agent-harness/03-reproduce/">阅读复现入口</a> · <a href="/downloads/agent-harness/03/agent-harness-03.zip">下载正文、原图与实验材料</a>（<a href="/downloads/agent-harness/03/agent-harness-03.zip.sha256">SHA-256</a>）。</p>
+<p>下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。</p>
+<!-- harness-series-nav -->
+<h2 id="系列阅读">系列阅读</h2>
+<p><a href="/agent-harness/02-model-streams/">上一篇：模型流何时可以执行工具？四种 Harness 的终态与重试</a></p>
+<!-- /harness-series-nav -->
+</div>
+    <nav class="post-tags" aria-label="文章标签"><a href="/tags/Agent-Harness/"># Agent Harness</a><a href="/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"># 源码阅读</a><a href="/tags/Coding-Agent/"># Coding Agent</a></nav>
+    <section class="share-section" aria-label="分享文章" data-share-title="上下文压缩如何保持一致？切点、替换与请求重建" data-quote-attribution="" data-share-description="原始日志里保留了要求，不代表下一次模型请求包含它。比较四种 Harness 的上下文切点、摘要替换与请求重建，区分结构合法性、预算估算和约束保留质量。" data-share-url="https://aresning.github.io/agent-harness/03-context/">
+  <h2>分享这篇文章</h2>
+  <div class="share-actions"><button class="ui-button outlined-button copy-link" type="button" data-clipboard-text="https://aresning.github.io/agent-harness/03-context/" hidden>复制链接</button><button class="ui-button outlined-button native-share" type="button" hidden>系统分享</button><a class="ui-button outlined-button" href="/images/share/e2a4580b807c258b.png" download="AresNing-article.png">保存文章封面</a><button class="ui-button outlined-button quote-open" type="button" hidden>保存摘录图片</button></div>
+  <p class="share-status muted" role="status" aria-live="polite"></p>
+</section>
+<div class="ui-dialog" id="quote-dialog" aria-hidden="true" aria-labelledby="quote-title">
+  <div class="dialog-overlay" data-a11y-dialog-hide></div>
+  <div class="dialog-panel quote-panel" role="document">
+    <div class="dialog-heading"><h2 id="quote-title">保存摘录</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭摘录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label for="quote-select">选择内容</label><select class="ui-input" id="quote-select" autofocus></select>
+    <p class="muted">图片保留段落原文与出处；引用他人内容时，请保留原作者署名。</p>
+    <img class="quote-preview" alt="摘录图片预览" width="1080" height="1440" hidden>
+    <p class="quote-status muted" role="status" aria-live="polite"></p>
+    <a class="ui-button outlined-button quote-download" download="AresNing-excerpt.png" hidden>保存 PNG 图片</a>
+  </div>
+</div>
+
+    <aside class="author-note" aria-label="关于作者"><a class="author-name" href="/about/">AresNing</a><p>我是 AresNing，在这里记录 Java、并发编程和代码可读性的学习与实践。希望把遇到的问题和理解的过程写清楚。</p><a class="read-more" target="_blank" href="https://github.com/AresNing" rel="me noopener">在 GitHub 关注 ↗</a></aside>
+
+    
+    <section class="related-posts" aria-labelledby="related-title"><h2 id="related-title">接着读</h2><ul><li><a href="/agent-harness/00-overview/">一次 Agent 任务经过哪些层？从四种 Harness 看责任边界<span aria-hidden="true"> ↗</span></a><p>从一次“修复失败测试”出发，沿 Codex、Pi、DeepSeek Harness 与 Grok Build 的固定源码，比较输入接纳、工具执行、状态保存和任务结束的责任边界，区分源码推演与局部实验。</p></li><li><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界<span aria-hidden="true"> ↗</span></a><p>一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p></li></ul></section>
+    
+  </article>
+  <aside class="desktop-toc"><nav aria-label="文章目录"><h2>目录</h2><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%AE%9A%E4%B9%89%E4%B8%89%E4%BB%BD%E6%95%B0%E6%8D%AE%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E6%AC%A1%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%88%90%E5%8A%9F%E6%9D%A1%E4%BB%B6"><span class="toc-text">先定义三份数据，以及一次压缩的成功条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pi%EF%BC%9A%E8%AF%B7%E6%B1%82%E6%97%B6%E5%8F%98%E6%8D%A2%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8E%8B%E7%BC%A9%EF%BC%8C%E4%B8%8D%E5%BA%94%E6%B7%B7%E6%88%90%E4%B8%80%E4%B8%AA%E6%8E%A5%E5%8F%A3"><span class="toc-text">Pi：请求时变换与持久压缩，不应混成一个接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#transformContext-%E4%B8%8D%E8%87%AA%E5%8A%A8%E4%BF%AE%E6%94%B9%E5%8E%9F%E5%A7%8B%E4%BC%9A%E8%AF%9D"><span class="toc-text">transformContext 不自动修改原始会话</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E7%82%B9%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7%EF%BC%9A%E4%B8%8D%E8%83%BD%E4%BB%8E-toolResult-%E5%BC%80%E5%A7%8B%E4%BF%9D%E7%95%99"><span class="toc-text">切点的合法性：不能从 toolResult 开始保留</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E4%B8%80%E7%AE%97%E6%B3%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B9%9F%E5%8F%AF%E8%83%BD%E4%BF%9D%E7%95%99%E5%BE%97%E6%AF%94%E9%A2%84%E7%AE%97%E5%A4%9A"><span class="toc-text">同一算法为什么也可能保留得比预算多</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#split-turn-%E6%91%98%E8%A6%81%E8%A1%A5%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%E4%BF%A1%E6%81%AF"><span class="toc-text">split turn 摘要补的是什么信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepSeek%EF%BC%9A%E6%91%98%E8%A6%81%E6%98%AF%E4%B8%80%E5%9C%BA%E5%B8%A6%E6%9D%A5%E6%BA%90%E6%A0%A1%E9%AA%8C%E7%9A%84%E5%BC%82%E6%AD%A5%E6%9B%BF%E6%8D%A2%E4%BA%8B%E5%8A%A1"><span class="toc-text">DeepSeek：摘要是一场带来源校验的异步替换事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%AF%94%E8%BE%83%E5%BD%93%E5%89%8D%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84%E5%86%85%E5%AE%B9%E4%B8%8E%E4%BD%8D%E7%BD%AE"><span class="toc-text">为什么需要比较当前上下文的内容与位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E7%A8%B3%E5%AE%9A%E6%80%A7%E7%AD%96%E7%95%A5%EF%BC%8C%E5%85%81%E8%AE%B8%E7%9A%84%E5%B9%B6%E5%8F%91%E4%BF%AE%E6%94%B9%E4%B8%8D%E5%90%8C"><span class="toc-text">两种稳定性策略，允许的并发修改不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%83%BD%E7%94%A8%E6%91%98%E8%A6%81%E6%AD%A3%E6%96%87%E9%95%BF%E5%BA%A6%E8%AF%81%E6%98%8E%E5%8E%8B%E7%BC%A9%E6%9C%89%E6%95%88"><span class="toc-text">不能用摘要正文长度证明压缩有效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E8%B5%B7%E6%AD%A2%E8%AE%B0%E5%BD%95%E6%80%8E%E6%A0%B7%E5%B8%AE%E5%8A%A9%E8%AF%86%E5%88%AB%E4%B8%8D%E5%AE%8C%E6%95%B4%E6%9B%BF%E6%8D%A2"><span class="toc-text">事务起止记录怎样帮助识别不完整替换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codex-remote-v2%EF%BC%9A%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8E%8B%E7%BC%A9%E8%BE%93%E5%87%BA%E4%B9%8B%E5%A4%96%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%98%E9%87%8D%E5%BB%BA%E5%93%AA%E4%BA%9B%E5%86%85%E5%AE%B9"><span class="toc-text">Codex remote v2：服务端压缩输出之外，客户端还重建哪些内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E9%AA%8C%E8%AF%81%E5%93%8D%E5%BA%94%E5%BD%A2%E7%8A%B6%EF%BC%8C%E5%86%8D%E8%B0%88%E6%91%98%E8%A6%81%E5%AE%89%E8%A3%85"><span class="toc-text">先验证响应形状，再谈摘要安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E5%90%8E%E7%9A%84%E5%8E%86%E5%8F%B2%E4%B8%8D%E6%98%AF%E5%8F%AA%E6%9C%89%E4%B8%80%E4%B8%AA%E9%BB%91%E7%9B%92%E6%91%98%E8%A6%81"><span class="toc-text">压缩后的历史不是只有一个黑盒摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#retained-budget-%E6%9C%89%E4%B8%8A%E9%99%90%EF%BC%8C%E4%BD%86%E2%80%9C%E4%BF%9D%E7%95%99%E7%94%A8%E6%88%B7%E6%B6%88%E6%81%AF%E2%80%9D%E4%B8%8D%E4%BB%A3%E8%A1%A8%E5%8E%9F%E6%96%87%E6%B0%B8%E4%B8%8D%E4%B8%A2"><span class="toc-text">retained budget 有上限，但“保留用户消息”不代表原文永不丢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grok%EF%BC%9A%E5%8C%BA%E5%88%86%E2%80%9C%E5%90%8C%E4%B8%80%E8%BE%93%E5%85%A5%E5%86%8D%E9%87%87%E6%A0%B7%E2%80%9D%E5%92%8C%E2%80%9C%E6%8D%A2%E4%B8%80%E4%BB%BD%E6%9B%B4%E5%B0%8F%E7%9A%84%E8%BE%93%E5%85%A5%E2%80%9D"><span class="toc-text">Grok：区分“同一输入再采样”和“换一份更小的输入”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%BC%95%E6%93%8E%E5%A4%84%E7%90%86%E9%87%8D%E9%87%87%E6%A0%B7%EF%BC%8Cshell-%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E9%80%80%E5%8C%96"><span class="toc-text">共享引擎处理重采样，shell 处理输入退化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E6%8E%89%E6%A8%A1%E5%9E%8B%E8%8D%89%E7%A8%BF%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E9%AA%8C%E8%AF%81%E6%91%98%E8%A6%81%E8%AF%AD%E4%B9%89"><span class="toc-text">去掉模型草稿，不等于验证摘要语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%BB%BA%E5%99%A8%E6%8A%8A%E4%B8%80%E4%BA%9B%E4%BA%8B%E5%AE%9E%E6%94%BE%E5%9C%A8%E6%91%98%E8%A6%81%E4%B9%8B%E5%A4%96"><span class="toc-text">重建器把一些事实放在摘要之外</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E5%A5%97%E7%AD%96%E7%95%A5%E5%88%B0%E5%BA%95%E4%BF%9D%E4%BD%8F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-text">四套策略到底保住了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E5%8F%AF%E5%A4%8D%E7%8E%B0%E5%88%87%E7%82%B9%E5%8F%8D%E4%BE%8B%E7%BA%A6%E6%9D%9F%E7%BB%93%E8%AE%BA"><span class="toc-text">用可复现切点反例约束结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%88%A4%E6%96%AD%EF%BC%9A%E5%AF%B9%E5%86%85%E5%AE%B9%E5%81%9A%E6%91%98%E8%A6%81%EF%BC%8C%E5%AF%B9%E5%A5%91%E7%BA%A6%E5%81%9A%E6%98%BE%E5%BC%8F%E4%BF%9D%E5%AD%98"><span class="toc-text">我的设计判断：对内容做摘要，对契约做显式保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></aside>
+</div>
+</main>
+  <footer class="site-footer shell">
+    <div><span class="footer-name">AresNing · Hungry &amp; Humble</span><small>© 2022–2026 AresNing · Powered by Hexo</small></div>
+    <a target="_blank" href="https://github.com/AresNing" rel="me noopener">GitHub <span aria-hidden="true">↗</span></a>
+  </footer>
+  <div class="ui-dialog" id="search-dialog" aria-hidden="true" aria-labelledby="search-title" data-search-url="/search.xml" data-fuse-url="/lib/paper/fuse.min.mjs">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+    <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
+    </div>
+  </div>
+  <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+      <div class="dialog-heading"><h2 id="menu-title">导航</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <a href="/" aria-current="page">文章</a>
+        <a href="/archives/">归档</a>
+        <a href="/categories/">分类</a>
+        <a href="/tags/">标签</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>
