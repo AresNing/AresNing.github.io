@@ -1,0 +1,34 @@
+{
+  "file": "packages/coding-agent/examples/extensions/subagent/index.ts",
+  "sha256": "4facaa61c9c781748dd000eb5d2ec0a75289986d1a6e11ce13971ca5653dc252",
+  "declarations": [
+    {
+      "name": "mapWithConcurrencyLimit",
+      "start": 219,
+      "end": 237
+    },
+    {
+      "name": "runSingleAgent",
+      "start": 272,
+      "end": 440
+    }
+  ],
+  "scope": "Original function bodies, isolated by AST. CLI command resolution replaced with a controlled Node child, spawn forwarded to native spawn, timers forwarded at original duration and observed. Empty systemPrompt and absent onUpdate avoid prompt-file/UI helper paths. No Pi CLI, model, plugins, actual agent or full extension load.",
+  "deepseek": {
+    "file": "packages/subagent/subagent/src/child-agent.ts",
+    "sha256": "89c157c123a58039fdfeeb4113d71430c72302e07491347c6ab61e48554dac86",
+    "declarations": [
+      {
+        "name": "captureDelegatedPolicyOverrides",
+        "start": 242,
+        "end": 247
+      },
+      {
+        "name": "appendDelegatedPolicyOverrides",
+        "start": 258,
+        "end": 268
+      }
+    ],
+    "scope": "Original policy capture/append bodies; parent policy services and child session append are fixtures."
+  }
+}
