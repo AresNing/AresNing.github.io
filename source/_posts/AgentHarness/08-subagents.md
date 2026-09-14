@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/08-subagents/
-related: ["agent-harness/07-extensions/"]
+related: ["agent-harness/07-extensions/", "agent-harness/09-clients/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/08/08.svg" target="_blank" rel="noopener" aria-label="查看完整配图：子 Agent 的责任归属：独立上下文、进程和工作区分别检查"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/08/08-mobile.svg"><img src="/images/agent-harness/08/08.svg" alt="子 Agent 的责任归属：独立上下文、进程和工作区分别检查" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -179,6 +179,6 @@ Grok 的 `wait_initial_child_prompt_readiness` 同时等待取消、readiness ac
 
 ## 系列阅读
 
-[上一篇：多个 Hook 如何协作？四种 Harness 的扩展与卸载](/agent-harness/07-extensions/)
+[上一篇：多个 Hook 如何协作？四种 Harness 的扩展与卸载](/agent-harness/07-extensions/) · [下一篇：界面显示已完成时，Harness 承诺了什么？](/agent-harness/09-clients/)
 
 <!-- /harness-series-nav -->
