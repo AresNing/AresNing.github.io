@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Pi：取到 stream 和读完 stream 是两条边界</title>
+<desc id="desc">请求阶段的退避策略，不能自动覆盖消费流中的所有失败。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#6b8592"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#6b8592;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#f5f8fa"/>
+<text x="64" y="53" font-size="19" fill="#007b70" text-anchor="start" font-weight="400">AGENT HARNESS   /   02   /   Pi</text>
+<text x="64" y="130" font-size="42" fill="#17313d" text-anchor="start" font-weight="700">Pi：取到 stream 和读完 stream 是两条边界</text>
+<text x="64" y="166" font-size="21" fill="#536c78" text-anchor="start" font-weight="400">分层责任：每一行独立说明一个边界</text>
+<rect x="64" y="199" width="1312" height="112" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="64" y="199" width="260" height="112" rx="16" fill="#eaf1f5" stroke="#cedbe1"/>
+<text x="86" y="247" font-size="26" fill="#17313d" text-anchor="start" font-weight="650">取流请求</text>
+<text x="356" y="248" font-size="27" fill="#17313d" text-anchor="start" font-weight="400">HTTP / provider 返回 stream</text>
+<path class="edge" d="M794 255 L865 255"/>
+<text x="897" y="247" font-size="26" fill="#007b70" text-anchor="start" font-weight="550">先经过请求层重试判断</text>
+<rect x="64" y="329" width="1312" height="112" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="64" y="329" width="260" height="112" rx="16" fill="#eaf1f5" stroke="#cedbe1"/>
+<text x="86" y="377" font-size="26" fill="#17313d" text-anchor="start" font-weight="650">退避策略</text>
+<text x="356" y="378" font-size="27" fill="#17313d" text-anchor="start" font-weight="400">429、服务端 veto、</text>
+<text x="356" y="412" font-size="27" fill="#17313d" text-anchor="start" font-weight="400">Retry-After</text>
+<path class="edge" d="M794 385 L865 385"/>
+<text x="897" y="377" font-size="26" fill="#007b70" text-anchor="start" font-weight="550">预算不允许时直接失败</text>
+<rect x="64" y="459" width="1312" height="112" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="64" y="459" width="260" height="112" rx="16" fill="#eaf1f5" stroke="#cedbe1"/>
+<text x="86" y="507" font-size="26" fill="#17313d" text-anchor="start" font-weight="650">消费响应</text>
+<text x="356" y="508" font-size="27" fill="#17313d" text-anchor="start" font-weight="400">增量文本与参数逐步到达</text>
+<path class="edge" d="M794 515 L865 515"/>
+<text x="897" y="507" font-size="26" fill="#007b70" text-anchor="start" font-weight="550">需等待语义终态</text>
+<rect x="64" y="589" width="1312" height="112" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="64" y="589" width="260" height="112" rx="16" fill="#eaf1f5" stroke="#cedbe1"/>
+<text x="86" y="637" font-size="26" fill="#17313d" text-anchor="start" font-weight="650">调用工具</text>
+<text x="356" y="638" font-size="27" fill="#17313d" text-anchor="start" font-weight="400">完整性决定能否执行</text>
+<path class="edge" d="M794 645 L865 645"/>
+<text x="897" y="637" font-size="26" fill="#007b70" text-anchor="start" font-weight="550">length 时不执行半截参数</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#e5f2ee" stroke="#c7dfd6"/>
+<text x="87" y="784" font-size="25" fill="#17313d" text-anchor="start" font-weight="500">请求阶段的退避策略，不能自动覆盖消费流中的所有失败。</text>
+<text x="64" y="869" font-size="18" fill="#536c78" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#536c78" text-anchor="end" font-weight="400">P02f · P02 · P02b</text>
+</svg>

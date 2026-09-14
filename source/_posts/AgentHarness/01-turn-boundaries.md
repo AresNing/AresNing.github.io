@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/01-turn-boundaries/
-related: ["agent-harness/00-overview/"]
+related: ["agent-harness/00-overview/", "agent-harness/02-model-streams/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/01/01.svg" target="_blank" rel="noopener" aria-label="查看完整配图：一轮何时结束：模型结束、循环结束、资源结算是不同边界"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/01/01-mobile.svg"><img src="/images/agent-harness/01/01.svg" alt="一轮何时结束：模型结束、循环结束、资源结算是不同边界" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -289,10 +289,12 @@ step 的返回值也不是单一布尔：无工具可返回 completed，工具�
 
 下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。
 
+
+
 <!-- harness-series-nav -->
 
 ## 系列阅读
 
-[上一篇：一次 Agent 任务经过哪些层？从四种 Harness 看责任边界](/agent-harness/00-overview/)
+[上一篇：一次 Agent 任务经过哪些层？从四种 Harness 看责任边界](/agent-harness/00-overview/) · [下一篇：模型流何时可以执行工具？四种 Harness 的终态与重试](/agent-harness/02-model-streams/)
 
 <!-- /harness-series-nav -->

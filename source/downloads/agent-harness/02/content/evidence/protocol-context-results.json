@@ -1,0 +1,111 @@
+{
+  "date": "2026-09-13",
+  "scope": "Original pure algorithms and retry helper with synthetic inputs; no network or full product integration",
+  "outcomes": [
+    {
+      "name": "02-provider-429-retry",
+      "passed": true,
+      "observation": {
+        "calls": 2,
+        "value": "ok"
+      }
+    },
+    {
+      "name": "02-provider-retry-veto",
+      "passed": true,
+      "observation": {
+        "calls": 1,
+        "vetoHonored": true
+      }
+    },
+    {
+      "name": "02-provider-delay-cap-fails",
+      "passed": true,
+      "observation": {
+        "calls": 1,
+        "requestedMs": 61000,
+        "capMs": 60000,
+        "delayClamped": false
+      }
+    },
+    {
+      "name": "02-provider-backoff-aborts",
+      "passed": true,
+      "observation": {
+        "calls": 1,
+        "requestedSleepMs": 10000,
+        "cancelledWithoutRetry": true
+      }
+    },
+    {
+      "name": "02-assembler-max-tokens-prunes-replay",
+      "passed": true,
+      "observation": {
+        "keptTypes": [
+          "text"
+        ],
+        "keptReplay": [
+          {
+            "id": "text"
+          }
+        ]
+      }
+    },
+    {
+      "name": "02-assembler-first-close-wins",
+      "passed": true,
+      "observation": {
+        "text": "visible"
+      }
+    },
+    {
+      "name": "02-assembler-interrupt-omits-tool",
+      "passed": true,
+      "observation": {
+        "keptTypes": [
+          "text"
+        ]
+      }
+    },
+    {
+      "name": "02-assembler-missing-finish-vs-invariant",
+      "passed": true,
+      "observation": {
+        "assemblerDefault": "stop",
+        "strictCompanionRejects": true,
+        "productionPluginEnablement": "not tested"
+      }
+    },
+    {
+      "name": "03-cut-does-not-start-at-tool-result",
+      "passed": true,
+      "observation": {
+        "firstKeptEntryIndex": 3,
+        "turnStartIndex": 0,
+        "isSplitTurn": true,
+        "retainedEstimate": 1,
+        "requestedRecentTokens": 10
+      }
+    },
+    {
+      "name": "03-cut-can-keep-more-than-budget",
+      "passed": true,
+      "observation": {
+        "firstKeptEntryIndex": 0,
+        "turnStartIndex": -1,
+        "isSplitTurn": false,
+        "retainedEstimate": 103,
+        "requestedRecentTokens": 10
+      }
+    },
+    {
+      "name": "03-cut-user-boundary-does-not-split",
+      "passed": true,
+      "observation": {
+        "firstKeptEntryIndex": 2,
+        "turnStartIndex": -1,
+        "isSplitTurn": false
+      }
+    }
+  ]
+}
