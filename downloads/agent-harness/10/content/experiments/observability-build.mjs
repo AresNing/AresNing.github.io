@@ -1,0 +1,2 @@
+import {build} from '../research/repos/pi/node_modules/esbuild/lib/main.js';
+await build({entryPoints:['experiments/observability-lab.ts'],outfile:'experiments/observability-lab.mjs',bundle:true,format:'esm',platform:'node',target:'node22',plugins:[{name:'session-fixture-boundary',setup(b){b.onResolve({filter:/^@deepseek-ai\/dsh-session$/},()=>({path:'session',namespace:'fixture'}));b.onLoad({filter:/.*/,namespace:'fixture'},()=>({contents:'export const SessionSeq=x=>x; export const SessionLogOffset=x=>x;',loader:'js'}));}}]});

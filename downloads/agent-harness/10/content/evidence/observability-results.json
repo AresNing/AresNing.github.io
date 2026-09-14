@@ -1,0 +1,46 @@
+{
+  "scope": "Unmodified DeepSeek SessionTelemetryCoordinator module, on-demand branch. Context, Session snapshot, sink and branded-number constructors are fixtures. No Cordis lifecycle, canonical-feedback authorization, real Session persistence, OTel SDK, exporter or remote delivery exercised. Also original Pi summarizeHarnessComparisons on synthetic observations, no model eval.",
+  "outcomes": [
+    {
+      "name": "10-ds-handoff-cursor-is-not-delivery-ack",
+      "passed": true,
+      "observation": {
+        "recordsHandedOff": 2,
+        "remoteDeliveryUnacknowledged": true,
+        "newCoordinatorSameSessionDoesNotReplayPrefix": true
+      }
+    },
+    {
+      "name": "10-ds-failed-middle-record-can-be-passed-by-cursor",
+      "passed": true,
+      "observation": {
+        "laterRecordNotStarved": true,
+        "failedMiddleNotRetriedOnNextCapture": true,
+        "accepted": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "name": "10-ds-capture-prefix-and-current-redaction-policy",
+      "passed": true,
+      "observation": {
+        "inclusivePrefixHonored": true,
+        "bodyCopiedBeforeLaterMutation": true,
+        "redactionSelectedAtCaptureTime": true
+      }
+    },
+    {
+      "name": "10-pi-paired-scores-exclude-harness-error",
+      "passed": true,
+      "observation": {
+        "candidatePassRate": 1,
+        "totalPairs": 2,
+        "eligiblePairs": 1,
+        "errorKeptAsDiagnostic": true,
+        "latencyOnlyEligiblePair": 5
+      }
+    }
+  ]
+}
