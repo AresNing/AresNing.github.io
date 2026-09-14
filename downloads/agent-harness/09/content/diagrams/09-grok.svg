@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Grok：Actor 终态之后，协议入口仍有工作</title>
+<desc id="desc">prompt_complete 发起发送，不代表对端已经消费所有状态。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#6b8592"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#6b8592;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#f5f8fa"/>
+<text x="64" y="53" font-size="19" fill="#007b70" text-anchor="start" font-weight="400">AGENT HARNESS   /   09   /   Grok Build</text>
+<text x="64" y="130" font-size="42" fill="#17313d" text-anchor="start" font-weight="700">Grok：Actor 终态之后，协议入口仍有工作</text>
+<text x="64" y="166" font-size="21" fill="#536c78" text-anchor="start" font-weight="400">调用 / 数据的推进路径</text>
+<rect x="174" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="206" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">01</text>
+<rect x="64" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="64" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="88" y="367" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">分发 prompt 后</text>
+<text x="88" y="401" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">释放锁</text>
+<text x="88" y="436" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">等待 Actor receiver</text>
+<path class="edge" d="M352 414 L386 414"/>
+<rect x="506" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="538" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">02</text>
+<rect x="396" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="396" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="420" y="367" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">Actor 返回终态</text>
+<text x="420" y="402" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">取得 stop reason 与</text>
+<text x="420" y="430" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">usage</text>
+<path class="edge" d="M684 414 L718 414"/>
+<rect x="838" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="870" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">03</text>
+<rect x="728" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="728" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="752" y="367" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">发通知并组织收尾</text>
+<text x="752" y="402" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">部分上传等待或转后台</text>
+<path class="edge" d="M1016 414 L1050 414"/>
+<rect x="1170" y="253" width="64" height="44" rx="22" fill="#dce9f7" stroke="none"/>
+<text x="1202" y="284" font-size="23" fill="#275db3" text-anchor="middle" font-weight="700">04</text>
+<rect x="1060" y="324" width="284" height="183" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="1060" y="342" width="5" height="147" rx="2" fill="#007b70"/>
+<text x="1084" y="364" font-size="25" fill="#17313d" text-anchor="start" font-weight="650">返回 ACP response</text>
+<text x="1084" y="399" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">包含对应结果与元数据</text>
+<text x="132" y="619" font-size="27" fill="#536c78" text-anchor="start" font-weight="400">读图时沿箭头寻找交接点，再回到正文核对输入、结果与失败分支。</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#e5f2ee" stroke="#c7dfd6"/>
+<text x="87" y="784" font-size="25" fill="#17313d" text-anchor="start" font-weight="500">prompt_complete 发起发送，不代表对端已经消费所有状态。</text>
+<text x="64" y="869" font-size="18" fill="#536c78" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#536c78" text-anchor="end" font-weight="400">G09b · G09c · G09d</text>
+</svg>

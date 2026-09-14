@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">DeepSeek：客户端超时，只放弃本地等待</title>
+<desc id="desc">没有 cancel 帧，已进入的服务端 handler 仍可产生副作用。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#968A7A"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#968A7A;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<text x="64" y="53" font-size="19" fill="#964D3B" text-anchor="start" font-weight="400">AGENT HARNESS   /   09   /   DeepSeek</text>
+<text x="64" y="130" font-size="42" fill="#292824" text-anchor="start" font-weight="700">DeepSeek：客户端超时，只放弃本地等待</text>
+<text x="64" y="166" font-size="21" fill="#68645E" text-anchor="start" font-weight="400">自上而下为事件次序，不表示时间比例</text>
+<rect x="74" y="189" width="332" height="60" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="240" y="229" font-size="27" fill="#292824" text-anchor="middle" font-weight="650">客户端</text>
+<path d="M240 249 L240 716" stroke="#bdcbd3" stroke-dasharray="8 8" stroke-width="2"/>
+<rect x="554" y="189" width="332" height="60" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="720" y="229" font-size="27" fill="#292824" text-anchor="middle" font-weight="650">transport</text>
+<path d="M720 249 L720 716" stroke="#bdcbd3" stroke-dasharray="8 8" stroke-width="2"/>
+<rect x="1034" y="189" width="332" height="60" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="1200" y="229" font-size="27" fill="#292824" text-anchor="middle" font-weight="650">服务端</text>
+<path d="M1200 249 L1200 716" stroke="#bdcbd3" stroke-dasharray="8 8" stroke-width="2"/>
+<rect x="258.0" y="270" width="444" height="38" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="480.0" y="294" font-size="25" fill="#292824" text-anchor="middle" font-weight="400">发送 request</text>
+<path class="edge" d="M252 315 L704 315"/>
+<text x="71" y="323" font-size="20" fill="#68645E" text-anchor="start" font-weight="400">1</text>
+<rect x="738.0" y="348" width="444" height="38" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="960.0" y="372" font-size="25" fill="#292824" text-anchor="middle" font-weight="400">启动 handler</text>
+<path class="edge" d="M732 393 L1184 393"/>
+<text x="71" y="401" font-size="20" fill="#68645E" text-anchor="start" font-weight="400">2</text>
+<rect x="258.0" y="426" width="444" height="38" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="480.0" y="450" font-size="25" fill="#292824" text-anchor="middle" font-weight="400">超时 abort：删除 pending</text>
+<path class="edge" d="M252 471 L704 471"/>
+<text x="71" y="479" font-size="20" fill="#68645E" text-anchor="start" font-weight="400">3</text>
+<rect x="738.0" y="504" width="444" height="38" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="960.0" y="528" font-size="25" fill="#292824" text-anchor="middle" font-weight="400">工作继续，迟到响应返回</text>
+<path class="edge" d="M1188 549 L736 549"/>
+<text x="71" y="557" font-size="20" fill="#68645E" text-anchor="start" font-weight="400">4</text>
+<path class="edge" d="M720 610 L870 610 L870 643 L729 643"/>
+<text x="885" y="615" font-size="22" fill="#292824" text-anchor="start" font-weight="400">无 pending：忽略迟到响</text>
+<text x="885" y="642" font-size="22" fill="#292824" text-anchor="start" font-weight="400">应</text>
+<text x="71" y="635" font-size="20" fill="#68645E" text-anchor="start" font-weight="400">5</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="87" y="784" font-size="25" fill="#292824" text-anchor="start" font-weight="500">没有 cancel 帧，已进入的服务端 handler 仍可产生副作用。</text>
+<text x="64" y="869" font-size="18" fill="#68645E" text-anchor="start" font-weight="400">原 transport + 内存 byte stream 实测</text>
+<text x="1376" y="869" font-size="17" fill="#68645E" text-anchor="end" font-weight="400">D09d · D09e</text>
+</svg>
