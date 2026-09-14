@@ -272,21 +272,66 @@
   if (shareSection) {
     const copyLink = shareSection.querySelector('.copy-link');
     const shareStatus = shareSection.querySelector('.share-status');
+    const shareTrigger = shareSection.querySelector('.share-trigger');
+    const sharePopover = shareSection.querySelector('.share-popover');
+    const anchoredShare = 'showPopover' in HTMLElement.prototype && window.FloatingUIDOM;
+    function closeShare() {
+      if (anchoredShare && sharePopover.matches(':popover-open')) {
+        sharePopover.hidePopover();
+        shareTrigger.focus({preventScroll: true});
+      }
+    }
+    if (anchoredShare) {
+      const {computePosition, autoUpdate, offset, flip, shift, hide} = window.FloatingUIDOM;
+      let cleanupPosition;
+      sharePopover.setAttribute('popover', 'auto');
+      shareTrigger.hidden = false;
+      shareTrigger.setAttribute('aria-expanded', 'false');
+      copyLink.setAttribute('autofocus', '');
+      const positionShare = async () => {
+        const {x, y, middlewareData} = await computePosition(shareTrigger, sharePopover, {
+          strategy: 'fixed', placement: 'bottom-start',
+          middleware: [offset(8), flip({padding: 12}), shift({padding: 12}), hide()]
+        });
+        if (!sharePopover.matches(':popover-open')) return;
+        if (middlewareData.hide?.referenceHidden) { sharePopover.hidePopover(); return; }
+        Object.assign(sharePopover.style, {left: `${x}px`, top: `${y}px`});
+      };
+      sharePopover.addEventListener('beforetoggle', event => {
+        if (event.newState === 'open') {
+          const rect = shareTrigger.getBoundingClientRect();
+          Object.assign(sharePopover.style, {left: `${rect.left}px`, top: `${rect.bottom + 8}px`});
+        }
+      });
+      sharePopover.addEventListener('toggle', () => {
+        cleanupPosition?.();
+        cleanupPosition = undefined;
+        const open = sharePopover.matches(':popover-open');
+        shareTrigger.setAttribute('aria-expanded', String(open));
+        if (open) cleanupPosition = autoUpdate(shareTrigger, sharePopover, positionShare);
+      });
+      // This is a group of ordinary links/buttons, so keep native Tab/Enter semantics.
+      document.addEventListener('focusin', event => {
+        if (!sharePopover.contains(event.target) && event.target !== shareTrigger && sharePopover.matches(':popover-open')) sharePopover.hidePopover();
+      });
+      sharePopover.querySelectorAll('a').forEach(link => link.addEventListener('click', closeShare));
+    }
     copyLink.hidden = false;
     if (navigator.clipboard?.writeText) {
       copyLink.addEventListener('click', async () => {
-        try { await navigator.clipboard.writeText(copyLink.dataset.clipboardText); shareStatus.textContent = '文章链接已复制。'; }
+        try { await navigator.clipboard.writeText(copyLink.dataset.clipboardText); closeShare(); shareStatus.textContent = '文章链接已复制。'; }
         catch { shareStatus.textContent = '未能复制，请复制浏览器地址栏中的文章链接。'; }
       });
     } else {
       const linkClipboard = new ClipboardJS(copyLink);
-      linkClipboard.on('success', e => { e.clearSelection(); shareStatus.textContent = '文章链接已复制。'; });
+      linkClipboard.on('success', e => { e.clearSelection(); closeShare(); shareStatus.textContent = '文章链接已复制。'; });
       linkClipboard.on('error', () => { shareStatus.textContent = '未能复制，请复制浏览器地址栏中的文章链接。'; });
     }
     const nativeShare = shareSection.querySelector('.native-share');
     if (navigator.share) {
       nativeShare.hidden = false;
       nativeShare.addEventListener('click', async () => {
+        closeShare();
         try { await navigator.share({title: shareSection.dataset.shareTitle, url: shareSection.dataset.shareUrl}); shareStatus.textContent = '已交给系统分享。'; }
         catch (error) { shareStatus.textContent = error.name === 'AbortError' ? '' : '系统分享暂时不可用，可以复制链接。'; }
       });
