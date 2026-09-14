@@ -1,0 +1,44 @@
+{
+  "scope": "independent teaching prototypes; not product acceptance",
+  "runtime": "3.11.16",
+  "outcomes": [
+    {
+      "name": "06-effect-before-result-crash",
+      "passed": true,
+      "observation": {
+        "naive": 2,
+        "idempotent": 1
+      }
+    },
+    {
+      "name": "08-cancel-and-reap-two-processes",
+      "passed": true,
+      "observation": {
+        "reapedChildren": 2,
+        "lateWrites": 0,
+        "exitCodes": [
+          -15,
+          -15
+        ]
+      }
+    },
+    {
+      "name": "09-disconnect-snapshot-cursor",
+      "passed": true,
+      "observation": {
+        "eventsRecovered": 4,
+        "duplicateEventsDropped": 2,
+        "finalStatus": "blocked",
+        "pendingApproval": false
+      }
+    },
+    {
+      "name": "10-semantic-mutation-check",
+      "passed": true,
+      "observation": {
+        "denyBlocksEffect": true,
+        "intentionalPermissionBugDetected": true
+      }
+    }
+  ]
+}

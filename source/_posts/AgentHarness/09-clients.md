@@ -4,13 +4,14 @@ description: "请求成功、运行结束和客户端看到结果，是不同的
 intro: "断连后看不到结果，能否直接重新提交？本文沿四条协议路径区分接纳、执行和观察，结合传输层与输出模块实验，分析客户端怎样避免把未知状态显示为失败或完成。"
 kind: article
 card_wrap: words
+card_title_lines: ["界面显示已完成时，", "Harness 承诺了什么？"]
 published: true
 categories: [Agent Harness]
 tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/09-clients/
-related: ["agent-harness/08-subagents/"]
+related: ["agent-harness/08-subagents/", "agent-harness/10-observability/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/09/09.svg" target="_blank" rel="noopener" aria-label="查看完整配图：客户端与运行时协议：请求接纳与任务完成不能合并"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/09/09-mobile.svg"><img src="/images/agent-harness/09/09.svg" alt="客户端与运行时协议：请求接纳与任务完成不能合并" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -171,6 +172,6 @@ Actor 回复之后还没立刻返回。代码读取 usage、准备取消元数�
 
 ## 系列阅读
 
-[上一篇：子 Agent 何时才算结束？创建、接纳与资源回收](/agent-harness/08-subagents/)
+[上一篇：子 Agent 何时才算结束？创建、接纳与资源回收](/agent-harness/08-subagents/) · [下一篇：测试通过证明了什么？Harness 的观测证据与评分分母](/agent-harness/10-observability/)
 
 <!-- /harness-series-nav -->

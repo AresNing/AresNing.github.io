@@ -29,7 +29,8 @@ hexo.extend.generator.register('paper-social', function(locals) {
     if (!fs.existsSync(file)) {
       const title = String(post.title || '无题');
       const size = title.length > 52 ? 44 : 58;
-      const titleLines = lines(title, 1030 / size, post.card_wrap === 'words');
+      const titleLines = post.card_title_lines || lines(title, 1030 / size, post.card_wrap === 'words');
+      if (post.card_title_lines && (!Array.isArray(titleLines) || titleLines.some(line => typeof line !== 'string' || !line) || titleLines.join('') !== title)) throw new Error(`封面断行必须完整保留标题：${title}`);
       if (titleLines.length > 4) throw new Error(`分享标题过长，请缩短：${title}`);
       const text = (items, y, fontSize, color, step) => items.map((line, i) => `<text x="80" y="${y + i * step}" font-size="${fontSize}" fill="${color}">${escapeHTML(line)}</text>`).join('');
       const descriptionY = Math.max(365, 200 + titleLines.length * 72);
