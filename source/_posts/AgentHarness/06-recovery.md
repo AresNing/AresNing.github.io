@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/06-recovery/
-related: ["agent-harness/05-permissions/"]
+related: ["agent-harness/05-permissions/", "agent-harness/07-extensions/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/06/06.svg" target="_blank" rel="noopener" aria-label="查看完整配图：恢复与外部副作用：历史缺少结果，不代表操作没有发生"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/06/06-mobile.svg"><img src="/images/agent-harness/06/06.svg" alt="恢复与外部副作用：历史缺少结果，不代表操作没有发生" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -182,6 +182,6 @@ Grok 的 `TurnBoundary` 将普通 turn Hook 与 prompt rewind RPC 分开：`prom
 
 ## 系列阅读
 
-[上一篇：一次批准改变了什么？四种 Harness 的权限与沙箱](/agent-harness/05-permissions/)
+[上一篇：一次批准改变了什么？四种 Harness 的权限与沙箱](/agent-harness/05-permissions/) · [下一篇：多个 Hook 如何协作？四种 Harness 的扩展与卸载](/agent-harness/07-extensions/)
 
 <!-- /harness-series-nav -->

@@ -1,0 +1,85 @@
+{
+  "scope": "Unmodified Pi durable HookRegistry and vendored Cordis. Hook callbacks, effect setup/cleanup and dependency services are controlled fixtures; gate only admits callbacks with an AbortSignal. No full Harness cancellation, plugin profile reload, OS process or telemetry exporter is tested.",
+  "outcomes": [
+    {
+      "name": "07-pi-durable-rewrite-is-waterfall",
+      "passed": true,
+      "observation": {
+        "observedArgs": [
+          1,
+          2
+        ],
+        "finalValue": 20
+      }
+    },
+    {
+      "name": "07-pi-pre-failure-blocks-post-failure-preserves",
+      "passed": true,
+      "observation": {
+        "beforeBlocked": true,
+        "laterBeforeRan": false,
+        "earlierPostPatchPreserved": true,
+        "laterPostRan": true,
+        "errorFlagNotOverwritten": true
+      }
+    },
+    {
+      "name": "07-pi-removal-does-not-change-admitted-snapshot",
+      "passed": true,
+      "observation": {
+        "removedHandlerRunsInCurrentSnapshot": 1,
+        "removedHandlerRunsInNextAggregate": 0
+      }
+    },
+    {
+      "name": "07-cordis-unload-waits-late-setup-cleanup",
+      "passed": true,
+      "observation": {
+        "waitsForLateSetup": true,
+        "waitsForCleanup": true,
+        "cleaned": 1
+      }
+    },
+    {
+      "name": "07-cordis-reverse-order-within-effect",
+      "passed": true,
+      "observation": {
+        "order": [
+          "B:start",
+          "B:end",
+          "A"
+        ],
+        "doubleDisposeNoOp": true
+      }
+    },
+    {
+      "name": "07-cordis-owner-unloads-independent-effects-concurrently",
+      "passed": true,
+      "observation": {
+        "cleanupStartsBeforeRelease": [
+          "B",
+          "A"
+        ],
+        "ownerWaitsForBoth": true
+      }
+    },
+    {
+      "name": "07-cordis-dependency-replacement-restarts-consumer",
+      "passed": true,
+      "observation": {
+        "consumerStarts": 2,
+        "consumerCleanups": 2
+      }
+    },
+    {
+      "name": "07-cordis-cleanup-failure-can-stop-one-effect-chain",
+      "passed": true,
+      "observation": {
+        "attemptedCleanup": [
+          "B"
+        ],
+        "earlierCleanupNotAttempted": true
+      }
+    }
+  ]
+}
