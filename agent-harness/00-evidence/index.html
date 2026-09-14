@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F5EF">
+  <script src="/js/theme.js"></script>
+  
+  <title>00 导读：实验记录与结论边界 · AresNing</title>
+  <meta name="description" content="记录 Java、并发编程与代码可读性的学习和实践。">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="00 导读：实验记录与结论边界">
+  <meta property="og:description" content="记录 Java、并发编程与代码可读性的学习和实践。">
+  <meta property="og:url" content="https://aresning.github.io/agent-harness/00-evidence/index.html">
+  <meta property="og:site_name" content="AresNing">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://aresning.github.io/images/share/a589b39b6d04340f.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="AresNing · AresNing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="00 导读：实验记录与结论边界">
+  <meta name="twitter:description" content="记录 Java、并发编程与代码可读性的学习和实践。">
+  <meta name="twitter:image" content="https://aresning.github.io/images/share/a589b39b6d04340f.png">
+  <meta name="twitter:image:alt" content="AresNing · AresNing">
+  
+  <link rel="canonical" href="https://aresning.github.io/agent-harness/00-evidence/index.html">
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png">
+  <link rel="stylesheet" href="/css/paper.css">
+  <script defer src="/lib/paper/a11y-dialog.min.js"></script>
+  <script defer src="/lib/paper/clipboard.min.js"></script>
+  <script defer src="/js/paper.js"></script>
+<meta name="generator" content="Hexo 5.4.2"><link rel="stylesheet" href="/css/prism-vs.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="/" aria-label="AresNing 首页">AresNing</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="/">文章</a>
+      <a href="/archives/">归档</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
+    <div class="header-actions">
+      <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      <button class="ui-button icon-button menu-toggle" type="button" aria-label="打开菜单" aria-controls="menu-dialog" aria-haspopup="dialog" data-a11y-dialog-show="menu-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1"><div class="reading-layout"><article class="reading-page standalone-page">
+  <header class="article-header"><p class="eyebrow">ABOUT</p><h1>00 导读：实验记录与结论边界</h1></header>
+  
+    <div class="prose"><p><a href="/agent-harness/00-overview/">返回 00 导读</a> · <a href="/downloads/agent-harness/00/agent-harness-00.zip">下载完整材料</a></p>
+<p>本附件摘取导读实际使用的实验依据。记录来自 2026-09-12 至 13 日，2026-09-14 核对并整理；本次润色没有重新执行实验。原环境为 macOS Apple Silicon、Node 22.19.0、Python 3.11.16，版本和归档校验值见 <a href="/downloads/agent-harness/00/content/evidence/versions.json">versions.json</a>。</p>
+<h2 id="本文使用的观察">本文使用的观察</h2>
+<table>
+<thead>
+<tr>
+<th>正文中的问题</th>
+<th>被测路径与输入</th>
+<th>保存的观察</th>
+<th>原始记录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一次请求有几种结束边界</td>
+<td>Pi 原始 core，固定返回两批工具及最终文本；工具写入为合成副作用</td>
+<td>3 次内部 turn 结束、1 次 Agent run 结束、2 次写入</td>
+<td><a href="/downloads/agent-harness/00/content/evidence/pi-lab-results.json">Pi 结果</a>，场景 <code>01-two-tool-batches</code>；<a href="/downloads/agent-harness/00/content/evidence/pi-events.jsonl">188 条事件</a></td>
+</tr>
+<tr>
+<td>停止以后还会轮询 follow-up 吗</td>
+<td>Pi 原始循环，在工具完成后的停止条件处控制输入</td>
+<td>follow-up 轮询 0 次</td>
+<td><a href="/downloads/agent-harness/00/content/evidence/deep-dive-results.json">深入实验结果</a>，场景 <code>01-stop-before-followup-poll</code></td>
+</tr>
+<tr>
+<td>同批工具是否要一起等准备完成</td>
+<td>Pi 原始工具调度，阻塞 B 的前置准备</td>
+<td>B 准备未释放时，工具 body 启动数为 0</td>
+<td><a href="/downloads/agent-harness/00/content/evidence/deep-dive-results.json">深入实验结果</a>，场景 <code>04-pi-all-preflight-before-body</code></td>
+</tr>
+<tr>
+<td>后续工具补位是否等于结果已提交</td>
+<td>DeepSeek 原始 scheduler，registry、执行服务及内存 append 为替身</td>
+<td>C 可以补位，结果仍按调用顺序提交</td>
+<td><a href="/downloads/agent-harness/00/content/evidence/deep-dive-results.json">深入实验结果</a>，完整时序见<a href="/downloads/agent-harness/00/content/evidence/deep-dive-traces.json">局部轨迹</a></td>
+</tr>
+<tr>
+<td>客户端超时是否终止服务端工作</td>
+<td>DeepSeek 原始 <code>JsonRpcLineTransport</code>，内存字节流与受控 handler</td>
+<td>客户端先拒绝，释放 handler 后计数器副作用仍发生，迟到响应被忽略</td>
+<td><a href="/downloads/agent-harness/00/content/evidence/clients-results.json">客户端结果</a>，场景 <code>09-ds-abandonment-does-not-cancel-server</code></td>
+</tr>
+</tbody>
+</table>
+<p>结果文件保留所在实验组的全部条目，避免摘取单一成功项后丢失上下文；它们包含 13、11、5 项检查。<code>passed</code> 表示观察符合该场景断言。例如超时后仍有副作用的反例通过，表示成功复现这一边界，不能读作取消保证通过。</p>
+<h2 id="原模块与替身分别是什么">原模块与替身分别是什么</h2>
+<p>Pi 实验使用固定源码的循环、EventStream 和参数校验路径；模型响应、工具输入与控制门为合成数据。构建桥接文件绕开未准备好的产品导出图，没有替换循环算法。直接调用 core，不等于启动 Pi CLI 或 durable Harness。</p>
+<p>DeepSeek 调度实验调用原始 <code>tool-calls.ts</code>、消息构造器和值工具；构建器从 tools 模块原样提取两个常量，registry、prepare/dispatch/finalize 与 session append 是测试服务。它不验证完整插件装配、真实审批或持久化 flush。</p>
+<p>客户端实验使用内存字节流，没有启动完整服务端、建立产品网络连接或执行真实模型任务。这里的“服务端副作用”具体指测试计数器，不能推广为所有业务动作的行为保证。</p>
+<h2 id="没有验证的范围">没有验证的范围</h2>
+<ul>
+<li>Codex、Grok Build：正文对应路径为固定版本源码分析，未构建或运行产品。</li>
+<li>Pi、DeepSeek：局部原模块实验不代表完整产品构建、安装或端到端验收。此前尝试 Pi 上游测试时在模块加载阶段失败，实际执行数为 0；局部实验通过不替代该结果。</li>
+<li>未进行真实模型任务成功率、成本或性能排名；未逐一验证四产品的操作系统隔离、崩溃恢复或真实客户端重连。</li>
+<li>本次交付检查的是文字、引用及附件完整性；网站构建、浏览器呈现和公开发布由博客发布环节另行验证。</li>
+</ul>
+<p>复现入口见<a href="/agent-harness/00-reproduce/">复现说明</a>。包内不含上游源码归档、依赖或带本机路径的失败日志。</p>
+</div>
+    
+  
+</article></div>
+</main>
+  <footer class="site-footer shell">
+    <div><span class="footer-name">AresNing · Hungry &amp; Humble</span><small>© 2022–2026 AresNing · Powered by Hexo</small></div>
+    <a target="_blank" href="https://github.com/AresNing" rel="me noopener">GitHub <span aria-hidden="true">↗</span></a>
+  </footer>
+  <div class="ui-dialog" id="search-dialog" aria-hidden="true" aria-labelledby="search-title" data-search-url="/search.xml" data-fuse-url="/lib/paper/fuse.min.mjs">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+    <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
+    </div>
+  </div>
+  <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+      <div class="dialog-heading"><h2 id="menu-title">导航</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <a href="/">文章</a>
+        <a href="/archives/">归档</a>
+        <a href="/categories/">分类</a>
+        <a href="/tags/">标签</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>

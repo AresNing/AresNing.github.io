@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img">
+<title>一次任务经过哪些层</title><desc>先对齐责任边界，再比较实现。实测同一 Pi 请求有 3 个内部 turn；四产品链路为固定源码推演。</desc>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#292824}.muted{fill:#68645E}.accent{fill:#964D3B}</style>
+<text x="70" y="78" font-size="22" class="accent">AGENT HARNESS / 00</text>
+<text x="70" y="156" font-size="48" font-weight="700">一次任务经过哪些层</text>
+<text x="70" y="213" font-size="29" class="muted">先对齐责任边界，再比较实现</text>
+<rect x="70" y="265" width="635" height="158" rx="14" fill="white" stroke="#DCD7CD"/>
+<text x="96" y="311" font-size="26" font-weight="600">Codex</text>
+<text x="96" y="359" font-size="24">输入准入后保持 step 请求视图</text>
+<text x="96" y="395" font-size="16" class="muted">固定源码 c4017a87aacc · 取证卡 C09b</text>
+<rect x="735" y="265" width="635" height="158" rx="14" fill="white" stroke="#DCD7CD"/>
+<text x="761" y="311" font-size="26" font-weight="600">Pi</text>
+<text x="761" y="359" font-size="24">循环、RPC 与 durable 路径分读</text>
+<text x="761" y="395" font-size="16" class="muted">固定源码 71dca871bc80 · 取证卡 P01</text>
+<rect x="70" y="453" width="635" height="158" rx="14" fill="white" stroke="#DCD7CD"/>
+<text x="96" y="499" font-size="26" font-weight="600">DeepSeek Harness</text>
+<text x="96" y="547" font-size="24">组合服务与 live 实例校验</text>
+<text x="96" y="583" font-size="16" class="muted">固定源码 c291e7961a51 · 取证卡 D09b</text>
+<rect x="735" y="453" width="635" height="158" rx="14" fill="white" stroke="#DCD7CD"/>
+<text x="761" y="499" font-size="26" font-weight="600">Grok Build</text>
+<text x="761" y="547" font-size="24">Actor 分发与并发执行分责</text>
+<text x="761" y="583" font-size="16" class="muted">固定源码 37949780c144 · 取证卡 G09b</text>
+<rect x="70" y="673" width="1300" height="128" rx="14" fill="#EFEBE3"/>
+<text x="96" y="714" font-size="20" class="accent">本轮证据与边界</text>
+<text x="96" y="756" font-size="23">实测同一 Pi 请求有 3 个内部 turn；四产品链路为固定源码推演。</text>
+<text x="70" y="855" font-size="18" class="muted">2026-09-12 · 源码研究版 · 详细调用链与实验范围见同编号正文</text>
+</svg>
