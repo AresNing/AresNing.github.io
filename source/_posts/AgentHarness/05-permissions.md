@@ -175,6 +175,6 @@ shell file gate 的 Ask 还会阻止 bash grant 抵消它。批准运行某类 b
 
 ## 系列阅读
 
-[上一篇：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交](/agent-harness/04-tools/) · [下一篇：中断后能恢复什么？四种 Harness 的历史重建与副作用](/agent-harness/06-recovery/)
+[上一篇：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交](/agent-harness/04-tools/) · [下一篇：失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略](/agent-harness/06-recovery/)
 
 <!-- /harness-series-nav -->

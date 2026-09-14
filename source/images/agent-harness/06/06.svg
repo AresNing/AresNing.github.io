@@ -1,10 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img">
-<title>恢复与外部副作用</title><desc>历史缺少结果，不代表操作没有发生。独立崩溃实验：朴素重跑 2 条，外部幂等键版本 1 条。</desc>
+<title>失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略</title><desc>历史缺少结果，不代表操作没有发生。独立崩溃实验：朴素重跑 2 条，外部幂等键版本 1 条。</desc>
 <rect width="1440" height="900" fill="#F7F5EF"/>
 <style>text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#292824}.muted{fill:#68645E}.accent{fill:#964D3B}</style>
 <text x="70" y="78" font-size="22" class="accent">AGENT HARNESS / 06</text>
-<text x="70" y="156" font-size="48" font-weight="700">恢复与外部副作用</text>
-<text x="70" y="213" font-size="29" class="muted">历史缺少结果，不代表操作没有发生</text>
+<text x="70" y="136" font-size="44" font-weight="700">失败之后，Agent 如何继续？</text>
+<text x="70" y="188" font-size="38" font-weight="700">四个 Harness 的重试、检查点与恢复策略</text>
+<text x="70" y="237" font-size="29" class="muted">历史缺少结果，不代表操作没有发生</text>
 <rect x="70" y="265" width="635" height="158" rx="14" fill="white" stroke="#DCD7CD"/>
 <text x="96" y="311" font-size="26" font-weight="600">Codex</text>
 <text x="96" y="359" font-size="24">存活 checkpoint 与基线重放</text>

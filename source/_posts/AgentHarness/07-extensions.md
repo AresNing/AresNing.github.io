@@ -169,6 +169,6 @@ DeepSeek vendored Cordis 的 Fiber 通过 `_refresh` 为依赖集合生成 epoch
 
 ## 系列阅读
 
-[上一篇：中断后能恢复什么？四种 Harness 的历史重建与副作用](/agent-harness/06-recovery/) · [下一篇：子 Agent 何时才算结束？创建、接纳与资源回收](/agent-harness/08-subagents/)
+[上一篇：失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略](/agent-harness/06-recovery/) · [下一篇：子 Agent 何时才算结束？创建、接纳与资源回收](/agent-harness/08-subagents/)
 
 <!-- /harness-series-nav -->

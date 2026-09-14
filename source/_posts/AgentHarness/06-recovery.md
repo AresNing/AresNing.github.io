@@ -1,9 +1,10 @@
 ---
-title: "中断后能恢复什么？四种 Harness 的历史重建与副作用"
+title: "失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略"
 description: "工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。"
 intro: "历史里没有结果，既不能证明工具没执行，也不能证明它已经成功。本文区分恢复上下文、重放工具与回滚工作区，并用独立故障实验说明外部系统为何必须参与去重。"
 kind: article
 card_wrap: words
+card_title_lines: ["失败之后，Agent 如何继续？", "四个 Harness 的重试、", "检查点与恢复策略"]
 published: true
 categories: [Agent Harness]
 tags: ["Agent Harness", "源码阅读", "Coding Agent"]
@@ -13,7 +14,7 @@ permalink: agent-harness/06-recovery/
 related: ["agent-harness/05-permissions/", "agent-harness/07-extensions/"]
 ---
 
-<figure class="article-figure"><a href="/images/agent-harness/06/06.svg" target="_blank" rel="noopener" aria-label="查看完整配图：恢复与外部副作用：历史缺少结果，不代表操作没有发生"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/06/06-mobile.svg"><img src="/images/agent-harness/06/06.svg" alt="恢复与外部副作用：历史缺少结果，不代表操作没有发生" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<figure class="article-figure"><a href="/images/agent-harness/06/06.svg" target="_blank" rel="noopener" aria-label="查看完整配图：失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略：历史缺少结果，不代表操作没有发生"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/06/06-mobile.svg"><img src="/images/agent-harness/06/06.svg" alt="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略：历史缺少结果，不代表操作没有发生" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
 
 工具已经提交一次外部写入，Harness 却在保存结果前崩溃。重启以后，日志里只剩一个尚未结束的调用。此时“再跑一次”可能造成重复，“当作成功”可能虚构结果，“恢复 checkpoint”也未必能触及外部系统。
 

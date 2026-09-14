@@ -1,4 +1,4 @@
-# 中断后能恢复什么？四种 Harness 的历史重建与副作用
+# 失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略
 
 [阅读正文](articles/06-recovery.md) · [实验说明](evidence/EXPERIMENTS.md) · [复现入口](experiments/README.md)
 
