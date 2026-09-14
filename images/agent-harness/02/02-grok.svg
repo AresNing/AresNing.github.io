@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Grok：Chat Completions 的 Length 有特殊优先级</title>
+<desc id="desc">这一优先级属于该适配器，不能推广到所有模型协议。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#968A7A"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#968A7A;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<text x="64" y="53" font-size="19" fill="#964D3B" text-anchor="start" font-weight="400">AGENT HARNESS   /   02   /   Grok Build</text>
+<text x="64" y="130" font-size="42" fill="#292824" text-anchor="start" font-weight="700">Grok：Chat Completions 的 Length 有特殊优先级</text>
+<text x="64" y="166" font-size="21" fill="#68645E" text-anchor="start" font-weight="400">条件不同，后续责任不同</text>
+<rect x="480" y="190" width="480" height="119" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="480" y="208" width="5" height="83" rx="2" fill="#964D3B"/>
+<text x="504" y="233" font-size="28" fill="#292824" text-anchor="start" font-weight="650">Chat Completions 响应</text>
+<text x="504" y="268" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">收到 finish reason</text>
+<rect x="480" y="360" width="480" height="119" rx="16" fill="#E8D7C9" stroke="#DCD7CD"/>
+<rect x="480" y="378" width="5" height="83" rx="2" fill="#964D3B"/>
+<text x="504" y="403" font-size="28" fill="#292824" text-anchor="start" font-weight="650">Length 同时带工具调用？</text>
+<text x="504" y="438" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">检查可用的工具输出</text>
+<path class="edge" d="M720 313 L720 353"/>
+<rect x="100" y="554" width="540" height="136" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="100" y="572" width="5" height="100" rx="2" fill="#964D3B"/>
+<text x="124" y="597" font-size="28" fill="#292824" text-anchor="start" font-weight="650">保留工具调用路径</text>
+<text x="124" y="632" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">工具分支覆盖 Length</text>
+<path class="edge" d="M720 483 L720 513 L370 513 L370 546"/>
+<rect x="400.0" y="480" width="290" height="29" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="545.0" y="503" font-size="21" fill="#964D3B" text-anchor="middle" font-weight="400">有工具</text>
+<rect x="800" y="554" width="540" height="136" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="800" y="572" width="5" height="100" rx="2" fill="#68645E"/>
+<text x="824" y="597" font-size="28" fill="#292824" text-anchor="start" font-weight="650">进入相应 Length 处理</text>
+<text x="824" y="632" font-size="22" fill="#68645E" text-anchor="start" font-weight="400">再看本层的策略决定</text>
+<path class="edge" d="M720 483 L720 513 L1070 513 L1070 546"/>
+<rect x="750.0" y="480" width="290" height="29" rx="0" fill="#F7F5EF" stroke="none"/>
+<text x="895.0" y="503" font-size="21" fill="#68645E" text-anchor="middle" font-weight="400">无工具</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="87" y="784" font-size="25" fill="#292824" text-anchor="start" font-weight="500">这一优先级属于该适配器，不能推广到所有模型协议。</text>
+<text x="64" y="869" font-size="18" fill="#68645E" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#68645E" text-anchor="end" font-weight="400">G02d · G02</text>
+</svg>

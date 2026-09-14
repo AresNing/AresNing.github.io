@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F5EF">
+  <script src="/js/theme.js"></script>
+  
+  <title>模型流何时可以执行工具？四种 Harness 的终态与重试 · AresNing</title>
+  <meta name="description" content="工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="模型流何时可以执行工具？四种 Harness 的终态与重试">
+  <meta property="og:description" content="工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。">
+  <meta property="og:url" content="https://aresning.github.io/agent-harness/02-model-streams/">
+  <meta property="og:site_name" content="AresNing">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://aresning.github.io/images/share/e052e565ef4cb933.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="模型流何时可以执行工具？四种 Harness 的终态与重试 · AresNing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="模型流何时可以执行工具？四种 Harness 的终态与重试">
+  <meta name="twitter:description" content="工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。">
+  <meta name="twitter:image" content="https://aresning.github.io/images/share/e052e565ef4cb933.png">
+  <meta name="twitter:image:alt" content="模型流何时可以执行工具？四种 Harness 的终态与重试 · AresNing">
+  <meta property="article:author" content="https://aresning.github.io/about/"><meta property="article:published_time" content="2026-09-13T16:00:00.000Z"><meta property="article:modified_time" content="2026-09-13T16:00:00.000Z">
+  <link rel="canonical" href="https://aresning.github.io/agent-harness/02-model-streams/">
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png">
+  <link rel="stylesheet" href="/css/paper.css">
+  <script defer src="/lib/paper/a11y-dialog.min.js"></script>
+  <script defer src="/lib/paper/clipboard.min.js"></script>
+  <script defer src="/js/paper.js"></script>
+<meta name="generator" content="Hexo 5.4.2"><link rel="stylesheet" href="/css/prism-vs.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="/" aria-label="AresNing 首页">AresNing</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="/" aria-current="page">文章</a>
+      <a href="/archives/">归档</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
+    <div class="header-actions">
+      <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      <button class="ui-button icon-button menu-toggle" type="button" aria-label="打开菜单" aria-controls="menu-dialog" aria-haspopup="dialog" data-a11y-dialog-show="menu-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+<div class="reading-layout has-toc">
+  <article class="reading-page">
+    <header class="article-header">
+      <nav class="breadcrumb" aria-label="当前位置"><a href="/">文章</a><span aria-hidden="true">/</span><a href="/categories/Agent-Harness/">Agent Harness</a></nav>
+      <h1>模型流何时可以执行工具？四种 Harness 的终态与重试</h1>
+      <div class="article-meta"><a href="/about/">AresNing</a><span aria-hidden="true">·</span><span>文章</span><span aria-hidden="true">·</span><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time><span>更新于 <time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></span></div>
+      <p class="article-intro">连接中断前，界面已经显示完整的工具参数，此时能否执行？沿着参数、输出块、响应和执行提交的不同边界，理解重试究竟会重新做什么。</p>
+    </header>
+    <details class="mobile-toc"><summary>文章目录</summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E6%9D%A1%E6%B5%81%E9%87%8C%E5%AD%98%E5%9C%A8%E5%9B%9B%E7%A7%8D%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AE%8C%E6%88%90"><span class="toc-text">一条流里存在四种不同的完成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pi%EF%BC%9AHTTP-%E8%AF%B7%E6%B1%82%E5%8F%96%E5%BE%97%E6%B5%81%EF%BC%8C%E4%B8%8E%E6%B6%88%E8%B4%B9%E6%B5%81%EF%BC%8C%E6%98%AF%E4%B8%A4%E4%B8%AA%E5%A4%B1%E8%B4%A5%E8%BE%B9%E7%95%8C"><span class="toc-text">Pi：HTTP 请求取得流，与消费流，是两个失败边界</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Responses-%E9%80%82%E9%85%8D%E5%99%A8%E5%8C%BA%E5%88%86%E8%AF%B7%E6%B1%82%E4%B8%8E%E6%B5%81%E6%B6%88%E8%B4%B9"><span class="toc-text">从 Responses 适配器区分请求与流消费</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E5%87%BA-Retry-After-%E4%B8%8A%E9%99%90%EF%BC%8C%E6%98%AF%E5%A4%B1%E8%B4%A5%EF%BC%8C%E4%B8%8D%E6%98%AF%E7%BC%A9%E7%9F%AD%E7%AD%89%E5%BE%85"><span class="toc-text">超出 Retry-After 上限，是失败，不是缩短等待</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Responses-%E7%9A%84%E7%BB%88%E6%80%81%E5%BD%92%E4%B8%80%E5%8C%96%E4%BF%9D%E7%95%99%E5%8E%9F%E5%9B%A0%EF%BC%8C%E8%80%8C%E9%9D%9E%E5%8F%AA%E4%BF%9D%E7%95%99-incomplete"><span class="toc-text">Responses 的终态归一化保留原因，而非只保留 incomplete</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepSeek%EF%BC%9A%E7%BB%84%E8%A3%85%E5%99%A8%E3%80%81%E5%8D%8F%E8%AE%AE%E6%A3%80%E6%9F%A5%E3%80%81attempt-%E6%8F%90%E4%BA%A4%E6%89%BF%E6%8B%85%E4%B8%8D%E5%90%8C%E8%B4%A3%E4%BB%BB"><span class="toc-text">DeepSeek：组装器、协议检查、attempt 提交承担不同责任</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E8%A3%85%E5%99%A8%E4%B8%8E%E5%8D%8F%E8%AE%AE%E6%A0%A1%E9%AA%8C%E5%99%A8%E5%88%86%E5%88%AB%E5%88%A4%E6%96%AD%E4%BB%80%E4%B9%88"><span class="toc-text">组装器与协议校验器分别判断什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%AA%E6%96%AD%E4%BC%9A%E5%90%8C%E6%97%B6%E6%94%B9%E5%8F%98%E6%B6%88%E6%81%AF%E4%B8%8E-replay-metadata"><span class="toc-text">截断会同时改变消息与 replay metadata</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#attempt-%E8%AE%B0%E5%BD%95%E4%B8%8E-assistant-message-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%86%E5%BC%80"><span class="toc-text">attempt 记录与 assistant message 为什么要分开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E5%89%8D%E9%87%8D%E6%96%B0%E5%87%86%E5%A4%87%E8%B7%AF%E7%94%B1%EF%BC%8C%E5%8D%B4%E4%B8%8D%E8%83%BD%E9%87%8D%E5%A4%8D%E6%8E%A5%E7%BA%B3%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5"><span class="toc-text">重试前重新准备路由，却不能重复接纳用户输入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codex%EF%BC%9A%E6%B5%81%E9%87%8D%E8%AF%95%E5%8F%AF%E8%83%BD%E5%8F%91%E7%94%9F%E5%9C%A8%E9%83%A8%E5%88%86%E5%B7%A5%E5%85%B7%E5%B7%B2%E7%BB%8F%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E"><span class="toc-text">Codex：流重试可能发生在部分工具已经完成之后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E5%BE%AA%E7%8E%AF%E6%B2%A1%E6%9C%89%E7%9B%B2%E7%9B%AE%E9%87%8D%E5%8F%91%E5%90%8C%E4%B8%80%E4%BB%BD%E5%8E%9F%E5%A7%8B%E8%BE%93%E5%85%A5"><span class="toc-text">重试循环没有盲目重发同一份原始输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E6%9D%A1%E9%80%80%E9%81%BF%E8%B7%AF%E5%BE%84%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E5%90%88%E6%88%90%E4%B8%80%E4%B8%AA%E6%AC%A1%E6%95%B0"><span class="toc-text">三条退避路径，为什么不能合成一个次数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grok%EF%BC%9A%E5%90%8C%E4%B8%80%E4%B8%AA%E4%BA%A7%E5%93%81%EF%BC%8C%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9E%8B%E5%8D%8F%E8%AE%AE%E7%9A%84-Length-%E4%BC%98%E5%85%88%E7%BA%A7%E4%B9%9F%E4%B8%8D%E7%9B%B8%E5%90%8C"><span class="toc-text">Grok：同一个产品，不同模型协议的 Length 优先级也不相同</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#collector-%E7%9A%84-Completed-%E5%8F%AA%E8%A1%A8%E7%A4%BA%E6%B5%81%E5%B7%B2%E6%9C%89%E7%BB%88%E6%80%81%E7%BB%93%E6%9E%9C"><span class="toc-text">collector 的 Completed 只表示流已有终态结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E6%88%AA%E6%96%AD%E7%BB%93%E6%9E%9C%E4%BB%8D%E8%A2%AB%E5%85%81%E8%AE%B8%E8%BF%9B%E5%85%A5%E6%89%A7%E8%A1%8C"><span class="toc-text">哪些截断结果仍被允许进入执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell-%E8%BF%98%E5%AF%B9%E8%BF%9E%E7%BB%AD-salvage-%E5%92%8C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%E5%88%86%E5%88%AB%E8%AE%A1%E6%95%B0"><span class="toc-text">shell 还对连续 salvage 和恢复过程分别计数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E4%B8%8E%E6%8F%90%E4%BA%A4%E5%BF%85%E9%A1%BB%E4%B8%80%E8%B5%B7%E5%BB%BA%E6%A8%A1"><span class="toc-text">重试与提交必须一起建模</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AF%81%E6%8D%AE%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%88%A4%E6%96%AD"><span class="toc-text">实验证据与设计判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></details>
+    <div class="prose"><figure class="article-figure"><a href="/images/agent-harness/02/02.svg" target="_blank" rel="noopener" aria-label="查看完整配图：可靠的模型执行流：参数合法性与响应完整性分别判断"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-mobile.svg"><img src="/images/agent-harness/02/02.svg" alt="可靠的模型执行流：参数合法性与响应完整性分别判断" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p>模型输出工具参数 <code>&#123;&quot;path&quot;:&quot;report.md&quot;,&quot;content&quot;:&quot;结论……&quot;&#125;</code>，随后连接断开。界面已经显示一个工具卡片，参数对象也通过了 JSON 校验。此时能否写文件？如果自动重连，应该重新发出原请求，还是把已产生的内容和工具结果带回去？</p>
+<p>这两个问题连在一起：<strong>允许执行工具的时刻，决定了后续重试是否可能越过副作用边界。</strong> 把四个 SDK 包成 <code>stream(messages)</code>，只能统一调用形式；决定可靠性的工作发生在增量组装、终止归类、记录提交和下一次请求构造之间。</p>
+<p>本文锁定<a href="/downloads/agent-harness/02/content/evidence/versions.json">四份源码提交</a>。重点比较“相同故障在各层怎样被解释”，而不是比较供应商稳定性。2026-09-13 的局部实验调用 Pi 原始请求重试函数与 DeepSeek 组装/校验代码，输入为合成数据；未访问真实模型接口。</p>
+<blockquote>
+<p>版本与证据：源码基线固定于 2026-09-12，实验记录来自 2026-09-12 至 13 日；本文于 2026-09-14 润色，未重新执行实验。源码事实、局部实验观察与设计判断分别表述，不代表四产品端到端验收。详见<a href="/agent-harness/02-evidence/">本篇实验说明</a>。</p>
+</blockquote>
+<h2 id="一条流里存在四种不同的完成">一条流里存在四种不同的完成</h2>
+<p>可以把工具相关状态分成下面四层：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">参数增量可展示</span><br><span class="line">  → 一个输出 block 已闭合</span><br><span class="line">  → 整个响应得到终止原因</span><br><span class="line">  → 运行时允许执行并把结果纳入下一次请求</span><br></pre></td></tr></table></figure>
+<p>第一层允许尽力解析，第二层应有块身份和权威终值，第三层区分正常完成、截断、取消与失败，第四层还需要运行策略和工具校验。一个 <code>done</code> 字段无法同时表达这些完成条件。</p>
+<p>尤其是字符串参数，Schema 无法证明其内容完整。<code>content</code> 从一万字截成一千字，仍可能是合法字符串。相反，一个响应因文本部分达到上限而结束，也不必然意味着此前所有工具块都不完整。实现必须在保守拒绝和利用已完成工作之间选择，并保留作出选择所依赖的事实。</p>
+<p>下面带着三个问题读源码：看到工具块是否就能执行；输入流结束（EOF）是否等于成功；“重试 N 次”是否约束了整个用户请求。四套实现对这些问题的答案都不能只在一个函数里找到。</p>
+<h2 id="Pi：HTTP-请求取得流，与消费流，是两个失败边界">Pi：HTTP 请求取得流，与消费流，是两个失败边界</h2>
+<h3 id="从-Responses-适配器区分请求与流消费">从 Responses 适配器区分请求与流消费</h3>
+<!-- harness-diagram:02-pi -->
+<figure class="article-figure"><a href="/images/agent-harness/02/02-pi.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Pi：取到 stream 和读完 stream 是两条边界"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-pi-mobile.svg"><img src="/images/agent-harness/02/02-pi.svg" alt="Pi：取到 stream 和读完 stream 是两条边界" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 02 · Pi：请求阶段的退避策略，不能自动覆盖消费流中的所有失败。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/utils/provider-retry.ts#L1-L125">P02f</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/agent-loop.ts#L208-L245">P02</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/utils/json-parse.ts#L108-L124">P02b</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p>在 <code>api/openai-responses.ts</code> 中，SDK 调用设置 <code>maxRetries: 0</code>，外层用 <code>retryProviderRequest</code> 包装 <code>client.responses.create(...).withResponse()</code>。拿到响应以后才发 start，再进入 <code>processResponsesStream</code>。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/api/openai-responses.ts#L122-L218">适配器入口</a></p>
+<p>所以这里的 provider request retry 包住的是<strong>取得 SDK 响应和流对象</strong>的调用，后面的异步流消费不在这个 wrapper 内。若已经收到若干增量后 iterator 抛错，外层 catch 会将它归为错误/取消响应；不能因为文件顶部导入了 retry helper，就断言该函数会透明重放整段已消费流。</p>
+<p>SDK 自带重试被关掉也有明确的实现原因：Pi 的 helper 提供可被 AbortSignal 中断的退避等待。否则请求已经取消，SDK 内部睡眠仍可能继续占用生命周期。这个理由来自代码注释和调用位置，不是对 SDK 作者动机的猜测。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/utils/provider-retry.ts#L1-L125">请求重试实现</a></p>
+<h3 id="超出-Retry-After-上限，是失败，不是缩短等待">超出 Retry-After 上限，是失败，不是缩短等待</h3>
+<p>helper 先检查 <code>x-should-retry</code>，显式 false 可以覆盖 429/5xx 这类默认可重试状态；再处理 <code>retry-after-ms</code>、<code>retry-after</code>，否则使用指数退避加抖动。</p>
+<p>关键分支在 <code>validateServerRetryDelayMs</code>：服务器要求等待超过配置上限时，代码抛错，不会把 61 秒缩短为 60 秒后继续请求。默认上限是 60 秒，<code>maxRetryDelayMs</code> 为 0 才禁用此上限。默认 <code>maxRetries</code> 又是 0；是否启用重试要看实际调用参数。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/utils/provider-retry.ts#L1-L125">完整判断</a></p>
+<p>这会改变产品体验：等待过长时立即向用户暴露原因，避免悄悄违背服务端要求或无限挂起。新增三个实验分别确认：429 配 0 ms Retry-After 可在显式预算下重试成功；服务端明确禁止重试后只请求一次；61 秒等待要求超过默认上限时立即失败，没有缩短等待后继续重试。第四个实验确认 10 秒退避可被取消，且不发出第二次请求。<a href="/downloads/agent-harness/02/content/evidence/protocol-context-results.json">运行结果</a></p>
+<h3 id="Responses-的终态归一化保留原因，而非只保留-incomplete">Responses 的终态归一化保留原因，而非只保留 incomplete</h3>
+<p><code>processResponsesStream</code> 分别处理参数 delta、arguments.done、output_item.done 和 response 终态。终态函数把 provider status 与 incomplete reason 保存为 <code>rawStopReason</code>，然后归一化为 core 的 stop reason。<code>incomplete.max_output_tokens</code> 映射为 length；其它 incomplete 原因进入 error，不能与输出预算耗尽混为一谈。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/api/openai-responses-shared.ts#L551-L596">终态归一化</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/api/openai-responses-shared.ts#L650-L790">事件分支</a></p>
+<p>在 iterator 自然结束后，函数还检查 <code>sawTerminalResponseEvent</code>；没有终态事件就抛出明确错误。外层输出初始为 pending，也保留未正常结算的检查。这使“网络连接关闭”和“模型成功完成”保持不同语义。</p>
+<p><code>parseStreamingJson</code> 能宽容地恢复部分 JSON，但这一结果本身不能证明工具已经具备执行资格。core 的 <code>runLoop</code> 看到 length 时，不执行任何这条消息里的工具，而是逐项产生截断错误结果；看到 error/aborted 时，则直接收束 turn/run。<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/agent/src/agent-loop.ts#L208-L245">工具执行资格</a></p>
+<p>这个策略牺牲了部分可挽救工作：同一响应里即使 A 的参数已完整、B 的参数被截断，length 分支仍拒绝整批。但它不要求 core 理解每个 provider 的“工具块是否可视为完成”保证，把风险边界压在一个容易解释的响应级条件上。</p>
+<h2 id="DeepSeek：组装器、协议检查、attempt-提交承担不同责任">DeepSeek：组装器、协议检查、attempt 提交承担不同责任</h2>
+<h3 id="组装器与协议校验器分别判断什么">组装器与协议校验器分别判断什么</h3>
+<!-- harness-diagram:02-deepseek -->
+<figure class="article-figure"><a href="/images/agent-harness/02/02-deepseek.svg" target="_blank" rel="noopener" aria-label="查看完整配图：DeepSeek：能组装对象，不代表流协议完整"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-deepseek-mobile.svg"><img src="/images/agent-harness/02/02-deepseek.svg" alt="DeepSeek：能组装对象，不代表流协议完整" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 02 · DeepSeek：组装默认值不等于协议通过；两条分支表示职责，不表示并发执行。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/llm/llm/src/invariant.ts#L1-L112">D02c</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/core/agent-loop/src/agent.ts#L352-L566">D02</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p><code>BlockAssembler</code> 支持只有 delta、没有完整 start/end 包装的输入；首次 block-end 成为该块权威内容，后来的重复 close 或尾随 delta 不再改写它。其 <code>finish</code> getter 在缺少 finish chunk 时默认返回 stop。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/llm/llm/src/assembler.ts#L38-L199">组装器</a></p>
+<p>只读这里，很容易得出“EOF 被当成成功”的全产品结论。但仓库还有独立的配套校验模块 <code>llm-invariant</code>：它在 <code>llm/stream</code> 外包装校验，检查块索引、delta 对应的开放块类型、重复 usage、finish 后新增事件，以及流结束时必须存在 finish。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/llm/llm/src/invariant.ts#L1-L112">协议校验插件</a></p>
+<p>本轮用同一类缺少 finish 的输入做了对照：原始 assembler 的 getter 返回 stop；通过原始 companion 安装的校验 wrapper 则抛出缺少终态的错误。实验使用测试上下文注册 wrapper，不证明所有产品 profile 都启用了该 companion。</p>
+<p>这正是插件型架构分析需要保留的限定：<strong>能在仓库找到校验器，不等于每个部署都执行校验；能在基础组装器找到宽容分支，也不等于最终请求必然被接受。</strong> 正确的审查单位应包含实际插件组合，而不只是某个类。</p>
+<h3 id="截断会同时改变消息与-replay-metadata">截断会同时改变消息与 replay metadata</h3>
+<p><code>BlockAssembler.assembled()</code> 在 max-tokens 时删除 tool-call blocks，并用同一 keep/drop 掩码裁剪 per-block replay envelope。如果 replay blocks 数量与实际块数量不一致，直接丢弃 replay envelope，避免错误对齐。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/llm/llm/src/assembler.ts#L38-L199">统一裁剪</a></p>
+<p>这比只过滤可见消息多一层一致性要求。否则界面看起来已经去掉工具，provider 私有重放信息却仍指向原位置；下一次路由恢复时，消息和重放元数据可能描述两份不同响应。</p>
+<p>取消走 <code>interruptedBlocks()</code>，只保留非空文本与 reasoning，不保留工具调用；因为此时尚未进入 dispatch，若保留工具意图，后续还需说明它为何没有对应的执行结果。新增测试确认 max-tokens 的正文/metadata 同步裁剪、首次 close 不被迟到数据覆盖，以及取消前缀不携带工具。<a href="/downloads/agent-harness/02/content/evidence/protocol-context-results.json">实验结果</a></p>
+<h3 id="attempt-记录与-assistant-message-为什么要分开">attempt 记录与 assistant message 为什么要分开</h3>
+<p>在 Agent step 内，每次尝试创建 <code>AssistantStreamAttempt</code>，把相同 chunk 送入紧凑日志 accumulator、canonical assembler 和临时 frame。成功时写 assistant/message；已开始的失败尝试可以写 assistant/attempt，避免把每次失败都作为可执行的成功回答纳入上下文。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/core/agent-loop/src/assistant-stream.ts#L46-L140">attempt 结算</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/core/agent-loop/src/agent.ts#L352-L493">step 分支</a></p>
+<p><code>settle</code> 的次序是先调用 append，拿到 seq 后才发 committed end frame。若 append 抛错，则发 abandoned，而不是给客户端一个指向不存在记录的成功 seq。这能让临时展示与会话记录对上身份，但这里的 committed 指 append 契约，不能自动升级为磁盘 flush 成功。</p>
+<p>还有一个细节：流正常提供 error/aborted finish 时，step 会写 attempt 并调用 <code>agent/request-error</code> waterfall，只有它返回 retry 才继续请求循环；若 iterator 直接抛异常，则先处理中断/失败的 durable settlement，再向外抛出。两种错误表现不应该在分析中统称“自动重试”。</p>
+<h3 id="重试前重新准备路由，却不能重复接纳用户输入">重试前重新准备路由，却不能重复接纳用户输入</h3>
+<p>step 内部循环每次调用 <code>prepareRequest</code>，经过请求 waterfall 和 <code>llm.prepareCall</code> 绑定实际适配器；但用户消息仅在 firstAttempt 时 append。随后 buildRequest 从 admitted surface 取消息，深冻结消息与 header，保留同一个活动 signal。<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/core/agent-loop/src/agent.ts#L495-L619">路由与请求冻结</a></p>
+<p>它试图避免两个问题：候选 provider 与实际 adapter 不一致导致历史装配错误；重试同一步时，把同一份用户输入重复写进会话。冻结的是这次请求的数据视图，取消信号仍是活动控制对象，不通过深克隆变成失去取消能力的数据副本。</p>
+<h2 id="Codex：流重试可能发生在部分工具已经完成之后">Codex：流重试可能发生在部分工具已经完成之后</h2>
+<h3 id="重试循环没有盲目重发同一份原始输入">重试循环没有盲目重发同一份原始输入</h3>
+<!-- harness-diagram:02-codex -->
+<figure class="article-figure"><a href="/images/agent-harness/02/02-codex.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Codex：可重试分支仍要保留已完成工具"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-codex-mobile.svg"><img src="/images/agent-harness/02/02-codex.svg" alt="Codex：可重试分支仍要保留已完成工具" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 02 · Codex：传输重试不代表此前发生的工具副作用被撤销。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/session/turn.rs#L1530-L1651">C02b</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/responses_retry.rs#L1-L160">C02</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p><code>run_sampling_request</code> 在循环外创建 <code>ToolCallRuntime</code> 与 retry state。第一次取 initial_input，后续重试改为从当前会话历史投影 prompt，并附带已执行工具调用的相关记录；每次还清除此前 ResponseId，防止后续工具归因到上一响应。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/session/turn.rs#L1530-L1651">完整请求循环</a></p>
+<p>结合第 04 篇可知，Codex 会在流中的输出项完成后建立工具 future，工具可能早于整个采样流结束完成。因此，一个可重试 stream error 不必然意味着“什么都没发生”。重新取历史和清理响应身份，是这种执行时序下需要面对的责任。</p>
+<p>这条路径仍不足以保证外部动作恰好执行一次（exactly-once）。相同外部动作是否重复、已执行记录何时写入、不同 provider 如何表示续接，需要继续追工具与外部系统的幂等边界。本文能够确认的是重试输入不是静态原请求的无条件复制。</p>
+<h3 id="三条退避路径，为什么不能合成一个次数">三条退避路径，为什么不能合成一个次数</h3>
+<p>在进入共享重试决策前，caller 已处理 ContextWindowExceeded、UsageLimitReached 等专门错误，并拒绝 <code>!err.is_retryable()</code> 的情况。重试状态随后区分普通 retries、connection_retries 和连接退避间隔。<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/session/turn.rs#L1530-L1651">请求资格检查</a>、<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/responses_retry.rs#L1-L160">共享决策</a></p>
+<p>无界连接重试只在一组明确条件同时满足时生效：功能开关开启、Sampling 请求、ConnectionFailed、非 internal session、非 Amazon Bedrock。它按 5、10、20、40、60 秒增长，之后保持 60 秒，并不消耗普通 retries 分支的计数。</p>
+<p>普通重试次数耗尽时，如果 client_session 能切换 fallback transport，代码将普通 retries 重置为 0 并继续。否则，在预算尚存时使用服务端建议延迟或本地 backoff；彻底耗尽后把包含 turn_id 的 retry advice 写入扩展状态再返回错误。</p>
+<p>所以“max_retries=2”最多描述一个普通重试预算阶段，不能不加条件地解释成“用户请求最多三次网络尝试”。transport 切换、连接恢复、外层压缩或任务继续都可能具有不同重试身份。监控应记录原因与层次，不能只累加一个 retry_count。</p>
+<h2 id="Grok：同一个产品，不同模型协议的-Length-优先级也不相同">Grok：同一个产品，不同模型协议的 Length 优先级也不相同</h2>
+<h3 id="collector-的-Completed-只表示流已有终态结果">collector 的 Completed 只表示流已有终态结果</h3>
+<!-- harness-diagram:02-grok -->
+<figure class="article-figure"><a href="/images/agent-harness/02/02-grok.svg" target="_blank" rel="noopener" aria-label="查看完整配图：Grok：Chat Completions 的 Length 有特殊优先级"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-grok-mobile.svg"><img src="/images/agent-harness/02/02-grok.svg" alt="Grok：Chat Completions 的 Length 有特殊优先级" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 02 · Grok Build：这一优先级属于该适配器，不能推广到所有模型协议。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-sampler/src/stream/chat_completions.rs#L232-L259">G02d</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/acp_session_impl/sampler_turn.rs#L1-L165">G02</a>。固定版本源码示意；省略的条件与实验边界见本节正文。</p>
+<!-- /harness-diagram -->
+<p><code>collect_response</code> 用于不需要流式 UI 的调用方，消费 intermediate events，遇 Completed 返回 response，Failed 返回错误，EOF 没有二者则显式报错。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-sampler/src/stream/collect.rs#L1-L53">buffered collector</a></p>
+<p>但 Completed 里的 stop_reason 仍可能是 Length。也就是说，事件流已完整表达一次“输出被截断”的结果，并不意味着结果可以当作普通成功答案使用。是否拒绝或保留可用部分（salvage），由后续 <code>LengthPolicy</code> 判断。</p>
+<h3 id="哪些截断结果仍被允许进入执行">哪些截断结果仍被允许进入执行</h3>
+<p><code>LengthPolicy</code> 有 Fail、CompleteToolCalls、CompletePartial。对保留 Length 的响应，默认 CompleteToolCalls 要求存在工具，并且所有参数要么为空，要么能被 JSON parser 完整消费；纯文本截断仍失败。CompletePartial 额外允许非空部分文本。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-sampling-types/src/conversation.rs#L513-L575">准入条件</a></p>
+<p>空参数被当成零参数调用惯例，并不被视为截断的充分证据。源码注释承认“在第一个参数 delta 之前截断”也会收集为空；后续工具校验仍需承担职责。这是明确的分层取舍，不是 JSON parser 证明了模型原意完整。</p>
+<p>更需要注意的是协议前置归一化：Chat Completions 流层只要存在 tool_calls，就把 stop reason 改为 ToolCalls，即使原 finish reason 是 Length，同时记录警告。该响应后续不再命中 LengthPolicy 的 Length 分支。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-sampler/src/stream/chat_completions.rs#L232-L259">Chat Completions 优先级</a></p>
+<p>所以不能把一个简单判断统一套到所有 Grok 后端：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>工具与 Length 同时出现时的事实</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi core 收到 length</td>
+<td>整条消息的工具批次转为错误结果，不执行</td>
+</tr>
+<tr>
+<td>DeepSeek assembler 收到 max-tokens</td>
+<td>删除工具块，并同步裁剪 replay metadata</td>
+</tr>
+<tr>
+<td>Grok 保留 Length 的响应</td>
+<td>由 LengthPolicy 判断参数及内容能否挽救</td>
+</tr>
+<tr>
+<td>Grok Chat Completions 转换路径</td>
+<td>工具可将 Length 改为 ToolCalls，后续执行仍需工具参数校验</td>
+</tr>
+</tbody>
+</table>
+<p>这张表不是安全排名。它说明比较必须保留原始 stop reason、转换后类别与具体 backend。对于语法可解析但语义已截短的字符串参数，单独依赖 Schema 或 JSON 完整性都不足以恢复生成意图。应保留 provider 原始终止事实，方便执行层采用更严格策略。</p>
+<h3 id="shell-还对连续-salvage-和恢复过程分别计数">shell 还对连续 salvage 和恢复过程分别计数</h3>
+<p>shell 对“Length 且有工具”的连续 salvage 设置 5 次上限，首次加入提醒，超过上限失败；非此类 sample 会重置 streak。另一个 transient retry 状态则包含每采样 step 3 次、每 prompt 累积 10 次、每次恢复 episode 10 分钟的限制。<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/acp_session_impl/sampler_turn.rs#L1-L165">salvage 与预算类型</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-shell/src/session/acp_session_impl/turn.rs#L3307-L3339">shell 消费处</a></p>
+<p>这些值都需要限定作用域：10 分钟窗口在失败发生时检查，不是把单次进行中的请求强制切断在第 600 秒；step 预算会在成功或压缩后重置，prompt 预算不在同一 prompt 内重置。transient 资格明确排除 RateLimited、Auth 等类别，它们需要各自专门路径，不等于整个产品不处理 429。</p>
+<h2 id="重试与提交必须一起建模">重试与提交必须一起建模</h2>
+<p>可以用下面的故障表判断应该重新做什么：</p>
+<table>
+<thead>
+<tr>
+<th>故障时点</th>
+<th>已知事实</th>
+<th>不能直接假定的事</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>尚未拿到响应流</td>
+<td>请求调用失败</td>
+<td>服务端没有计费或没有处理</td>
+</tr>
+<tr>
+<td>已显示部分文本，未有终态</td>
+<td>有临时观察</td>
+<td>回答已成功、参数可执行</td>
+</tr>
+<tr>
+<td>某个输出项完成且工具已执行</td>
+<td>可能已经产生外部副作用</td>
+<td>重试模型等于安全重跑工具</td>
+</tr>
+<tr>
+<td>assistant attempt 结算失败</td>
+<td>临时流与持久记录未对齐</td>
+<td>客户端 end frame 应标成功</td>
+</tr>
+<tr>
+<td>正常终态但 Length</td>
+<td>协议正确描述了截断事实</td>
+<td>所有内容都可丢弃或都可执行</td>
+</tr>
+</tbody>
+</table>
+<p>我会为每次用户请求、模型 attempt、输出 block 和工具调用保留关联身份，并同时记录 raw stop reason、normalized reason、工具执行资格决定及其来源。这些字段能解释一个重复文件写入来自模型重采样、工具重试还是恢复重放，单一“失败后重试”日志做不到。</p>
+<h2 id="实验证据与设计判断">实验证据与设计判断</h2>
+<p>原有 Pi 实验已经证明：半截 JSON 可以恢复成对象，但 length 消息的工具副作用为 0；error 消息即使含工具也不会执行。2026-09-13 补充 8 个协议/重试局部检查，补上请求等待、服务端禁止重试、终态组装、replay 裁剪和严格校验的差异。<a href="/downloads/agent-harness/02/content/evidence/pi-lab-results.json">原始实验</a>、<a href="/downloads/agent-harness/02/content/evidence/protocol-context-results.json">新增结果</a></p>
+<p>这些实验没有模拟真实 HTTP/SSE 服务器，也没有完整启动 DeepSeek 插件图。它们用于检验已经定位的真实函数，不能证明四产品网络恢复全部通过。Grok 和 Codex 本篇的运行时判断仍为固定源码推导。</p>
+<p>我的选择是让基础组装保持兼容性，但把执行所需的终态事实作为显式契约传给下一层；严格校验是否启用必须可查询。任何会重新跨过副作用边界的 retry 都应有自己的预算、原因和身份。这样既能避免把不完整响应冒充成功，也不会为了统一接口而丢掉已经发生的工作。</p>
+<!-- harness-diagram:02-summary -->
+<figure class="article-figure"><a href="/images/agent-harness/02/02-summary.svg" target="_blank" rel="noopener" aria-label="查看完整配图：可靠流需要多层终态判断"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-summary-mobile.svg"><img src="/images/agent-harness/02/02-summary.svg" alt="可靠流需要多层终态判断" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+<p><em>图 02 · 本篇总结：能解析 JSON、收到完整响应、允许执行和提交历史，不能合成一个成功。</em></p>
+<p>图示依据：<a target="_blank" rel="noopener" href="https://github.com/openai/codex/blob/c4017a87aacc7558002b7cb510025e967c1d765e/codex-rs/core/src/session/turn.rs#L1530-L1651">C02b</a>、<a target="_blank" rel="noopener" href="https://github.com/earendil-works/pi/blob/71dca871bc80b6bc97be37f0ca3189399d651fff/packages/ai/src/utils/provider-retry.ts#L1-L125">P02f</a>、<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness/blob/c291e7961a515f6d7af9304e7fd1d257929aef26/packages/llm/llm/src/invariant.ts#L1-L112">D02c</a>、<a target="_blank" rel="noopener" href="https://github.com/xai-org/grok-build/blob/37949780c144e37df692e3d669051a21fec24f20/crates/codegen/xai-grok-sampler/src/stream/chat_completions.rs#L232-L259">G02d</a>。跨实现比较 · 根据本篇已引源码与明确的实验范围。</p>
+<!-- /harness-diagram -->
+<h2 id="配套材料">配套材料</h2>
+<p><a href="/agent-harness/02-evidence/">阅读实验说明</a> · <a href="/agent-harness/02-reproduce/">阅读复现入口</a> · <a href="/downloads/agent-harness/02/agent-harness-02.zip">下载正文、原图与实验材料</a>（<a href="/downloads/agent-harness/02/agent-harness-02.zip.sha256">SHA-256</a>）。</p>
+<p>下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。</p>
+<!-- harness-series-nav -->
+<h2 id="系列阅读">系列阅读</h2>
+<p><a href="/agent-harness/01-turn-boundaries/">上一篇：Agent 的一轮何时结束？四种 Harness 的执行边界</a></p>
+<!-- /harness-series-nav -->
+</div>
+    <nav class="post-tags" aria-label="文章标签"><a href="/tags/Agent-Harness/"># Agent Harness</a><a href="/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"># 源码阅读</a><a href="/tags/Coding-Agent/"># Coding Agent</a></nav>
+    <section class="share-section" aria-label="分享文章" data-share-title="模型流何时可以执行工具？四种 Harness 的终态与重试" data-quote-attribution="" data-share-description="工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。" data-share-url="https://aresning.github.io/agent-harness/02-model-streams/">
+  <h2>分享这篇文章</h2>
+  <div class="share-actions"><button class="ui-button outlined-button copy-link" type="button" data-clipboard-text="https://aresning.github.io/agent-harness/02-model-streams/" hidden>复制链接</button><button class="ui-button outlined-button native-share" type="button" hidden>系统分享</button><a class="ui-button outlined-button" href="/images/share/e052e565ef4cb933.png" download="AresNing-article.png">保存文章封面</a><button class="ui-button outlined-button quote-open" type="button" hidden>保存摘录图片</button></div>
+  <p class="share-status muted" role="status" aria-live="polite"></p>
+</section>
+<div class="ui-dialog" id="quote-dialog" aria-hidden="true" aria-labelledby="quote-title">
+  <div class="dialog-overlay" data-a11y-dialog-hide></div>
+  <div class="dialog-panel quote-panel" role="document">
+    <div class="dialog-heading"><h2 id="quote-title">保存摘录</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭摘录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label for="quote-select">选择内容</label><select class="ui-input" id="quote-select" autofocus></select>
+    <p class="muted">图片保留段落原文与出处；引用他人内容时，请保留原作者署名。</p>
+    <img class="quote-preview" alt="摘录图片预览" width="1080" height="1440" hidden>
+    <p class="quote-status muted" role="status" aria-live="polite"></p>
+    <a class="ui-button outlined-button quote-download" download="AresNing-excerpt.png" hidden>保存 PNG 图片</a>
+  </div>
+</div>
+
+    <aside class="author-note" aria-label="关于作者"><a class="author-name" href="/about/">AresNing</a><p>我是 AresNing，在这里记录 Java、并发编程和代码可读性的学习与实践。希望把遇到的问题和理解的过程写清楚。</p><a class="read-more" target="_blank" href="https://github.com/AresNing" rel="me noopener">在 GitHub 关注 ↗</a></aside>
+
+    
+    <section class="related-posts" aria-labelledby="related-title"><h2 id="related-title">接着读</h2><ul><li><a href="/agent-harness/00-overview/">一次 Agent 任务经过哪些层？从四种 Harness 看责任边界<span aria-hidden="true"> ↗</span></a><p>从一次“修复失败测试”出发，沿 Codex、Pi、DeepSeek Harness 与 Grok Build 的固定源码，比较输入接纳、工具执行、状态保存和任务结束的责任边界，区分源码推演与局部实验。</p></li><li><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界<span aria-hidden="true"> ↗</span></a><p>一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p></li></ul></section>
+    
+  </article>
+  <aside class="desktop-toc"><nav aria-label="文章目录"><h2>目录</h2><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E6%9D%A1%E6%B5%81%E9%87%8C%E5%AD%98%E5%9C%A8%E5%9B%9B%E7%A7%8D%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AE%8C%E6%88%90"><span class="toc-text">一条流里存在四种不同的完成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pi%EF%BC%9AHTTP-%E8%AF%B7%E6%B1%82%E5%8F%96%E5%BE%97%E6%B5%81%EF%BC%8C%E4%B8%8E%E6%B6%88%E8%B4%B9%E6%B5%81%EF%BC%8C%E6%98%AF%E4%B8%A4%E4%B8%AA%E5%A4%B1%E8%B4%A5%E8%BE%B9%E7%95%8C"><span class="toc-text">Pi：HTTP 请求取得流，与消费流，是两个失败边界</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Responses-%E9%80%82%E9%85%8D%E5%99%A8%E5%8C%BA%E5%88%86%E8%AF%B7%E6%B1%82%E4%B8%8E%E6%B5%81%E6%B6%88%E8%B4%B9"><span class="toc-text">从 Responses 适配器区分请求与流消费</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E5%87%BA-Retry-After-%E4%B8%8A%E9%99%90%EF%BC%8C%E6%98%AF%E5%A4%B1%E8%B4%A5%EF%BC%8C%E4%B8%8D%E6%98%AF%E7%BC%A9%E7%9F%AD%E7%AD%89%E5%BE%85"><span class="toc-text">超出 Retry-After 上限，是失败，不是缩短等待</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Responses-%E7%9A%84%E7%BB%88%E6%80%81%E5%BD%92%E4%B8%80%E5%8C%96%E4%BF%9D%E7%95%99%E5%8E%9F%E5%9B%A0%EF%BC%8C%E8%80%8C%E9%9D%9E%E5%8F%AA%E4%BF%9D%E7%95%99-incomplete"><span class="toc-text">Responses 的终态归一化保留原因，而非只保留 incomplete</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepSeek%EF%BC%9A%E7%BB%84%E8%A3%85%E5%99%A8%E3%80%81%E5%8D%8F%E8%AE%AE%E6%A3%80%E6%9F%A5%E3%80%81attempt-%E6%8F%90%E4%BA%A4%E6%89%BF%E6%8B%85%E4%B8%8D%E5%90%8C%E8%B4%A3%E4%BB%BB"><span class="toc-text">DeepSeek：组装器、协议检查、attempt 提交承担不同责任</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E8%A3%85%E5%99%A8%E4%B8%8E%E5%8D%8F%E8%AE%AE%E6%A0%A1%E9%AA%8C%E5%99%A8%E5%88%86%E5%88%AB%E5%88%A4%E6%96%AD%E4%BB%80%E4%B9%88"><span class="toc-text">组装器与协议校验器分别判断什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%AA%E6%96%AD%E4%BC%9A%E5%90%8C%E6%97%B6%E6%94%B9%E5%8F%98%E6%B6%88%E6%81%AF%E4%B8%8E-replay-metadata"><span class="toc-text">截断会同时改变消息与 replay metadata</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#attempt-%E8%AE%B0%E5%BD%95%E4%B8%8E-assistant-message-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%86%E5%BC%80"><span class="toc-text">attempt 记录与 assistant message 为什么要分开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E5%89%8D%E9%87%8D%E6%96%B0%E5%87%86%E5%A4%87%E8%B7%AF%E7%94%B1%EF%BC%8C%E5%8D%B4%E4%B8%8D%E8%83%BD%E9%87%8D%E5%A4%8D%E6%8E%A5%E7%BA%B3%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5"><span class="toc-text">重试前重新准备路由，却不能重复接纳用户输入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codex%EF%BC%9A%E6%B5%81%E9%87%8D%E8%AF%95%E5%8F%AF%E8%83%BD%E5%8F%91%E7%94%9F%E5%9C%A8%E9%83%A8%E5%88%86%E5%B7%A5%E5%85%B7%E5%B7%B2%E7%BB%8F%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E"><span class="toc-text">Codex：流重试可能发生在部分工具已经完成之后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E5%BE%AA%E7%8E%AF%E6%B2%A1%E6%9C%89%E7%9B%B2%E7%9B%AE%E9%87%8D%E5%8F%91%E5%90%8C%E4%B8%80%E4%BB%BD%E5%8E%9F%E5%A7%8B%E8%BE%93%E5%85%A5"><span class="toc-text">重试循环没有盲目重发同一份原始输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E6%9D%A1%E9%80%80%E9%81%BF%E8%B7%AF%E5%BE%84%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E5%90%88%E6%88%90%E4%B8%80%E4%B8%AA%E6%AC%A1%E6%95%B0"><span class="toc-text">三条退避路径，为什么不能合成一个次数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grok%EF%BC%9A%E5%90%8C%E4%B8%80%E4%B8%AA%E4%BA%A7%E5%93%81%EF%BC%8C%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9E%8B%E5%8D%8F%E8%AE%AE%E7%9A%84-Length-%E4%BC%98%E5%85%88%E7%BA%A7%E4%B9%9F%E4%B8%8D%E7%9B%B8%E5%90%8C"><span class="toc-text">Grok：同一个产品，不同模型协议的 Length 优先级也不相同</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#collector-%E7%9A%84-Completed-%E5%8F%AA%E8%A1%A8%E7%A4%BA%E6%B5%81%E5%B7%B2%E6%9C%89%E7%BB%88%E6%80%81%E7%BB%93%E6%9E%9C"><span class="toc-text">collector 的 Completed 只表示流已有终态结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E6%88%AA%E6%96%AD%E7%BB%93%E6%9E%9C%E4%BB%8D%E8%A2%AB%E5%85%81%E8%AE%B8%E8%BF%9B%E5%85%A5%E6%89%A7%E8%A1%8C"><span class="toc-text">哪些截断结果仍被允许进入执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell-%E8%BF%98%E5%AF%B9%E8%BF%9E%E7%BB%AD-salvage-%E5%92%8C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%E5%88%86%E5%88%AB%E8%AE%A1%E6%95%B0"><span class="toc-text">shell 还对连续 salvage 和恢复过程分别计数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E4%B8%8E%E6%8F%90%E4%BA%A4%E5%BF%85%E9%A1%BB%E4%B8%80%E8%B5%B7%E5%BB%BA%E6%A8%A1"><span class="toc-text">重试与提交必须一起建模</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AF%81%E6%8D%AE%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%88%A4%E6%96%AD"><span class="toc-text">实验证据与设计判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></aside>
+</div>
+</main>
+  <footer class="site-footer shell">
+    <div><span class="footer-name">AresNing · Hungry &amp; Humble</span><small>© 2022–2026 AresNing · Powered by Hexo</small></div>
+    <a target="_blank" href="https://github.com/AresNing" rel="me noopener">GitHub <span aria-hidden="true">↗</span></a>
+  </footer>
+  <div class="ui-dialog" id="search-dialog" aria-hidden="true" aria-labelledby="search-title" data-search-url="/search.xml" data-fuse-url="/lib/paper/fuse.min.mjs">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+    <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
+    </div>
+  </div>
+  <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+      <div class="dialog-heading"><h2 id="menu-title">导航</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <a href="/" aria-current="page">文章</a>
+        <a href="/archives/">归档</a>
+        <a href="/categories/">分类</a>
+        <a href="/tags/">标签</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>
