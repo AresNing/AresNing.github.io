@@ -1,0 +1,49 @@
+{
+  "scope": "Unmodified DeepSeek approveEscalation and validateEscalationArgs, with an injected approval responder. No actual tool, OS sandbox, full approval service, user approval or cancellation-service integration is exercised.",
+  "passed": 5,
+  "total": 5,
+  "results": [
+    {
+      "name": "05-ds-invalid-pair-never-asks",
+      "passed": true,
+      "observation": {
+        "invalidPairsRejected": 3,
+        "validPairsAccepted": 2
+      }
+    },
+    {
+      "name": "05-ds-widening-checked-against-effective-call",
+      "passed": true,
+      "observation": {
+        "nonWideningAsks": 0,
+        "readOnlyToWorkspaceWriteAsks": 1
+      }
+    },
+    {
+      "name": "05-ds-missing-channel-fails-closed",
+      "passed": true,
+      "observation": {
+        "asks": 0,
+        "grants": 0
+      }
+    },
+    {
+      "name": "05-ds-only-allowed-once-returns-mode",
+      "passed": true,
+      "observation": {
+        "nonGrantOutcomes": 3,
+        "distinctErrors": 3
+      }
+    },
+    {
+      "name": "05-ds-approval-pending-is-no-grant",
+      "passed": true,
+      "observation": {
+        "grantBeforeReply": false,
+        "signalIdentityPreserved": true,
+        "callIdentityPreserved": true,
+        "inputPolicyMutated": false
+      }
+    }
+  ]
+}

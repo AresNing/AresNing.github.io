@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img">
+<title>权限与执行隔离</title><desc>审批管决策，隔离管实际访问范围。新增 DeepSeek 原函数检查 5 组通过；不替代 OS 隔离验收。</desc>
+<rect width="1440" height="900" fill="#f5f7f4"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#162d36}.muted{fill:#557079}.accent{fill:#006b61}</style>
+<text x="70" y="78" font-size="22" class="accent">AGENT HARNESS / 05</text>
+<text x="70" y="156" font-size="48" font-weight="700">权限与执行隔离</text>
+<text x="70" y="213" font-size="29" class="muted">审批管决策，隔离管实际访问范围</text>
+<rect x="70" y="265" width="635" height="158" rx="14" fill="white" stroke="#cfdddf"/>
+<text x="96" y="311" font-size="26" font-weight="600">Codex</text>
+<text x="96" y="359" font-size="24">两次 attempt 保留环境权限边界</text>
+<text x="96" y="395" font-size="16" class="muted">固定源码 c4017a87aacc · 取证卡 C05d</text>
+<rect x="735" y="265" width="635" height="158" rx="14" fill="white" stroke="#cfdddf"/>
+<text x="761" y="311" font-size="26" font-weight="600">Pi</text>
+<text x="761" y="359" font-size="24">执行参数与前置 Hook 分界</text>
+<text x="761" y="395" font-size="16" class="muted">固定源码 71dca871bc80 · 取证卡 P05b</text>
+<rect x="70" y="453" width="635" height="158" rx="14" fill="white" stroke="#cfdddf"/>
+<text x="96" y="499" font-size="26" font-weight="600">DeepSeek Harness</text>
+<text x="96" y="547" font-size="24">逐调用提权与后端能力分层</text>
+<text x="96" y="583" font-size="16" class="muted">固定源码 c291e7961a51 · 取证卡 D05d</text>
+<rect x="735" y="453" width="635" height="158" rx="14" fill="white" stroke="#cfdddf"/>
+<text x="761" y="499" font-size="26" font-weight="600">Grok Build</text>
+<text x="761" y="547" font-size="24">规则 Ask 与分析失败 Ask 分流</text>
+<text x="761" y="583" font-size="16" class="muted">固定源码 37949780c144 · 取证卡 G05c</text>
+<rect x="70" y="673" width="1300" height="128" rx="14" fill="#e5f3ee"/>
+<text x="96" y="714" font-size="20" class="accent">本轮证据与边界</text>
+<text x="96" y="756" font-size="23">新增 DeepSeek 原函数检查 5 组通过；不替代 OS 隔离验收。</text>
+<text x="70" y="855" font-size="18" class="muted">2026-09-12 · 源码研究版 · 详细调用链与实验范围见同编号正文</text>
+</svg>
