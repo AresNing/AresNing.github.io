@@ -1,0 +1,130 @@
+{
+  "date": "2026-09-13",
+  "scope": "Pi real loop; DeepSeek real scheduler with stub services and real message constructor; no product or model benchmark",
+  "outcomes": [
+    {
+      "name": "01-stop-before-followup-poll",
+      "passed": true,
+      "observation": {
+        "modelCalls": 1,
+        "followupPolls": 0,
+        "toolCompleted": true
+      }
+    },
+    {
+      "name": "01-steer-during-prepare",
+      "passed": true,
+      "observation": {
+        "secondRequestIncludesLateSteering": true,
+        "modelCalls": 2
+      }
+    },
+    {
+      "name": "04-pi-all-preflight-before-body",
+      "passed": true,
+      "observation": {
+        "bodiesWhileBApprovalPending": 0,
+        "finalBodies": 2
+      }
+    },
+    {
+      "name": "04-pi-one-sequential-tool-serializes-batch",
+      "passed": true,
+      "observation": {
+        "startsBeforeAReleased": [
+          "a"
+        ],
+        "finalStarts": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "name": "04-pi-termination-is-all-results",
+      "passed": true,
+      "observation": {
+        "mixedModelCalls": 2,
+        "unanimousModelCalls": 1,
+        "allBodiesStillExecuted": true
+      }
+    },
+    {
+      "name": "04-pi-blocked-peer-is-not-batch-rollback",
+      "passed": true,
+      "observation": {
+        "executed": [
+          "a"
+        ],
+        "denied": [
+          "b"
+        ],
+        "modelCalls": 2
+      }
+    },
+    {
+      "name": "04-ds-rolling-pool-ordered-commit",
+      "passed": true,
+      "observation": {
+        "thirdStartedBeforeFirstCompleted": true,
+        "resultsBeforeFirstCompleted": 0,
+        "resultOrder": [
+          "a",
+          "b",
+          "c"
+        ],
+        "maxActive": 2
+      }
+    },
+    {
+      "name": "04-ds-live-exclusive-barrier",
+      "passed": true,
+      "observation": {
+        "cReclassifiedAfterACommit": true,
+        "cWaitedForB": true
+      }
+    },
+    {
+      "name": "04-ds-cancel-drains-and-pairs-skipped",
+      "passed": true,
+      "observation": {
+        "started": [
+          "a",
+          "b"
+        ],
+        "resultCount": 3,
+        "skippedCode": "ABORTED_BEFORE_DISPATCH",
+        "abortedSignalPreserved": true
+      }
+    },
+    {
+      "name": "04-ds-internal-failure-drains-without-fabrication",
+      "passed": true,
+      "observation": {
+        "started": [
+          "a",
+          "b"
+        ],
+        "drained": [
+          "b",
+          "a"
+        ],
+        "toolCallsRetained": 2,
+        "fabricatedResults": 0
+      }
+    },
+    {
+      "name": "04-ds-conclusion-is-any-committed-result",
+      "passed": true,
+      "observation": {
+        "concluded": true,
+        "bodiesExecuted": [
+          "a",
+          "b"
+        ],
+        "shortCircuit": false
+      }
+    }
+  ]
+}

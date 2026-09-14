@@ -6,10 +6,11 @@ const { escapeHTML } = require('hexo-util');
 const { summary, cardPath } = require('../lib/content');
 
 // Stable typographic template, rendered at build time. No client font download.
-function lines(text, units) {
+function lines(text, units, wordAware = false) {
   const result = []; let line = '', width = 0;
-  for (const char of Array.from(text)) {
-    const size = /[\x00-\x7f]/.test(char) ? .58 : 1;
+  const tokens = wordAware ? (text.match(/[A-Za-z0-9_]+|[^A-Za-z0-9_]/gu) || []).flatMap(token => token.length * .58 > units ? Array.from(token) : [token]) : Array.from(text);
+  for (const char of tokens) {
+    const size = Array.from(char).reduce((sum, c) => sum + (/[\x00-\x7f]/.test(c) ? .58 : 1), 0);
     if (width + size > units && line && !/[，。！？；：、）》」』]/.test(char)) { result.push(line); line = ''; width = 0; }
     line += char; width += size;
   }
@@ -28,11 +29,11 @@ hexo.extend.generator.register('paper-social', function(locals) {
     if (!fs.existsSync(file)) {
       const title = String(post.title || '无题');
       const size = title.length > 52 ? 44 : 58;
-      const titleLines = lines(title, 1030 / size);
+      const titleLines = lines(title, 1030 / size, post.card_wrap === 'words');
       if (titleLines.length > 4) throw new Error(`分享标题过长，请缩短：${title}`);
       const text = (items, y, fontSize, color, step) => items.map((line, i) => `<text x="80" y="${y + i * step}" font-size="${fontSize}" fill="${color}">${escapeHTML(line)}</text>`).join('');
       const descriptionY = Math.max(365, 200 + titleLines.length * 72);
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" font-family="Noto Serif CJK SC"><rect width="1200" height="630" fill="#f7f5ef"/><path d="M80 102H1120M80 530H1120" stroke="#dcd7cd"/><rect x="80" y="66" width="28" height="3" fill="#964d3b"/><text x="122" y="77" font-size="22" fill="#68645e">${escapeHTML(hexo.config.author)} · 编程与实践</text>${text(titleLines, 205, size, '#292824', 72)}${text(lines(summary(post), 43).slice(0, 2), descriptionY, 24, '#68645e', 38)}<text x="80" y="579" font-size="23" fill="#964d3b">${escapeHTML(new URL(hexo.config.url).hostname)}</text><text x="1120" y="579" text-anchor="end" font-size="20" fill="#68645e">${post.path ? '文章与笔记' : 'Hungry &amp; Humble'}</text></svg>`;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" font-family="Noto Serif CJK SC"><rect width="1200" height="630" fill="#f7f5ef"/><path d="M80 102H1120M80 530H1120" stroke="#dcd7cd"/><rect x="80" y="66" width="28" height="3" fill="#964d3b"/><text x="122" y="77" font-size="22" fill="#68645e">${escapeHTML(hexo.config.author)} · 编程与实践</text>${text(titleLines, 205, size, '#292824', 72)}${text(lines(summary(post), 43, post.card_wrap === 'words').slice(0, 2), descriptionY, 24, '#68645e', 38)}<text x="80" y="579" font-size="23" fill="#964d3b">${escapeHTML(new URL(hexo.config.url).hostname)}</text><text x="1120" y="579" text-anchor="end" font-size="20" fill="#68645e">${post.path ? '文章与笔记' : 'Hungry &amp; Humble'}</text></svg>`;
       fs.writeFileSync(file, new Resvg(svg, {font: {fontFiles: [font], loadSystemFonts: false}}).render().asPng());
     }
     return {path: output, data: () => fs.createReadStream(file)};

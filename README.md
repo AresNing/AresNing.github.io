@@ -58,6 +58,6 @@ npm run server -- --port 4317
 
 ### Agent Harness 系列
 
-按最终润色包逐篇接入，目前仅 00 导读进入发布范围：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
+按最终润色包逐篇接入，00 导读入口：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。后续 01–11 按最终包顺序接入，已发布篇目使用前后篇导航连接。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
 
 接收冻结 ZIP 后先核对 SHA-256 与逐文件清单，再完整复制到博客工作区。公开 ZIP 只包含正文、原图和相关实验材料；交接元数据不放入网站。保留固定源码链接与实验边界，尚未发布的后续篇目只作文字指引。

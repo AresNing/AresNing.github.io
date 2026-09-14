@@ -13,7 +13,7 @@ function explicit(post, field) {
   return Boolean(header && new RegExp(`^${field}:[ \\t]*[^\\s#]`, 'm').test(header[1]));
 }
 function cardPath(post) {
-  const key = JSON.stringify([post.path, post.title, summary(post), 'paper-card-v2']);
+  const key = JSON.stringify([post.path, post.title, summary(post), post.card_wrap === 'words' ? 'paper-card-v3-words' : 'paper-card-v2']);
   return `images/share/${createHash('sha256').update(key).digest('hex').slice(0, 16)}.png`;
 }
 module.exports = { plain, summary, explicit, cardPath };

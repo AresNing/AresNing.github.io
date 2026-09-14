@@ -9,6 +9,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/00-overview/
+related: ["agent-harness/01-turn-boundaries/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/00/00.svg" target="_blank" rel="noopener" aria-label="查看完整配图：一次任务经过哪些层：先对齐责任边界，再比较实现"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/00/00-mobile.svg"><img src="/images/agent-harness/00/00.svg" alt="一次任务经过哪些层：先对齐责任边界，再比较实现" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -165,3 +166,11 @@ Actor 回复后，ACP 入口还会发完成通知、整理 usage 和 trace，按
 [阅读实验说明](/agent-harness/00-evidence/) · [阅读复现入口](/agent-harness/00-reproduce/) · [下载正文、原图与实验材料](/downloads/agent-harness/00/agent-harness-00.zip)（[SHA-256](/downloads/agent-harness/00/agent-harness-00.zip.sha256)）。
 
 下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。
+
+<!-- harness-series-nav -->
+
+## 系列阅读
+
+[下一篇：Agent 的一轮何时结束？四种 Harness 的执行边界](/agent-harness/01-turn-boundaries/)
+
+<!-- /harness-series-nav -->
