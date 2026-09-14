@@ -1,0 +1,69 @@
+{
+  "scope": "Unmodified Pi event bus/reducer and DeepSeek journal/assistant reducers; alias maps narrow original exports. Controlled carriers and inputs, not complete products.",
+  "aliases": {
+    "@deepseek-ai/dsh-typert-protocol": "research/repos/deepseek/packages/typert/protocol/src/remote-error.ts",
+    "@deepseek-ai/dsh-deque": "research/repos/deepseek/packages/util/deque/src/index.ts",
+    "@deepseek-ai/dsh-util-crypto": "research/repos/deepseek/packages/util/crypto/src/index.ts",
+    "@deepseek-ai/dsh-util-values": "research/repos/deepseek/packages/util/values/src/index.ts",
+    "@deepseek-ai/dsh-brand": "research/repos/deepseek/packages/util/brand/src/index.ts",
+    "@deepseek-ai/dsh-llm/assistant-stream": "research/repos/deepseek/packages/llm/llm/src/assistant-stream.ts"
+  },
+  "sources": [
+    {
+      "path": "research/repos/pi/packages/agent/src/harness/events.ts",
+      "sha256": "8e69fd404703ff88d487b26323e2b8950500c16b4945e115d8a1ab2bedf38769"
+    },
+    {
+      "path": "research/repos/pi/packages/agent/src/harness/runtime/reducer.ts",
+      "sha256": "f3066a2c4710ecdba1a87befe175330a3f19b87e31d8a2b5be4b237eea16849d"
+    },
+    {
+      "path": "research/repos/deepseek/packages/typert/protocol/src/remote-error.ts",
+      "sha256": "64db3b3fdcefcf9d1997cbda0ff37053cc9ff466141f9dd8bd5094e5fc6e8ada"
+    },
+    {
+      "path": "research/repos/deepseek/packages/api/gateway/src/stream-protocol.ts",
+      "sha256": "24bc63f54b5fdd31d6eac7c19306f539bdde2d5848ada2471b46c6ce32036f3b"
+    },
+    {
+      "path": "research/repos/deepseek/packages/util/deque/src/index.ts",
+      "sha256": "6dd9b24cc99aeeffb1e70c880306d76ced4a3b769dbd2131d7f129fa8a6649e7"
+    },
+    {
+      "path": "research/repos/deepseek/packages/util/crypto/src/index.ts",
+      "sha256": "6d314b677a163808a732c53fc509eebea1f8b8cc34b67031644dcfa4a97e28f0"
+    },
+    {
+      "path": "research/repos/deepseek/packages/api/gateway/src/client/stream-client.ts",
+      "sha256": "5e5f45a7482a9cba45bd78c4f654729521854fb48f0a0ed7cb3b6ba19247c189"
+    },
+    {
+      "path": "research/repos/deepseek/packages/api/gateway/src/client/journal-stream.ts",
+      "sha256": "b867f384cc49fca6d8c0cd4731e0e0ec2b6819c2dacefdca78aa51cb8b1ae013"
+    },
+    {
+      "path": "research/repos/deepseek/packages/util/values/src/index.ts",
+      "sha256": "573c77ba7017fc747f90fdbd5445cfd565db6ff6d53a6b999f6c34ed842bbb8f"
+    },
+    {
+      "path": "research/repos/deepseek/packages/util/brand/src/index.ts",
+      "sha256": "f9d6da858d7308117227dcc2306ce7246b7309b2ae22d413d289cbae51e83e98"
+    },
+    {
+      "path": "research/repos/deepseek/packages/llm/llm/src/message.ts",
+      "sha256": "81322e50c2addcdad23a8c8f4d94e0f0958414478925fd3c5f0a9fc0031f7db3"
+    },
+    {
+      "path": "research/repos/deepseek/packages/llm/llm/src/assembler.ts",
+      "sha256": "ff30f5ca346015bfffeffb5ee3398901d03eb3429fda5d0d4e0c40e8638dfe58"
+    },
+    {
+      "path": "research/repos/deepseek/packages/llm/llm/src/assistant-stream.ts",
+      "sha256": "9ac0c19b83eb8243f4907579608e00f77d8c447c010f31afeec4a1e760f2da82"
+    },
+    {
+      "path": "research/repos/deepseek/packages/api/session-controller/src/client/sessions/assistant-stream.ts",
+      "sha256": "fc4cb49fa268e1f3fa8baaf78eef5f61ec4f3c2f60910332ab79e3263a3dbd6b"
+    }
+  ]
+}

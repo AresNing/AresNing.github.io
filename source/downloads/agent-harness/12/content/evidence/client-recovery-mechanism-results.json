@@ -1,0 +1,115 @@
+{
+  "date": "2026-09-14",
+  "scope": "Five author-designed scenarios and one exact-function Rust harness with two original mechanisms. No full product or network/disk test.",
+  "outcomes": [
+    {
+      "name": "12-design-delayed-snapshot-must-not-regress-completion",
+      "passed": true,
+      "observation": {
+        "naive": {
+          "version": 1,
+          "text": "A",
+          "done": false
+        },
+        "versionGuard": {
+          "version": 2,
+          "text": "AB",
+          "done": true
+        },
+        "scope": "author-designed full-state version contract"
+      }
+    },
+    {
+      "name": "12-design-buffer-cut-and-duplicate-delta",
+      "passed": true,
+      "observation": {
+        "cut": 2,
+        "naiveText": "ABABCC",
+        "cutAndDenseCursorText": "ABC"
+      }
+    },
+    {
+      "name": "12-design-pagination-append-between-pages",
+      "passed": true,
+      "observation": {
+        "offsetPages": [
+          [
+            5,
+            4,
+            3
+          ],
+          [
+            3,
+            2,
+            1
+          ]
+        ],
+        "stablePrefixPages": [
+          [
+            5,
+            4,
+            3
+          ],
+          [
+            2,
+            1,
+            0
+          ]
+        ],
+        "assumption": "append-only numbered log; not mutable item versions"
+      }
+    },
+    {
+      "name": "12-design-lost-completion-and-expired-history",
+      "passed": true,
+      "observation": {
+        "submissions": 1,
+        "confirmation": "read same operation",
+        "historyExpired": true,
+        "resultRecovered": true,
+        "intermediateTimelineRecovered": false,
+        "scope": "author-designed retained result independent from short event log"
+      }
+    },
+    {
+      "name": "12-design-payload-accounting",
+      "passed": true,
+      "observation": {
+        "events": 10000,
+        "tailEvents": 100,
+        "fullJsonBytes": 1028891,
+        "tailJsonBytes": 10301,
+        "fullTextSnapshotBytes": 800025,
+        "meaning": "fewer records does not guarantee small full-text snapshot; no transport/compression timing"
+      }
+    },
+    {
+      "name": "12-extracted-codex-cursor-and-grok-watermark",
+      "passed": true,
+      "observation": {
+        "sources": [
+          {
+            "path": "research/repos/codex/codex-rs/tui/src/app_server_session/history.rs",
+            "start": 51,
+            "end": 60,
+            "file_sha256": "7bbb70ccbfc2fd2e9c6b5013fa9dca8787331a4ad29563b1f4247f12c68779a0"
+          },
+          {
+            "path": "research/repos/grok/crates/codegen/xai-grok-pager/src/app/agent_view/session.rs",
+            "start": 48,
+            "end": 63,
+            "file_sha256": "2afc884d00d9c4a33165ab1b2d9d3a0e45a700df088746a7084751bb739e86e5"
+          },
+          {
+            "path": "research/repos/grok/crates/codegen/xai-grok-pager/src/acp/meta.rs",
+            "start": 85,
+            "end": 90,
+            "file_sha256": "6aedc83712d6d8d04c682c4868b310e86db117f7c2bd6908ff8c3d19f99d5ad5"
+          }
+        ],
+        "output": "exact functions: cursor cycle stops; max watermark is not contiguous ACK",
+        "scope": "unmodified extracted functions, synthetic container; not Rust workspace build, real pager or server"
+      }
+    }
+  ]
+}

@@ -161,6 +161,26 @@ Actor 回复后，ACP 入口还会发完成通知、整理 usage 和 trace，按
 
 <!-- /harness-diagram -->
 
+## 全部篇目
+
+本系列现有 13 篇。第 12 篇补充客户端断线后的状态同步与事件恢复，新增检查执行于 2026-09-14；具体对象与未验证范围见该篇实验说明。
+
+| 编号 | 文章 |
+| --- | --- |
+| 00 | [一次 Agent 任务经过哪些层？从四种 Harness 看责任边界](/agent-harness/00-overview/) |
+| 01 | [Agent 的一轮何时结束？四种 Harness 的执行边界](/agent-harness/01-turn-boundaries/) |
+| 02 | [模型流何时可以执行工具？四种 Harness 的终态与重试](/agent-harness/02-model-streams/) |
+| 03 | [上下文压缩如何保持一致？切点、替换与请求重建](/agent-harness/03-context/) |
+| 04 | [工具并发怎样保持顺序？四种 Harness 的准备、执行与提交](/agent-harness/04-tools/) |
+| 05 | [一次批准改变了什么？四种 Harness 的权限与沙箱](/agent-harness/05-permissions/) |
+| 06 | [失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略](/agent-harness/06-recovery/) |
+| 07 | [多个 Hook 如何协作？四种 Harness 的扩展与卸载](/agent-harness/07-extensions/) |
+| 08 | [子 Agent 何时才算结束？创建、接纳与资源回收](/agent-harness/08-subagents/) |
+| 09 | [界面显示已完成时，Harness 承诺了什么？](/agent-harness/09-clients/) |
+| 10 | [测试通过证明了什么？Harness 的观测证据与评分分母](/agent-harness/10-observability/) |
+| 11 | [从四种 Harness 到自己的设计：用离线查看器检验取舍](/agent-harness/11-design/) |
+| 12 | [断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复](/agent-harness/12-client-recovery/) |
+
 ## 配套材料
 
 [阅读实验说明](/agent-harness/00-evidence/) · [阅读复现入口](/agent-harness/00-reproduce/) · [下载正文、原图与实验材料](/downloads/agent-harness/00/agent-harness-00.zip)（[SHA-256](/downloads/agent-harness/00/agent-harness-00.zip.sha256)）。

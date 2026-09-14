@@ -1,0 +1,131 @@
+{
+  "date": "2026-09-14",
+  "scope": "Unmodified fixed-source Pi HarnessEventBus/reduceLaneSnapshot and DeepSeek RemoteJournalStream/ClientAssistantStream. Controlled generation carrier, page provider, synthetic event values and schedule gates. No full product, WebSocket, model or disk durability test.",
+  "outcomes": [
+    {
+      "name": "12-pi-watch-buffers-before-start",
+      "passed": true,
+      "observation": {
+        "snapshotBeforeDelivery": true,
+        "seen": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "12-pi-resnapshot-drops-old-epoch-holds-post-cut",
+      "passed": true,
+      "observation": {
+        "representedBySnapshot": [
+          2
+        ],
+        "postBoundary": [
+          3
+        ],
+        "oldEpochSuppressed": true
+      }
+    },
+    {
+      "name": "12-pi-resnapshot-failure-is-not-lossless-replay",
+      "passed": true,
+      "observation": {
+        "snapshotRejected": true,
+        "preBoundaryEventNotReplayed": 1,
+        "laterSeen": 2,
+        "meaning": "caller must reopen snapshot, not continue as if gap-free"
+      }
+    },
+    {
+      "name": "12-pi-reducer-replaces-text-but-does-not-general-dedup",
+      "passed": true,
+      "observation": {
+        "duplicateFullText": "AB",
+        "duplicateEntryCount": 2,
+        "navigation": "rebase",
+        "meaning": "ordered watch contract required; reducer is not arbitrary network replay deduplicator"
+      }
+    },
+    {
+      "name": "12-ds-journal-repairs-gap-while-new-events-arrive",
+      "passed": true,
+      "observation": {
+        "pageCut": 3,
+        "mergedTail": 5,
+        "queuedOutOfOrder": [
+          5,
+          4
+        ],
+        "notificationAfterRepair": true
+      }
+    },
+    {
+      "name": "12-ds-journal-duplicate-is-skipped",
+      "passed": true,
+      "observation": {
+        "appended": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "12-ds-journal-rejects-regressing-opening",
+      "passed": true,
+      "observation": {
+        "oldCursor": 2,
+        "newCursor": 1,
+        "rejected": true,
+        "oldViewRetained": true
+      }
+    },
+    {
+      "name": "12-ds-journal-new-generation-wins-over-old-page",
+      "passed": true,
+      "observation": {
+        "stalePageTail": 2,
+        "adoptedGenerationTail": 4
+      }
+    },
+    {
+      "name": "12-ds-older-page-during-live-append",
+      "passed": true,
+      "observation": {
+        "olderPageThrough": 4,
+        "liveTail": 5,
+        "olderEntries": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "12-ds-expired-or-missing-page-does-not-silently-heal",
+      "passed": true,
+      "observation": {
+        "pageSourceIsFixture": true,
+        "failurePropagated": true,
+        "noFalseContinuousView": true
+      }
+    },
+    {
+      "name": "12-ds-assistant-missed-end-stages-until-new-baseline",
+      "passed": true,
+      "observation": {
+        "durableArrivalAloneNotPublished": true,
+        "missedEndNeedsAnotherRecoveryTrigger": true,
+        "baselineMakesResultVisible": true
+      }
+    },
+    {
+      "name": "12-ds-assistant-dense-index-and-settlement-identity",
+      "passed": true,
+      "observation": {
+        "knownIndexGap": "rebaseline",
+        "duplicateEndIgnored": true,
+        "unknownAttemptSuffixIgnored": true,
+        "durableWithoutKnownStart": "publish"
+      }
+    }
+  ]
+}

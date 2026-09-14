@@ -1,0 +1,36 @@
+{
+  "date": "2026-09-14",
+  "scope": "Handoff scripts and fixed source files copied to isolated temp directory; existing esbuild dependency reused via node_modules symlink. No complete source download or fresh dependency installation. No product/model/network run.",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "experiments/client-recovery-build.mjs"
+      ],
+      "exitCode": 0,
+      "output": "Bundled 14 fixed upstream source modules\n"
+    },
+    {
+      "command": [
+        "node",
+        "experiments/client-recovery-lab.mjs"
+      ],
+      "exitCode": 0,
+      "output": "{\"passed\":12,\"total\":12,\"failures\":[]}\n"
+    },
+    {
+      "command": [
+        "python3",
+        "experiments/client_recovery_mechanisms.py"
+      ],
+      "exitCode": 0,
+      "output": "{\"passed\": 6, \"total\": 6, \"failures\": []}\n"
+    }
+  ],
+  "resultFilesByteIdentical": [
+    "client-recovery-results.json",
+    "client-recovery-mechanism-results.json",
+    "client-recovery-module-sources.json"
+  ],
+  "passedChecks": 18
+}

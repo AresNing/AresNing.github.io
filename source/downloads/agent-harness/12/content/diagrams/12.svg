@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="1370" viewBox="0 0 780 1370" role="img" aria-labelledby="title desc">
+<title id="title">断线之后，进度如何接上？</title><desc id="desc">同一任务的五个观察时刻。客户端:已收到半段文本，任务身份已知；界面显示运行中；连接中断:工具仍在服务端执行，看不到更新，不等于任务停止；重新观察:旧历史与新事件交错，迟到快照不能覆盖新进度；第二次遗漏:最后的完成通知丢失，应查询原任务，确认结果与状态；恢复目标:可信视图＋持续更新，缺失的过程必须明确标记。场景假设：服务进程存活，只有客户端断连。</desc>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#19333d}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#61867e" stroke-width="1.5"/></marker></defs>
+<rect width="780" height="1370" rx="20" fill="#f5f7f3"/>
+<text x="40" y="53" font-size="25" font-weight="600" style="fill:#087a67">AGENT HARNESS / 12</text>
+<text x="40" y="111" font-size="42" font-weight="700" style="fill:#19333d">断线之后，进度如何接上？</text>
+<text x="40" y="157" font-size="28" font-weight="400" style="fill:#506c66">同一任务的五个观察时刻</text>
+<rect x="32" y="196" width="716" height="158" rx="18" fill="white" stroke="#c8d9d1" stroke-width="2"/>
+<text x="55" y="235" font-size="27" font-weight="650" style="fill:#087a67">01  客户端</text>
+<text x="55" y="282" font-size="34" font-weight="650" style="fill:#19333d">已收到半段文本</text>
+<text x="55" y="324" font-size="30" font-weight="400" style="fill:#435d5a">任务身份已知；界面显示运行中</text>
+<path d="M390 354 L390 380" stroke="#61867e" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="390" width="716" height="158" rx="18" fill="white" stroke="#c8d9d1" stroke-width="2"/>
+<text x="55" y="429" font-size="27" font-weight="650" style="fill:#087a67">02  连接中断</text>
+<text x="55" y="476" font-size="34" font-weight="650" style="fill:#19333d">工具仍在服务端执行</text>
+<text x="55" y="518" font-size="30" font-weight="400" style="fill:#435d5a">看不到更新，不等于任务停止</text>
+<path d="M390 548 L390 574" stroke="#61867e" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="584" width="716" height="158" rx="18" fill="white" stroke="#c8d9d1" stroke-width="2"/>
+<text x="55" y="623" font-size="27" font-weight="650" style="fill:#087a67">03  重新观察</text>
+<text x="55" y="670" font-size="34" font-weight="650" style="fill:#19333d">旧历史与新事件交错</text>
+<text x="55" y="712" font-size="30" font-weight="400" style="fill:#435d5a">迟到快照不能覆盖新进度</text>
+<path d="M390 742 L390 768" stroke="#61867e" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="778" width="716" height="158" rx="18" fill="white" stroke="#c8d9d1" stroke-width="2"/>
+<text x="55" y="817" font-size="27" font-weight="650" style="fill:#087a67">04  第二次遗漏</text>
+<text x="55" y="864" font-size="34" font-weight="650" style="fill:#19333d">最后的完成通知丢失</text>
+<text x="55" y="906" font-size="30" font-weight="400" style="fill:#435d5a">应查询原任务，确认结果与状态</text>
+<path d="M390 936 L390 962" stroke="#61867e" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="972" width="716" height="158" rx="18" fill="white" stroke="#c8d9d1" stroke-width="2"/>
+<text x="55" y="1011" font-size="27" font-weight="650" style="fill:#087a67">05  恢复目标</text>
+<text x="55" y="1058" font-size="34" font-weight="650" style="fill:#19333d">可信视图＋持续更新</text>
+<text x="55" y="1100" font-size="30" font-weight="400" style="fill:#435d5a">缺失的过程必须明确标记</text>
+<rect x="32" y="1180" width="716" height="116" rx="18" fill="#e0efe7"/>
+<text x="55" y="1226" font-size="32" font-weight="600" style="fill:#19333d">场景假设：服务进程存活，只有客户端断连。</text>
+<text x="40" y="1340" font-size="23" font-weight="400" style="fill:#536c66">作者场景 · 具体实现与边界见正文</text>
+</svg>

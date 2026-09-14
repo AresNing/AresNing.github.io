@@ -170,6 +170,6 @@ Pi 的实例则说明为什么需要多个“结束”：工具执行结束和 t
 
 ## 系列阅读
 
-[上一篇：测试通过证明了什么？Harness 的观测证据与评分分母](/agent-harness/10-observability/)
+[上一篇：测试通过证明了什么？Harness 的观测证据与评分分母](/agent-harness/10-observability/) · [下一篇：断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复](/agent-harness/12-client-recovery/)
 
 <!-- /harness-series-nav -->
