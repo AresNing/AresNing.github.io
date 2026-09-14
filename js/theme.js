@@ -12,12 +12,16 @@
   apply(choice);
   media.addEventListener('change', () => { if (choice === 'system') apply(choice); });
   document.addEventListener('DOMContentLoaded', () => {
-    const select = document.querySelector('#theme-select');
-    select.value = choice;
-    select.closest('label').hidden = false;
-    select.addEventListener('change', () => {
-      apply(select.value);
-      try { localStorage.setItem('paper-theme', select.value); } catch {}
+    const control = document.querySelector('.theme-control');
+    if (!control) return;
+    const radios = control.querySelectorAll('input[name="theme"]');
+    radios.forEach(radio => { radio.checked = radio.value === choice; });
+    control.hidden = false;
+    control.addEventListener('change', event => {
+      const radio = event.target;
+      if (!radio.matches('input[name="theme"]') || !radio.checked) return;
+      apply(radio.value);
+      try { localStorage.setItem('paper-theme', radio.value); } catch {}
     });
   });
 })();

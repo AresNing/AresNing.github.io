@@ -18,6 +18,8 @@
   const input = dialog.querySelector('input');
   const results = dialog.querySelector('.search-results');
   const status = dialog.querySelector('.search-status');
+  const clearButton = dialog.querySelector('.search-clear');
+  let composing = false;
   let indexPromise;
   let requestVersion = 0;
   let searchTimer;
@@ -34,20 +36,24 @@
         const posts = [...data.querySelectorAll('entry')].map(entry => {
           const title = entry.querySelector('title')?.textContent || '无题';
           const rawUrl = entry.querySelector('url')?.textContent || entry.querySelector('link')?.getAttribute('href');
-          const url = new URL(rawUrl, location.origin);
+          if (!rawUrl) return null;
+          // Hexo may concatenate root and permalink as //category/path. This index
+          // contains local article paths; preserve that first segment as a path.
+          const url = new URL(rawUrl.replace(/^\/+/, "/"), location.origin);
           if (!['http:', 'https:'].includes(url.protocol)) return null;
-          // The XML uses production absolute URLs. Internal results also work in local preview.
+          // Resolve published absolute URLs to the same internal path in local preview.
           const href = url.pathname + url.search + url.hash;
           const template = document.createElement('template');
           template.innerHTML = entry.querySelector('content')?.textContent || '';
           template.content.querySelectorAll('script, style, .gutter, .line-numbers-rows').forEach(node => node.remove());
           template.content.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6, pre, td').forEach(node => node.append(' '));
           const content = (template.content.textContent || '').replace(/\s+/g, ' ').trim();
-          const tags = [...entry.querySelectorAll('tag, category')].map(node => node.textContent.trim()).join(' ');
+          const tags = [...new Set([...entry.querySelectorAll('tag, category')].map(node => node.textContent.trim()))].join(' ');
           return {title, href, content, tags};
         }).filter(Boolean);
         return new Fuse(posts, {
           keys: [{name: 'title', weight: .6}, {name: 'tags', weight: .25}, {name: 'content', weight: .15}],
+          includeMatches: true,
           threshold: .25,
           ignoreLocation: true,
           ignoreFieldNorm: true
@@ -60,38 +66,99 @@
     return indexPromise;
   }
 
+  // Rendering uses Fuse's match metadata; DOM text nodes keep article/query text inert.
+  function rangesFor(text, terms, matches, key) {
+    const lower = text.toLocaleLowerCase();
+    const ranges = [];
+    terms.forEach(term => {
+      let position = lower.indexOf(term);
+      while (position !== -1) {
+        ranges.push([position, position + term.length - 1]);
+        position = lower.indexOf(term, position + Math.max(1, term.length));
+      }
+    });
+    if (!ranges.length) {
+      (matches || []).filter(match => match.key === key).forEach(match => {
+        match.indices.forEach(([start, end]) => {
+          // A typo should highlight the matching word, not scattered Latin letters.
+          while (start > 0 && /[a-z0-9_]/i.test(text[start - 1])) start--;
+          while (end + 1 < text.length && /[a-z0-9_]/i.test(text[end + 1])) end++;
+          ranges.push([start, end]);
+        });
+      });
+    }
+    const merged = [];
+    ranges.sort((a, b) => a[0] - b[0]).forEach(range => {
+      const previous = merged[merged.length - 1];
+      if (previous && range[0] <= previous[1] + 1) previous[1] = Math.max(previous[1], range[1]);
+      else merged.push([...range]);
+    });
+    return merged;
+  }
+
+  function appendHighlighted(node, text, ranges, start = 0, end = text.length) {
+    let cursor = start;
+    ranges.forEach(([left, right]) => {
+      left = Math.max(start, left);
+      right = Math.min(end, right + 1);
+      if (left >= right) return;
+      node.append(document.createTextNode(text.slice(cursor, left)));
+      const mark = document.createElement('mark');
+      mark.textContent = text.slice(left, right);
+      node.append(mark);
+      cursor = right;
+    });
+    node.append(document.createTextNode(text.slice(cursor, end)));
+  }
+
   async function search() {
     const version = ++requestVersion;
     const query = input.value.trim().toLocaleLowerCase();
+    clearButton.hidden = !input.value;
     results.replaceChildren();
+    results.setAttribute('aria-busy', 'false');
     if (!query) {
-      status.textContent = '输入关键词，搜索所有文章。';
+      status.textContent = '输入关键词开始搜索';
       return;
     }
     status.textContent = '正在搜索…';
+    results.setAttribute('aria-busy', 'true');
     try {
       const index = await loadIndex();
       if (version !== requestVersion || !searchDialog.shown) return;
       const terms = query.split(/\s+/);
-      const matches = index.search({$and: terms.map(term => ({$or: [{title: term}, {tags: term}, {content: term}]}))})
-        .map(result => result.item);
-      status.textContent = matches.length ? `找到 ${matches.length} 篇文章${matches.length > 30 ? '，显示前 30 篇，请增加关键词缩小范围' : ''}。` : '没有找到相关文章。试试其他关键词，或清空搜索。';
-      matches.slice(0, 30).forEach(post => {
+      const matches = index.search({$and: terms.map(term => ({$or: [{title: term}, {tags: term}, {content: term}]}))});
+      results.setAttribute('aria-busy', 'false');
+      status.textContent = matches.length ? `${matches.length} 篇相关文章${matches.length > 30 ? '，显示前 30 篇，可增加关键词缩小范围' : ''}` : `没有找到“${input.value.trim()}”相关的文章，试试更短的关键词。`;
+      matches.slice(0, 30).forEach(result => {
+        const post = result.item;
         const li = document.createElement('li');
         const link = document.createElement('a');
         link.href = post.href;
         const heading = document.createElement('h3');
-        heading.textContent = post.title;
+        appendHighlighted(heading, post.title, rangesFor(post.title, terms, result.matches, 'title'));
+        link.append(heading);
+        if ((result.matches || []).some(match => match.key === 'tags')) {
+          const tags = document.createElement('p');
+          tags.className = 'search-tags';
+          tags.append('标签 · ');
+          appendHighlighted(tags, post.tags, rangesFor(post.tags, terms, result.matches, 'tags'));
+          link.append(tags);
+        }
         const excerpt = document.createElement('p');
-        const position = post.content.toLocaleLowerCase().indexOf(terms[0]);
-        const start = Math.max(0, position - 35);
-        excerpt.textContent = (start ? '…' : '') + post.content.slice(start, start + 130) + (post.content.length > start + 130 ? '…' : '');
-        link.append(heading, excerpt);
+        const ranges = rangesFor(post.content, terms, result.matches, 'content');
+        const start = Math.max(0, (ranges[0]?.[0] || 0) - 30);
+        const end = Math.min(post.content.length, start + 150);
+        if (start) excerpt.append('…');
+        appendHighlighted(excerpt, post.content, ranges, start, end);
+        if (end < post.content.length) excerpt.append('…');
+        link.append(excerpt);
         li.append(link);
         results.append(li);
       });
     } catch {
       if (version !== requestVersion || !searchDialog.shown) return;
+      results.setAttribute('aria-busy', 'false');
       status.textContent = '搜索暂时不可用，请稍后重试。';
       const retry = document.createElement('button');
       retry.type = 'button';
@@ -102,12 +169,19 @@
     }
   }
   searchDialog.on('show', search);
-  input.addEventListener('input', () => {
+  function queueSearch() {
     ++requestVersion;
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(search, 120);
-  });
-  dialog.querySelector('.search-clear').addEventListener('click', () => {
+    clearButton.hidden = !input.value;
+    results.replaceChildren();
+    results.setAttribute('aria-busy', 'false');
+    status.textContent = input.value.trim() ? '正在搜索…' : '输入关键词开始搜索';
+    if (!composing) searchTimer = setTimeout(search, 120);
+  }
+  input.addEventListener('compositionstart', () => { composing = true; });
+  input.addEventListener('compositionend', () => { composing = false; queueSearch(); });
+  input.addEventListener('input', queueSearch);
+  clearButton.addEventListener('click', () => {
     clearTimeout(searchTimer);
     input.value = '';
     search();

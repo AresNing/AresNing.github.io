@@ -43,8 +43,13 @@
       <a href="/archives/">归档</a>
       <a href="/about/">关于</a>
     </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
     <div class="header-actions">
-      <label class="theme-control" hidden><span class="sr-only">外观</span><select class="ui-input" id="theme-select" aria-label="外观"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label>
       <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
       </button>
@@ -127,9 +132,10 @@
     <div class="dialog-panel" role="document">
     <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
-    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="输入标题、关键词或标签" autocomplete="off" autofocus><button class="ui-button text-button search-clear" type="button">清空</button></div>
-    <p class="search-status" role="status" aria-live="polite">输入关键词，搜索所有文章。</p>
-    <ul class="search-results"></ul>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
     </div>
   </div>
   <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">

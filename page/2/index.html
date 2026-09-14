@@ -43,8 +43,13 @@
       <a href="/archives/">归档</a>
       <a href="/about/">关于</a>
     </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
     <div class="header-actions">
-      <label class="theme-control" hidden><span class="sr-only">外观</span><select class="ui-input" id="theme-select" aria-label="外观"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label>
       <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
       </button>
@@ -63,10 +68,10 @@
     <div class="section-heading"><h2 id="articles-title">全部文章与笔记</h2><div class="taxonomy-links"><a href="/categories/">分类</a><span aria-hidden="true"> / </span><a href="/tags/">标签 <span aria-hidden="true">→</span></a></div></div>
     
       <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Java-Basics/">Java Basics</a></div></div>
-        <h2><a href="/java-basics/javabasics/new-in-java-8/">Java8新特性</a></h2>
-        <p class="article-summary">整理 Java 8 的 Lambda、函数式接口、Stream 与 Optional，通过示例理解函数式写法和集合处理。</p>
-        <a class="read-more" href="/java-basics/javabasics/new-in-java-8/" aria-label="阅读全文：Java8新特性">阅读全文 <span aria-hidden="true">↗</span></a>
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Design-Pattern/">Design Pattern</a></div></div>
+        <h2><a href="/design-pattern/designpattern/strategy-pattern/">策略模式</a></h2>
+        <p class="article-summary">围绕策略接口与具体实现，整理策略模式的适用场景、优缺点和代码示例，理解如何封装可替换的算法。</p>
+        <a class="read-more" href="/design-pattern/designpattern/strategy-pattern/" aria-label="阅读全文：策略模式">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
       <article class="article-row">
@@ -99,6 +104,13 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Concurrency/">Concurrency</a></div></div>
+        <h2><a href="/concurrency/concurrency/concurrent-notes/thread-safe-of-collection/">集合的线程安全</a></h2>
+        <p class="article-summary">记录集合遍历与并发修改的问题，以及常见集合的线程安全替代方案和 CopyOnWriteArrayList 的特点。</p>
+        <a class="read-more" href="/concurrency/concurrency/concurrent-notes/thread-safe-of-collection/" aria-label="阅读全文：集合的线程安全">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+    
+      <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Concurrency/">Concurrency</a></div></div>
         <h2><a href="/concurrency/concurrency/concurrent-notes/three-auxiliary-classes-of-juc/">JUC的三大辅助类</a></h2>
         <p class="article-summary">通过示例对照 CountDownLatch、CyclicBarrier 与 Semaphore，区分等待完成、同步屏障和并发许可。</p>
         <a class="read-more" href="/concurrency/concurrency/concurrent-notes/three-auxiliary-classes-of-juc/" aria-label="阅读全文：JUC的三大辅助类">阅读全文 <span aria-hidden="true">↗</span></a>
@@ -106,9 +118,9 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Concurrency/">Concurrency</a></div></div>
-        <h2><a href="/concurrency/concurrency/concurrent-notes/thread-safe-of-collection/">集合的线程安全</a></h2>
-        <p class="article-summary">记录集合遍历与并发修改的问题，以及常见集合的线程安全替代方案和 CopyOnWriteArrayList 的特点。</p>
-        <a class="read-more" href="/concurrency/concurrency/concurrent-notes/thread-safe-of-collection/" aria-label="阅读全文：集合的线程安全">阅读全文 <span aria-hidden="true">↗</span></a>
+        <h2><a href="/concurrency/concurrency/concurrent-notes/cas/">CAS</a></h2>
+        <p class="article-summary">从比较并交换的基本思路出发，记录 CAS、Unsafe 与原子更新的实现要点，以及这种方式的局限。</p>
+        <a class="read-more" href="/concurrency/concurrency/concurrent-notes/cas/" aria-label="阅读全文：CAS">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
       <article class="article-row">
@@ -123,13 +135,6 @@
         <h2><a href="/concurrency/concurrency/concurrent-notes/atomic/">atomic</a></h2>
         <p class="article-summary">分类整理 Java 原子类的使用方式，涵盖基本类型、数组、引用及累加器，结合代码查阅不同原子更新场景。</p>
         <a class="read-more" href="/concurrency/concurrency/concurrent-notes/atomic/" aria-label="阅读全文：atomic">阅读全文 <span aria-hidden="true">↗</span></a>
-      </article>
-    
-      <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Concurrency/">Concurrency</a></div></div>
-        <h2><a href="/concurrency/concurrency/concurrent-notes/callable-interface/">Runnable 接口与 Callable 接口</a></h2>
-        <p class="article-summary">比较 Runnable 与 Callable 的返回值、异常和调用方法，并记录 Future 与 FutureTask 的基本用法。</p>
-        <a class="read-more" href="/concurrency/concurrency/concurrent-notes/callable-interface/" aria-label="阅读全文：Runnable 接口与 Callable 接口">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
     
@@ -148,9 +153,10 @@
     <div class="dialog-panel" role="document">
     <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
-    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="输入标题、关键词或标签" autocomplete="off" autofocus><button class="ui-button text-button search-clear" type="button">清空</button></div>
-    <p class="search-status" role="status" aria-live="polite">输入关键词，搜索所有文章。</p>
-    <ul class="search-results"></ul>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
     </div>
   </div>
   <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
