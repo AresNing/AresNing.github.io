@@ -1,0 +1,27 @@
+[
+  {
+    "project": "codex",
+    "repository": "https://github.com/openai/codex",
+    "commit": "c4017a87aacc7558002b7cb510025e967c1d765e",
+    "archive_sha256": "c5d0b14d3335613aebcfc1dfc938ada414b0017201ce52dbfafe19f3fda6ac4d"
+  },
+  {
+    "project": "pi",
+    "repository": "https://github.com/earendil-works/pi",
+    "commit": "71dca871bc80b6bc97be37f0ca3189399d651fff",
+    "archive_sha256": "1bc45f398ea8181d5942bd85d22af08d9f6ea9378aa9b75a402c0625b75552b0"
+  },
+  {
+    "project": "deepseek",
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "c291e7961a515f6d7af9304e7fd1d257929aef26",
+    "archive_sha256": "f08cfc86cb05d4186be3319670e2756375cb2788b3d2164dd7f30b885f350860"
+  },
+  {
+    "project": "grok",
+    "repository": "https://github.com/xai-org/grok-build",
+    "commit": "37949780c144e37df692e3d669051a21fec24f20",
+    "archive_sha256": "e9d9791ce047da4c296cc7960a82cd7c2542029a80c9e3e0858cbd285879eff3",
+    "source_rev": "c4ea71cfdbcdb21e32e41bc25a0043d7d4836714"
+  }
+]

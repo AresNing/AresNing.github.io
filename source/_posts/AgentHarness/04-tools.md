@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/04-tools/
-related: ["agent-harness/03-context/"]
+related: ["agent-harness/03-context/", "agent-harness/05-permissions/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/04/04.svg" target="_blank" rel="noopener" aria-label="查看完整配图：工具执行与并发：完成顺序可以不同于模型历史顺序"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/04/04-mobile.svg"><img src="/images/agent-harness/04/04.svg" alt="工具执行与并发：完成顺序可以不同于模型历史顺序" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -291,10 +291,11 @@ DeepSeek 使用原始 scheduler、原始消息构造器及常量声明，registr
 
 下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。
 
+
 <!-- harness-series-nav -->
 
 ## 系列阅读
 
-[上一篇：上下文压缩如何保持一致？切点、替换与请求重建](/agent-harness/03-context/)
+[上一篇：上下文压缩如何保持一致？切点、替换与请求重建](/agent-harness/03-context/) · [下一篇：一次批准改变了什么？四种 Harness 的权限与沙箱](/agent-harness/05-permissions/)
 
 <!-- /harness-series-nav -->
