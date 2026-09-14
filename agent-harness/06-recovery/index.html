@@ -6,25 +6,25 @@
   <meta name="theme-color" content="#F7F5EF">
   <script src="/js/theme.js"></script>
   
-  <title>中断后能恢复什么？四种 Harness 的历史重建与副作用 · AresNing</title>
+  <title>失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略 · AresNing</title>
   <meta name="description" content="工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。">
   
   <meta property="og:type" content="article">
-  <meta property="og:title" content="中断后能恢复什么？四种 Harness 的历史重建与副作用">
+  <meta property="og:title" content="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略">
   <meta property="og:description" content="工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。">
   <meta property="og:url" content="https://aresning.github.io/agent-harness/06-recovery/">
   <meta property="og:site_name" content="AresNing">
   <meta property="og:locale" content="zh_CN">
-  <meta property="og:image" content="https://aresning.github.io/images/share/a76cf307df72246b.png">
+  <meta property="og:image" content="https://aresning.github.io/images/share/ac44cf996dea203b.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:alt" content="中断后能恢复什么？四种 Harness 的历史重建与副作用 · AresNing">
+  <meta property="og:image:alt" content="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略 · AresNing">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="中断后能恢复什么？四种 Harness 的历史重建与副作用">
+  <meta name="twitter:title" content="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略">
   <meta name="twitter:description" content="工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。">
-  <meta name="twitter:image" content="https://aresning.github.io/images/share/a76cf307df72246b.png">
-  <meta name="twitter:image:alt" content="中断后能恢复什么？四种 Harness 的历史重建与副作用 · AresNing">
+  <meta name="twitter:image" content="https://aresning.github.io/images/share/ac44cf996dea203b.png">
+  <meta name="twitter:image:alt" content="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略 · AresNing">
   <meta property="article:author" content="https://aresning.github.io/about/"><meta property="article:published_time" content="2026-09-13T16:00:00.000Z"><meta property="article:modified_time" content="2026-09-13T16:00:00.000Z">
   <link rel="canonical" href="https://aresning.github.io/agent-harness/06-recovery/">
   <link rel="icon" type="image/png" href="/images/favicon-32x32.png">
@@ -65,12 +65,12 @@
   <article class="reading-page">
     <header class="article-header">
       <nav class="breadcrumb" aria-label="当前位置"><a href="/">文章</a><span aria-hidden="true">/</span><a href="/categories/Agent-Harness/">Agent Harness</a></nav>
-      <h1>中断后能恢复什么？四种 Harness 的历史重建与副作用</h1>
+      <h1>失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略</h1>
       <div class="article-meta"><a href="/about/">AresNing</a><span aria-hidden="true">·</span><span>文章</span><span aria-hidden="true">·</span><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time><span>更新于 <time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></span></div>
       <p class="article-intro">历史里没有结果，既不能证明工具没执行，也不能证明它已经成功。本文区分恢复上下文、重放工具与回滚工作区，并用独立故障实验说明外部系统为何必须参与去重。</p>
     </header>
     <details class="mobile-toc"><summary>文章目录</summary><nav aria-label="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%95%85%E9%9A%9C%E7%AA%97%E5%8F%A3%E6%9B%BF%E4%BB%A3%E4%B8%80%E4%B8%AA%E5%90%AB%E7%B3%8A%E7%9A%84%E2%80%9C%E5%B7%B2%E4%BF%9D%E5%AD%98%E2%80%9D"><span class="toc-text">用故障窗口替代一个含糊的“已保存”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codex%EF%BC%9A%E5%85%88%E6%89%BE%E4%BB%8D%E6%9C%89%E6%95%88%E7%9A%84-checkpoint%EF%BC%8C%E5%86%8D%E9%87%8D%E6%94%BE%E5%90%8E%E7%BB%AD%E5%8E%86%E5%8F%B2"><span class="toc-text">Codex：先找仍有效的 checkpoint，再重放后续历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pi%EF%BC%9Adurable-Harness-%E6%8A%8A%E2%80%9C%E6%9C%AA%E5%AE%8C%E6%88%90%E2%80%9D%E7%BB%A7%E7%BB%AD%E6%8B%86%E6%88%90%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81"><span class="toc-text">Pi：durable Harness 把“未完成”继续拆成几种状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepSeek%EF%BC%9A%E9%80%9A%E7%94%A8%E6%8E%A5%E5%8F%A3%E3%80%81%E6%98%BE%E5%BC%8F-append%E3%80%81%E5%AE%9E%E6%97%B6%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97%E6%98%AF%E4%B8%89%E4%B8%AA%E6%89%BF%E8%AF%BA"><span class="toc-text">DeepSeek：通用接口、显式 append、实时事件队列是三个承诺</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grok%EF%BC%9A%E6%96%87%E4%BB%B6-rewind-%E6%88%90%E5%8A%9F%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%89%80%E6%9C%89%E6%81%A2%E5%A4%8D%E5%9F%9F%E9%83%BD%E6%88%90%E5%8A%9F"><span class="toc-text">Grok：文件 rewind 成功，不等于所有恢复域都成功</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E5%AE%9E%E9%AA%8C%EF%BC%9A%E7%BC%BA%E5%A4%B1%E7%BB%93%E6%9E%9C%E6%97%A0%E6%B3%95%E5%8C%BA%E5%88%86%E2%80%9C%E6%B2%A1%E6%89%A7%E8%A1%8C%E2%80%9D%E5%92%8C%E2%80%9C%E5%B7%B2%E7%BB%8F%E5%AE%8C%E6%88%90%E2%80%9D"><span class="toc-text">故障实验：缺失结果无法区分“没执行”和“已经完成”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%A5%97%E6%9D%90%E6%96%99"><span class="toc-text">配套材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E9%98%85%E8%AF%BB"><span class="toc-text">系列阅读</span></a></li></ol></nav></details>
-    <div class="prose"><figure class="article-figure"><a href="/images/agent-harness/06/06.svg" target="_blank" rel="noopener" aria-label="查看完整配图：恢复与外部副作用：历史缺少结果，不代表操作没有发生"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/06/06-mobile.svg"><img src="/images/agent-harness/06/06.svg" alt="恢复与外部副作用：历史缺少结果，不代表操作没有发生" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
+    <div class="prose"><figure class="article-figure"><a href="/images/agent-harness/06/06.svg" target="_blank" rel="noopener" aria-label="查看完整配图：失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略：历史缺少结果，不代表操作没有发生"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/06/06-mobile.svg"><img src="/images/agent-harness/06/06.svg" alt="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略：历史缺少结果，不代表操作没有发生" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
 <p>工具已经提交一次外部写入，Harness 却在保存结果前崩溃。重启以后，日志里只剩一个尚未结束的调用。此时“再跑一次”可能造成重复，“当作成功”可能虚构结果，“恢复 checkpoint”也未必能触及外部系统。</p>
 <p>恢复真正要回答的是：系统掌握了什么证据，可以据此采取哪一步行动。四个项目在这里展示的并非同一种能力：Codex 从运行记录（rollout）重建回滚后仍有效的上下文；Pi 的 durable Harness 持有工具意图和重放策略；DeepSeek 区分日志抽象与具体后端的落盘边界；Grok 同时处理工作区、Git 与 hunk 状态的 rewind。</p>
 <p>本篇基于<a href="/downloads/agent-harness/06/content/evidence/versions.json">固定源码版本</a>。文中的进程崩溃实验为独立机制实验，确实运行了子进程退出和数据库查询，但没有向这四个产品注入崩溃。源码追踪与产品恢复验收分别陈述。</p>
@@ -198,7 +198,7 @@
 <!-- /harness-series-nav -->
 </div>
     <nav class="post-tags" aria-label="文章标签"><a href="/tags/Agent-Harness/"># Agent Harness</a><a href="/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"># 源码阅读</a><a href="/tags/Coding-Agent/"># Coding Agent</a></nav>
-    <section class="share-section" aria-label="分享文章" data-share-title="中断后能恢复什么？四种 Harness 的历史重建与副作用" data-quote-attribution="" data-share-description="工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。" data-share-url="https://aresning.github.io/agent-harness/06-recovery/">
+    <section class="share-section" aria-label="分享文章" data-share-title="失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略" data-quote-attribution="" data-share-description="工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。" data-share-url="https://aresning.github.io/agent-harness/06-recovery/">
   <h2>分享这篇文章</h2>
   <div class="share-actions">
     <button class="ui-button share-trigger" type="button" popovertarget="article-share-options" hidden>
@@ -209,10 +209,10 @@
       <button class="ui-button share-option copy-link" type="button" data-clipboard-text="https://aresning.github.io/agent-harness/06-recovery/" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 13 4-4m-6 5-2 2a3 3 0 0 0 4 4l4-4a3 3 0 0 0 0-4m2-2 2-2a3 3 0 0 0-4-4l-4 4a3 3 0 0 0 0 4"/></svg><span>复制链接</span>
       </button>
-      <a class="ui-button share-option share-x" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Faresning.github.io%2Fagent-harness%2F06-recovery%2F&amp;text=%E4%B8%AD%E6%96%AD%E5%90%8E%E8%83%BD%E6%81%A2%E5%A4%8D%E4%BB%80%E4%B9%88%EF%BC%9F%E5%9B%9B%E7%A7%8D%20Harness%20%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA%E4%B8%8E%E5%89%AF%E4%BD%9C%E7%94%A8" target="_blank" rel="noopener noreferrer">
+      <a class="ui-button share-option share-x" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Faresning.github.io%2Fagent-harness%2F06-recovery%2F&amp;text=%E5%A4%B1%E8%B4%A5%E4%B9%8B%E5%90%8E%EF%BC%8CAgent%20%E5%A6%82%E4%BD%95%E7%BB%A7%E7%BB%AD%EF%BC%9F%E5%9B%9B%E4%B8%AA%20Harness%20%E7%9A%84%E9%87%8D%E8%AF%95%E3%80%81%E6%A3%80%E6%9F%A5%E7%82%B9%E4%B8%8E%E6%81%A2%E5%A4%8D%E7%AD%96%E7%95%A5" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4l12 16h-4L4 4Zm16 0-7 8m-2 2-7 6"/></svg><span>分享到 X</span>
       </a>
-      <a class="ui-button share-option" href="/images/share/a76cf307df72246b.png" download="AresNing-article.png">
+      <a class="ui-button share-option" href="/images/share/ac44cf996dea203b.png" download="AresNing-article.png">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 17 6-6 5 5 3-3 4 4"/><circle cx="16" cy="8" r="1"/></svg><span>保存文章封面</span>
       </a>
       <button class="ui-button share-option native-share" type="button" hidden>
