@@ -1,0 +1,4672 @@
+[
+  {
+    "name": "01-stop-before-followup-poll",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 6,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641016
+          }
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641016
+          }
+        }
+      },
+      {
+        "seq": 12,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641016
+            }
+          ]
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641016
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "01-steer-during-prepare",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 6,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641016
+          }
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641016
+          }
+        }
+      },
+      {
+        "seq": 12,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641016
+            }
+          ]
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 14,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "arrived-during-prepare",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 15,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "arrived-during-prepare",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 16,
+        "kind": "model",
+        "index": 2
+      },
+      {
+        "seq": 17,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 18,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 19,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": []
+        }
+      },
+      {
+        "seq": 20,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641016
+            },
+            {
+              "role": "user",
+              "content": "arrived-during-prepare",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "done"
+                }
+              ],
+              "stopReason": "stop",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-pi-all-preflight-before-body",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 6,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "preflight",
+        "id": "a"
+      },
+      {
+        "seq": 10,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "args": {
+            "value": "b"
+          }
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "preflight",
+        "id": "b"
+      },
+      {
+        "seq": 12,
+        "kind": "body",
+        "id": "a"
+      },
+      {
+        "seq": 13,
+        "kind": "body",
+        "id": "b"
+      },
+      {
+        "seq": 14,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 15,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 16,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641017
+          }
+        }
+      },
+      {
+        "seq": 17,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641017
+          }
+        }
+      },
+      {
+        "seq": 18,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641017
+          }
+        }
+      },
+      {
+        "seq": 19,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641017
+          }
+        }
+      },
+      {
+        "seq": 20,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641017
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641017
+            }
+          ]
+        }
+      },
+      {
+        "seq": 21,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 22,
+        "kind": "model",
+        "index": 2
+      },
+      {
+        "seq": 23,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 24,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 25,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": []
+        }
+      },
+      {
+        "seq": 26,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                },
+                {
+                  "type": "toolCall",
+                  "id": "b",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "b"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641017
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641017
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "done"
+                }
+              ],
+              "stopReason": "stop",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-pi-one-sequential-tool-serializes-batch",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 6,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "c",
+                "name": "exclusive",
+                "arguments": {
+                  "value": "c"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "c",
+                "name": "exclusive",
+                "arguments": {
+                  "value": "c"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641018
+          }
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641018
+          }
+        }
+      },
+      {
+        "seq": 12,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "args": {
+            "value": "b"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 14,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641018
+          }
+        }
+      },
+      {
+        "seq": 15,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641018
+          }
+        }
+      },
+      {
+        "seq": 16,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "c",
+          "toolName": "exclusive",
+          "args": {
+            "value": "c"
+          }
+        }
+      },
+      {
+        "seq": 17,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "c",
+          "toolName": "exclusive",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "c"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 18,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "c",
+            "toolName": "exclusive",
+            "content": [
+              {
+                "type": "text",
+                "text": "c"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641018
+          }
+        }
+      },
+      {
+        "seq": 19,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "c",
+            "toolName": "exclusive",
+            "content": [
+              {
+                "type": "text",
+                "text": "c"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641018
+          }
+        }
+      },
+      {
+        "seq": 20,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "c",
+                "name": "exclusive",
+                "arguments": {
+                  "value": "c"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641018
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641018
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "c",
+              "toolName": "exclusive",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "c"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641018
+            }
+          ]
+        }
+      },
+      {
+        "seq": 21,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 22,
+        "kind": "model",
+        "index": 2
+      },
+      {
+        "seq": 23,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 24,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 25,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": []
+        }
+      },
+      {
+        "seq": 26,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                },
+                {
+                  "type": "toolCall",
+                  "id": "b",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "b"
+                  }
+                },
+                {
+                  "type": "toolCall",
+                  "id": "c",
+                  "name": "exclusive",
+                  "arguments": {
+                    "value": "c"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641018
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641018
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "c",
+              "toolName": "exclusive",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "c"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641018
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "done"
+                }
+              ],
+              "stopReason": "stop",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-pi-termination-is-all-results",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 6,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "args": {
+            "value": "b"
+          }
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "terminate": true
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "terminate": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 12,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641019
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641019
+          }
+        }
+      },
+      {
+        "seq": 14,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641019
+          }
+        }
+      },
+      {
+        "seq": 15,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641019
+          }
+        }
+      },
+      {
+        "seq": 16,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641019
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641019
+            }
+          ]
+        }
+      },
+      {
+        "seq": 17,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 18,
+        "kind": "model",
+        "index": 2
+      },
+      {
+        "seq": 19,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 20,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 21,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": []
+        }
+      },
+      {
+        "seq": 22,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                },
+                {
+                  "type": "toolCall",
+                  "id": "b",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "b"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641019
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641019
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "done"
+                }
+              ],
+              "stopReason": "stop",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            }
+          ]
+        }
+      },
+      {
+        "seq": 23,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 24,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 25,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 26,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 27,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 28,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 29,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 30,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 31,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "args": {
+            "value": "b"
+          }
+        }
+      },
+      {
+        "seq": 32,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "terminate": true
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 33,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "terminate": true
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 34,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 35,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 36,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 37,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "b"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 38,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641020
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641020
+            }
+          ]
+        }
+      },
+      {
+        "seq": 39,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                },
+                {
+                  "type": "toolCall",
+                  "id": "b",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "b"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641020
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641020
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-pi-blocked-peer-is-not-batch-rollback",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_start"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "user",
+            "content": "fixture",
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "model",
+        "index": 1
+      },
+      {
+        "seq": 6,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "args": {
+            "value": "a"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_start",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "args": {
+            "value": "b"
+          }
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "b",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "fixture deny"
+              }
+            ],
+            "details": {},
+            "terminate": true
+          },
+          "isError": true
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "pi-event",
+        "raw": {
+          "type": "tool_execution_end",
+          "toolCallId": "a",
+          "toolName": "probe",
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false
+          },
+          "isError": false
+        }
+      },
+      {
+        "seq": 12,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "a",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "a"
+              }
+            ],
+            "details": {},
+            "isError": false,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 14,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "fixture deny"
+              }
+            ],
+            "details": {},
+            "isError": true,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 15,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "toolResult",
+            "toolCallId": "b",
+            "toolName": "probe",
+            "content": [
+              {
+                "type": "text",
+                "text": "fixture deny"
+              }
+            ],
+            "details": {},
+            "isError": true,
+            "timestamp": 1789260641020
+          }
+        }
+      },
+      {
+        "seq": 16,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "toolCall",
+                "id": "a",
+                "name": "probe",
+                "arguments": {
+                  "value": "a"
+                }
+              },
+              {
+                "type": "toolCall",
+                "id": "b",
+                "name": "probe",
+                "arguments": {
+                  "value": "b"
+                }
+              }
+            ],
+            "stopReason": "toolUse",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": [
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641020
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "fixture deny"
+                }
+              ],
+              "details": {},
+              "isError": true,
+              "timestamp": 1789260641020
+            }
+          ]
+        }
+      },
+      {
+        "seq": 17,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_start"
+        }
+      },
+      {
+        "seq": 18,
+        "kind": "model",
+        "index": 2
+      },
+      {
+        "seq": 19,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_start",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 20,
+        "kind": "pi-event",
+        "raw": {
+          "type": "message_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          }
+        }
+      },
+      {
+        "seq": 21,
+        "kind": "pi-event",
+        "raw": {
+          "type": "turn_end",
+          "message": {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "done"
+              }
+            ],
+            "stopReason": "stop",
+            "api": "openai-responses",
+            "provider": "fixture",
+            "model": "fixture",
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "totalTokens": 0,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "timestamp": 0
+          },
+          "toolResults": []
+        }
+      },
+      {
+        "seq": 22,
+        "kind": "pi-event",
+        "raw": {
+          "type": "agent_end",
+          "messages": [
+            {
+              "role": "user",
+              "content": "fixture",
+              "timestamp": 0
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "toolCall",
+                  "id": "a",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "a"
+                  }
+                },
+                {
+                  "type": "toolCall",
+                  "id": "b",
+                  "name": "probe",
+                  "arguments": {
+                    "value": "b"
+                  }
+                }
+              ],
+              "stopReason": "toolUse",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "a",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                }
+              ],
+              "details": {},
+              "isError": false,
+              "timestamp": 1789260641020
+            },
+            {
+              "role": "toolResult",
+              "toolCallId": "b",
+              "toolName": "probe",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "fixture deny"
+                }
+              ],
+              "details": {},
+              "isError": true,
+              "timestamp": 1789260641020
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "done"
+                }
+              ],
+              "stopReason": "stop",
+              "api": "openai-responses",
+              "provider": "fixture",
+              "model": "fixture",
+              "usage": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "totalTokens": 0,
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0,
+                  "total": 0
+                }
+              },
+              "timestamp": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-ds-rolling-pool-ordered-commit",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "session-append",
+        "event": {
+          "seq": 1,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "a",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "prepare",
+        "id": "a"
+      },
+      {
+        "seq": 3,
+        "kind": "body-start",
+        "id": "a"
+      },
+      {
+        "seq": 4,
+        "kind": "session-append",
+        "event": {
+          "seq": 2,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "b",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "prepare",
+        "id": "b"
+      },
+      {
+        "seq": 6,
+        "kind": "body-start",
+        "id": "b"
+      },
+      {
+        "seq": 7,
+        "kind": "body-end",
+        "id": "b"
+      },
+      {
+        "seq": 8,
+        "kind": "session-append",
+        "event": {
+          "seq": 3,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "c",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "prepare",
+        "id": "c"
+      },
+      {
+        "seq": 10,
+        "kind": "body-start",
+        "id": "c"
+      },
+      {
+        "seq": 11,
+        "kind": "body-end",
+        "id": "c"
+      },
+      {
+        "seq": 12,
+        "kind": "body-end",
+        "id": "a"
+      },
+      {
+        "seq": 13,
+        "kind": "finalize",
+        "id": "a"
+      },
+      {
+        "seq": 14,
+        "kind": "session-append",
+        "event": {
+          "seq": 4,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "a"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "a",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "a"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "34cf750a-b75b-4e44-95f4-b119548372cc"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              1
+            ]
+          }
+        }
+      },
+      {
+        "seq": 15,
+        "kind": "finalize",
+        "id": "b"
+      },
+      {
+        "seq": 16,
+        "kind": "session-append",
+        "event": {
+          "seq": 5,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "b"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "b",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "b"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "3db93a3d-e981-4758-94a4-76529f8f7434"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              2
+            ]
+          }
+        }
+      },
+      {
+        "seq": 17,
+        "kind": "finalize",
+        "id": "c"
+      },
+      {
+        "seq": 18,
+        "kind": "session-append",
+        "event": {
+          "seq": 6,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "c"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "c",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "c"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "870be85f-18f6-4269-9d57-f5c36a2913cb"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              3
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-ds-live-exclusive-barrier",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "session-append",
+        "event": {
+          "seq": 1,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "a",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "prepare",
+        "id": "a"
+      },
+      {
+        "seq": 3,
+        "kind": "body-start",
+        "id": "a"
+      },
+      {
+        "seq": 4,
+        "kind": "session-append",
+        "event": {
+          "seq": 2,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "b",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "prepare",
+        "id": "b"
+      },
+      {
+        "seq": 6,
+        "kind": "body-start",
+        "id": "b"
+      },
+      {
+        "seq": 7,
+        "kind": "body-end",
+        "id": "a"
+      },
+      {
+        "seq": 8,
+        "kind": "finalize",
+        "id": "a"
+      },
+      {
+        "seq": 9,
+        "kind": "session-append",
+        "event": {
+          "seq": 3,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "a"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "a",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "a"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "ff3c4bdb-7031-48ce-b802-882d331dc0b0"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              1
+            ]
+          }
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "body-end",
+        "id": "b"
+      },
+      {
+        "seq": 11,
+        "kind": "finalize",
+        "id": "b"
+      },
+      {
+        "seq": 12,
+        "kind": "session-append",
+        "event": {
+          "seq": 4,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "b"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "b",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "b"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "53c99aae-ece0-45c2-be8d-2c5d090e4da0"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              2
+            ]
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "session-append",
+        "event": {
+          "seq": 5,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "c",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 14,
+        "kind": "prepare",
+        "id": "c"
+      },
+      {
+        "seq": 15,
+        "kind": "body-start",
+        "id": "c"
+      },
+      {
+        "seq": 16,
+        "kind": "body-end",
+        "id": "c"
+      },
+      {
+        "seq": 17,
+        "kind": "finalize",
+        "id": "c"
+      },
+      {
+        "seq": 18,
+        "kind": "session-append",
+        "event": {
+          "seq": 6,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "c"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "c",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "c"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "cfd0f399-ed92-414c-abbd-2d6230bce6e5"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              5
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-ds-cancel-drains-and-pairs-skipped",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "session-append",
+        "event": {
+          "seq": 1,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "a",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "prepare",
+        "id": "a"
+      },
+      {
+        "seq": 3,
+        "kind": "body-start",
+        "id": "a"
+      },
+      {
+        "seq": 4,
+        "kind": "session-append",
+        "event": {
+          "seq": 2,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "b",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "prepare",
+        "id": "b"
+      },
+      {
+        "seq": 6,
+        "kind": "body-start",
+        "id": "b"
+      },
+      {
+        "seq": 7,
+        "kind": "body-end",
+        "id": "a"
+      },
+      {
+        "seq": 8,
+        "kind": "body-end",
+        "id": "b"
+      },
+      {
+        "seq": 9,
+        "kind": "finalize",
+        "id": "a"
+      },
+      {
+        "seq": 10,
+        "kind": "session-append",
+        "event": {
+          "seq": 3,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "a"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "a",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "a"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "cbc2e919-b009-4480-bae8-a7d98156c2eb"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              1
+            ]
+          }
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "finalize",
+        "id": "b"
+      },
+      {
+        "seq": 12,
+        "kind": "session-append",
+        "event": {
+          "seq": 4,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "b"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "b",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "b"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "0754e2da-cb40-4145-852f-9df14bfa5d05"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              2
+            ]
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "kind": "session-append",
+        "event": {
+          "seq": 5,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "c",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 14,
+        "kind": "session-append",
+        "event": {
+          "seq": 6,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "c"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "c",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Error: tool call aborted before dispatch"
+                    }
+                  ],
+                  "isError": true
+                }
+              ],
+              "role": "user",
+              "id": "6407a7ff-7dd6-4f44-8e3c-c3c61da61474"
+            },
+            "error": {
+              "name": "AbortError",
+              "code": "ABORTED_BEFORE_DISPATCH"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              5
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "04-ds-internal-failure-drains-without-fabrication",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "session-append",
+        "event": {
+          "seq": 1,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "a",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "prepare",
+        "id": "a"
+      },
+      {
+        "seq": 3,
+        "kind": "body-start",
+        "id": "a"
+      },
+      {
+        "seq": 4,
+        "kind": "session-append",
+        "event": {
+          "seq": 2,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "b",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "prepare",
+        "id": "b"
+      },
+      {
+        "seq": 6,
+        "kind": "body-start",
+        "id": "b"
+      },
+      {
+        "seq": 7,
+        "kind": "body-end",
+        "id": "b"
+      },
+      {
+        "seq": 8,
+        "kind": "body-end",
+        "id": "a"
+      }
+    ]
+  },
+  {
+    "name": "04-ds-conclusion-is-any-committed-result",
+    "events": [
+      {
+        "seq": 1,
+        "kind": "session-append",
+        "event": {
+          "seq": 1,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "a",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "prepare",
+        "id": "a"
+      },
+      {
+        "seq": 3,
+        "kind": "body-start",
+        "id": "a"
+      },
+      {
+        "seq": 4,
+        "kind": "body-end",
+        "id": "a"
+      },
+      {
+        "seq": 5,
+        "kind": "session-append",
+        "event": {
+          "seq": 2,
+          "type": "tool/call",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "callId": "b",
+            "name": "probe",
+            "arguments": "{}"
+          }
+        }
+      },
+      {
+        "seq": 6,
+        "kind": "prepare",
+        "id": "b"
+      },
+      {
+        "seq": 7,
+        "kind": "body-start",
+        "id": "b"
+      },
+      {
+        "seq": 8,
+        "kind": "body-end",
+        "id": "b"
+      },
+      {
+        "seq": 9,
+        "kind": "finalize",
+        "id": "a"
+      },
+      {
+        "seq": 10,
+        "kind": "session-append",
+        "event": {
+          "seq": 3,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "a"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "a",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "a"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "cacdf7a2-bc33-4312-bd2f-0a3596421b70"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              1
+            ]
+          }
+        }
+      },
+      {
+        "seq": 11,
+        "kind": "finalize",
+        "id": "b"
+      },
+      {
+        "seq": 12,
+        "kind": "session-append",
+        "event": {
+          "seq": 4,
+          "type": "tool/result",
+          "data": {
+            "turn": 1,
+            "step": 1,
+            "message": {
+              "source": {
+                "kind": "tool",
+                "callId": "b"
+              },
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "b",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "b"
+                    }
+                  ],
+                  "isError": false
+                }
+              ],
+              "role": "user",
+              "id": "cb18cf4d-435d-4fa3-991e-95ccfd4a52c9"
+            }
+          },
+          "intent": {
+            "surfaceOp": "append",
+            "sourceEventSeqs": [
+              2
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

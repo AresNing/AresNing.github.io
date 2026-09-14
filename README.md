@@ -55,3 +55,9 @@ npm run server -- --port 4317
 - 文章封面由 `@resvg/resvg-js` 在构建时生成，中文字体使用随仓库提供的 Noto Serif CJK SC（SIL OFL）；字体仅在构建使用，不传给读者。来源及许可证见 `themes/paper/assets/fonts/`。
 - 摘录使用 a11y-dialog + 原生 select、Canvas；支持原文段落选择与 1080 × 1440 PNG 保存。系统分享由浏览器 Web Share API 提供，复制优先使用原生 Clipboard API，不支持时使用 ClipboardJS。
 - 外观提供跟随系统、浅色、深色；仅保存用户的本地偏好。分享图片统一保持浅色纸张模板。
+
+### Agent Harness 系列
+
+按最终润色包逐篇接入，目前仅 00 导读进入发布范围：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
+
+接收冻结 ZIP 后先核对 SHA-256 与逐文件清单，再完整复制到博客工作区。公开 ZIP 只包含正文、原图和相关实验材料；交接元数据不放入网站。保留固定源码链接与实验边界，尚未发布的后续篇目只作文字指引。
