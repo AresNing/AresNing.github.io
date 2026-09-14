@@ -44,6 +44,8 @@ npm run server -- --port 4317
 
 ## 发布
 
+2026-09-14 分享菜单已上线：功能源码 `be535f3`，缓存版本修正 `ac3550c`，静态提交 `4a47c3c`；Pages 为 `built`。139 项公开页面/资源回读一致，桌面深色与手机浅色菜单实际验收通过。文章、原有列表顺序及分享封面保持不变；本次为限定分享区与资源引用的发布，构建排序边界见设计文档。
+
 2026-09-14 已发布 Agent Harness 全系列 00–11，共 12 篇：[从导读开始](https://aresning.github.io/agent-harness/00-overview/) · [全部篇目](https://aresning.github.io/categories/Agent-Harness/) · [轨迹查看器](https://aresning.github.io/agent-harness/11-viewer/)。源码保存在 `source`，最终内容提交为 `1a2bc22`；线上使用 `main` 根目录，静态发布提交为 `84b3481`，Pages 状态为 `built`。482 项公开资源回读一致，实际浏览器系列导航与查看器交互通过；X 后续篇封面预览尚未完整通过，详见设计文档验收记录。
 
 后续发布先执行 `npm run clean && npm run verify`，再将 `public/` 同步到基于远端 `main` 的独立工作区，提交并正常推送，保留分支历史。发布需要明确授权；不要直接使用带强制推送行为的默认部署器。发布后核对 Pages 状态、公开页面和实际目标平台分享预览。
