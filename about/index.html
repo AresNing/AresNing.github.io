@@ -61,13 +61,14 @@
   <main id="main" tabindex="-1"><div class="reading-layout"><article class="reading-page standalone-page">
   <header class="article-header"><p class="eyebrow">ABOUT</p><h1>关于</h1></header>
   
-    <div class="prose"><p>我是 AresNing，在这里记录 Java、并发编程和代码可读性的学习与实践。</p>
-<p>写下遇到的问题、尝试过的方法，以及还需要继续理解的地方。内容分为整理后的文章和持续补充的学习笔记；引用与参考资料尽量保留出处。</p>
+    <div class="prose"><p>我是 AresNing，关注 Agent 系统与 Harness 的设计和实现。</p>
+<p>我通过源码阅读和局部实验，理解 Agent 如何组织模型调用、使用工具、管理上下文，以及在中断或失败后恢复执行。希望把实现背后的责任边界与设计取舍写清楚。</p>
+<p>这里也保留 Java、并发编程和代码可读性的学习笔记。文章会区分源码支持的结论、实际运行的观察和个人的设计思考，并保留引用与实验范围。</p>
 <h2 id="从这里开始">从这里开始</h2>
 <ul>
-<li><a href="/concurrency/concurrency/concurrent-notes/completable-future/">CompletableFuture：异步任务的组合与异常处理</a></li>
-<li><a href="/programming-ideas/programmingideas/cleancode/comments/">什么样的注释值得写？</a></li>
-<li><a href="/programming-ideas/programmingideas/codeaesthetic/namingpatterns/">代码命名：让名字说明意图</a></li>
+<li><a href="/agent-harness/00-overview/">一次 Agent 任务经过哪些层？从四种 Harness 看责任边界</a></li>
+<li><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界</a></li>
+<li><a href="/agent-harness/11-design/">从四种 Harness 到自己的设计：用离线查看器检验取舍</a></li>
 </ul>
 <h2 id="代码与联系">代码与联系</h2>
 <p>你可以在 <a target="_blank" rel="noopener" href="https://github.com/AresNing">GitHub</a> 查看我的公开代码，也可以通过这个<a target="_blank" rel="noopener" href="https://github.com/AresNing/AresNing.github.io">博客的源码仓库</a>了解本站的实现。</p>
