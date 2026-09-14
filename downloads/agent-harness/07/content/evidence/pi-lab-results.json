@@ -1,0 +1,123 @@
+{
+  "sourceCommit": "71dca871bc80b6bc97be37f0ca3189399d651fff",
+  "runtime": "v22.19.0",
+  "model": "scripted, no network",
+  "outcomes": [
+    {
+      "name": "01-two-tool-batches",
+      "passed": true,
+      "observation": {
+        "modelTurns": 3,
+        "agentRuns": 1,
+        "writes": 2
+      }
+    },
+    {
+      "name": "01-cancel-preflight",
+      "passed": true,
+      "observation": {
+        "writes": 0
+      }
+    },
+    {
+      "name": "01-cancel-cooperative-tool",
+      "passed": true,
+      "observation": {
+        "writes": 0
+      }
+    },
+    {
+      "name": "01-cancel-ignoring-tool",
+      "passed": true,
+      "observation": {
+        "writesAfterAbort": 1,
+        "meaning": "AbortSignal requires tool cooperation"
+      }
+    },
+    {
+      "name": "02-truncated-arguments",
+      "passed": true,
+      "observation": {
+        "parsed": {
+          "value": "partial"
+        },
+        "writes": 0,
+        "meaning": "parseable partial JSON was not executed"
+      }
+    },
+    {
+      "name": "02-stream-error",
+      "passed": true,
+      "observation": {
+        "writes": 0,
+        "settled": true
+      }
+    },
+    {
+      "name": "03-context-transform",
+      "passed": true,
+      "observation": {
+        "providerMessages": 2,
+        "originalMessages": 3,
+        "constraintRetainedByExplicitTransform": true,
+        "modelSemanticRetention": "not tested"
+      }
+    },
+    {
+      "name": "04-parallel-order",
+      "passed": true,
+      "observation": {
+        "completion": [
+          "b",
+          "a"
+        ],
+        "history": [
+          "a",
+          "b"
+        ]
+      }
+    },
+    {
+      "name": "04-dependent-sequential",
+      "passed": true,
+      "observation": {
+        "consumedAfterProduce": true
+      }
+    },
+    {
+      "name": "04-output-truncation",
+      "passed": true,
+      "observation": {
+        "headLines": 2000,
+        "tailLines": 2000,
+        "totalLines": 3000,
+        "headBytes": 34889
+      }
+    },
+    {
+      "name": "05-denied-before-execute",
+      "passed": true,
+      "observation": {
+        "writes": 0,
+        "boundary": "application hook, not OS sandbox"
+      }
+    },
+    {
+      "name": "07-after-hook-failure",
+      "passed": true,
+      "observation": {
+        "writes": 1,
+        "presentedAsError": true,
+        "meaning": "result transformation cannot undo effect"
+      }
+    },
+    {
+      "name": "09-agent-end-subscriber-barrier",
+      "passed": true,
+      "observation": {
+        "settledBeforeSubscriber": false,
+        "settledAfterSubscriber": true
+      }
+    }
+  ]
+}
