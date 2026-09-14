@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">设计启发 · Grok：删除资源要晚于退出确认</title>
+<desc id="desc">设计建议：结果、记录和资源分别有状态；未知不能显示成已回收。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#6b8592"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#6b8592;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#f5f8fa"/>
+<text x="64" y="53" font-size="19" fill="#007b70" text-anchor="start" font-weight="400">AGENT HARNESS   /   11   /   Grok Build</text>
+<text x="64" y="130" font-size="42" fill="#17313d" text-anchor="start" font-weight="700">设计启发 · Grok：删除资源要晚于退出确认</text>
+<text x="64" y="166" font-size="21" fill="#536c78" text-anchor="start" font-weight="400">条件不同，后续责任不同</text>
+<rect x="480" y="190" width="480" height="119" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="480" y="208" width="5" height="83" rx="2" fill="#007b70"/>
+<text x="504" y="233" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">子任务结果或启动失败</text>
+<text x="504" y="268" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">状态不代表资源已退出</text>
+<rect x="480" y="360" width="480" height="119" rx="16" fill="#eef0fa" stroke="#cedbe1"/>
+<rect x="480" y="378" width="5" height="83" rx="2" fill="#6c5aa6"/>
+<text x="504" y="403" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">拥有的 thread 已结束？</text>
+<text x="504" y="438" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">先取消并等待核实</text>
+<path class="edge" d="M720 313 L720 353"/>
+<rect x="100" y="554" width="540" height="136" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="100" y="572" width="5" height="100" rx="2" fill="#007b70"/>
+<text x="124" y="597" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">按所有权清理资源</text>
+<text x="124" y="632" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">仅清理本次有权删除的对象</text>
+<path class="edge" d="M720 483 L720 513 L370 513 L370 546"/>
+<rect x="400.0" y="480" width="290" height="29" rx="0" fill="#f5f8fa" stroke="none"/>
+<text x="545.0" y="503" font-size="21" fill="#007b70" text-anchor="middle" font-weight="400">已确认</text>
+<rect x="800" y="554" width="540" height="136" rx="16" fill="#ffffff" stroke="#cedbe1"/>
+<rect x="800" y="572" width="5" height="100" rx="2" fill="#a96a19"/>
+<text x="824" y="597" font-size="28" fill="#17313d" text-anchor="start" font-weight="650">保留资源并报告待处理</text>
+<text x="824" y="632" font-size="22" fill="#536c78" text-anchor="start" font-weight="400">避免活进程继续访问已删目录</text>
+<path class="edge" d="M720 483 L720 513 L1070 513 L1070 546"/>
+<rect x="750.0" y="480" width="290" height="29" rx="0" fill="#f5f8fa" stroke="none"/>
+<text x="895.0" y="503" font-size="21" fill="#a96a19" text-anchor="middle" font-weight="400">未确认</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#e5f2ee" stroke="#c7dfd6"/>
+<text x="87" y="784" font-size="25" fill="#17313d" text-anchor="start" font-weight="500">设计建议：结果、记录和资源分别有状态；未知不能显示成已回收。</text>
+<text x="64" y="869" font-size="18" fill="#536c78" text-anchor="start" font-weight="400">固定源码启发 → 本文设计建议</text>
+<text x="1376" y="869" font-size="17" fill="#536c78" text-anchor="end" font-weight="400">G08d</text>
+</svg>
