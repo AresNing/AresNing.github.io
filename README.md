@@ -44,6 +44,8 @@ npm run server -- --port 4317
 
 ## 发布
 
+2026-09-14 第 12 篇已发布：[断线之后，Agent 的进度如何接上？四个 Harness 的状态同步与事件恢复](https://aresning.github.io/agent-harness/12-client-recovery/)。系列现有 00–12 共 13 篇。内容源码 `839e385`，静态提交 `16b351d`，Pages 为 `built`；87 项公开资源回读一致，7 张完整配图、实验说明与 21 文件下载材料齐备，06/09 延伸阅读、11↔12 导航及总览/分类/搜索已同步。X 临时预览未展开，未记平台验收通过。
+
 2026-09-14 第 06 篇已改题并发布：[失败之后，Agent 如何继续？四个 Harness 的重试、检查点与恢复策略](https://aresning.github.io/agent-harness/06-recovery/)。内容源码 `5ef7602`，静态提交 `320e2e2`，Pages 为 `built`；49 项公开资源回读一致，前后篇导航、开篇双版本图、下载包和新封面已同步。保留现有正文、文章排序、分享菜单及作者介绍。X 临时卡片仍显示旧标题/封面，未记新版本平台验收通过。
 
 2026-09-14 分享菜单已上线：功能源码 `be535f3`，缓存版本修正 `ac3550c`，静态提交 `4a47c3c`；Pages 为 `built`。139 项公开页面/资源回读一致，桌面深色与手机浅色菜单实际验收通过。文章、原有列表顺序及分享封面保持不变；本次为限定分享区与资源引用的发布，构建排序边界见设计文档。
@@ -63,6 +65,6 @@ npm run server -- --port 4317
 
 ### Agent Harness 系列
 
-已按最终润色包接入 00–11 全部文章。00 导读入口：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。12 篇使用前后篇导航连接。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/` 至 `11/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
+已按最终润色包接入 00–12 共 13 篇文章。00 导读入口：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。13 篇使用前后篇导航连接。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/` 至 `12/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
 
 接收冻结 ZIP 后先核对 SHA-256 与逐文件清单，再完整复制到博客工作区。公开 ZIP 只包含正文、原图和相关实验材料；交接元数据不放入网站。保留固定源码链接与实验边界；正文的网页适配与下载原稿分开保留。原始 HTML 属于下载材料，构建时检查字节一致；适配查看器位于 `source/agent-harness/11-viewer/`。
