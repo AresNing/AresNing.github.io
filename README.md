@@ -33,6 +33,7 @@ npm run server -- --port 4317
 | 文章搜索 | [Fuse.js 7.5.0](https://www.fusejs.io/) | 标题、标签和正文加权搜索，多关键词组合与拼写容错；命中词高亮、片段定位、结果整行打开；索引仍为本地 `search.xml`。 |
 | 代码与链接复制 | 原生 Clipboard API，兼容回退使用 [ClipboardJS 2.0.11](https://clipboardjs.com/) | 共用 `.ui-button`，显示实际复制结果；代码排除行号、保留换行。 |
 | 外观胶囊切换 | 原生 `fieldset`、`radio` | 系统 / 浅色 / 深色互斥选择；方向键切换，选中项反色显示，沿用本地偏好记忆。 |
+| 文章分享菜单 | 原生 [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) + [Floating UI DOM 1.8.0](https://floating-ui.com/docs/computeposition) | 原生弹层负责 Esc、外部点击和焦点顺序；Floating UI 负责左侧对齐、滚动跟随、翻转与边缘避让。不支持时直接展示操作链接。 |
 | 按钮、输入框、目录折叠 | 原生 `button`、`input`、`details` | 共用按钮、输入框和焦点样式；保留原生语义。 |
 
 组件版本精确锁定在 `package.json` / `package-lock.json`，分发文件来自 npm 官方源，生成到 `public/lib/paper/`。Fuse.js 在首次输入搜索时加载。升级时同时检查桌面/手机的配色、字体、间距、按钮热区、焦点循环、关闭恢复、加载失败重试和复制结果。

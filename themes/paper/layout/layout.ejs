@@ -31,6 +31,10 @@
   <link rel="stylesheet" href="<%= url_for('/css/paper.css') %>">
   <script defer src="<%= url_for('/lib/paper/a11y-dialog.min.js') %>"></script>
   <script defer src="<%= url_for('/lib/paper/clipboard.min.js') %>"></script>
+  <% if (socialPost) { %>
+  <script defer src="<%= url_for('/lib/paper/floating-ui.core.min.js') %>"></script>
+  <script defer src="<%= url_for('/lib/paper/floating-ui.dom.min.js') %>"></script>
+  <% } %>
   <script defer src="<%= url_for('/js/paper.js') %>"></script>
 </head>
 <body>
