@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">把源码差异转成有代价说明的设计约束</title>
+<desc id="desc">已交付的是只读 Pi 轨迹查看器；运行控制与跨产品状态机仍是建议。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#968A7A"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#968A7A;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<text x="64" y="53" font-size="19" fill="#964D3B" text-anchor="start" font-weight="400">AGENT HARNESS   /   11   /   本篇总结</text>
+<text x="64" y="130" font-size="42" fill="#292824" text-anchor="start" font-weight="700">把源码差异转成有代价说明的设计约束</text>
+<text x="64" y="166" font-size="21" fill="#68645E" text-anchor="start" font-weight="400">四者对照：保留机制差异，不作能力排名</text>
+<rect x="64" y="199" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="199" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="247" font-size="26" fill="#292824" text-anchor="start" font-weight="650">Codex 启发</text>
+<text x="356" y="248" font-size="27" fill="#292824" text-anchor="start" font-weight="400">保留 raw 与模型源证据</text>
+<path class="edge" d="M794 255 L865 255"/>
+<text x="897" y="247" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">不靠便利输出伪造模型可见性</text>
+<rect x="64" y="329" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="329" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="377" font-size="26" fill="#292824" text-anchor="start" font-weight="650">Pi 启发</text>
+<text x="356" y="378" font-size="27" fill="#292824" text-anchor="start" font-weight="400">保留多次观察与取消阶段</text>
+<path class="edge" d="M794 385 L865 385"/>
+<text x="897" y="377" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">不覆盖事件，不猜 attempt</text>
+<rect x="64" y="459" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="459" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="507" font-size="26" fill="#292824" text-anchor="start" font-weight="650">DeepSeek 启发</text>
+<text x="356" y="508" font-size="27" fill="#292824" text-anchor="start" font-weight="400">区分持久与遥测交接</text>
+<path class="edge" d="M794 515 L865 515"/>
+<text x="897" y="507" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">不把 handoff 当 delivered</text>
+<rect x="64" y="589" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="589" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="637" font-size="26" fill="#292824" text-anchor="start" font-weight="650">Grok 启发</text>
+<text x="356" y="638" font-size="27" fill="#292824" text-anchor="start" font-weight="400">控制权与资源生命分开</text>
+<path class="edge" d="M794 645 L865 645"/>
+<text x="897" y="637" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">退出未确认时保留资源</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="87" y="784" font-size="25" fill="#292824" text-anchor="start" font-weight="500">已交付的是只读 Pi 轨迹查看器；运行控制与跨产品状态机仍是建议。</text>
+<text x="64" y="869" font-size="18" fill="#68645E" text-anchor="start" font-weight="400">跨实现比较 · 根据本篇已引源码与明确的实验范围</text>
+<text x="1376" y="869" font-size="17" fill="#68645E" text-anchor="end" font-weight="400">C10f · P08e · D06d · G08d</text>
+</svg>

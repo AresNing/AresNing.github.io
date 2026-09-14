@@ -1,0 +1,49 @@
+{
+  "scope": "Unmodified DeepSeek JsonRpcLineTransport on paired in-memory byte streams, and unmodified Pi output-guard with fixture stdout callbacks. No product server, runtime client subprocess, network reconnect or actual terminal. Server side effects are counters.",
+  "outcomes": [
+    {
+      "name": "09-ds-responses-correlate-despite-concurrent-handlers",
+      "passed": true,
+      "observation": {
+        "fastResponseBeforeSlow": true,
+        "notificationsInterleaved": true,
+        "requestIdsPreserveCorrelation": true
+      }
+    },
+    {
+      "name": "09-ds-abandonment-does-not-cancel-server",
+      "passed": true,
+      "observation": {
+        "clientRejectedBeforeSideEffect": true,
+        "serverEffectStillOccurred": true,
+        "lateResponseIgnored": true
+      }
+    },
+    {
+      "name": "09-ds-close-detaches-without-destroying-owned-streams",
+      "passed": true,
+      "observation": {
+        "streamsRemainOpen": true,
+        "pendingRequestRejected": true,
+        "inflightPeerHandlerContinues": true
+      }
+    },
+    {
+      "name": "09-pi-backpressure-follows-growing-write-tail",
+      "passed": true,
+      "observation": {
+        "writesSerialized": true,
+        "waitIncludesLaterB": true,
+        "writeFalseAloneDoesNotReleaseWait": true
+      }
+    },
+    {
+      "name": "09-pi-transient-buffer-error-retries-same-chunk",
+      "passed": true,
+      "observation": {
+        "sameChunkRetried": true,
+        "attempts": 2
+      }
+    }
+  ]
+}

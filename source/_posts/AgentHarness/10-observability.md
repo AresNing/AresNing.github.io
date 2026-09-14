@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/10-observability/
-related: ["agent-harness/09-clients/"]
+related: ["agent-harness/09-clients/", "agent-harness/11-design/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/10/10.svg" target="_blank" rel="noopener" aria-label="查看完整配图：可观测性与回归评测：机制正确性和真实模型效果分开验证"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/10/10-mobile.svg"><img src="/images/agent-harness/10/10.svg" alt="可观测性与回归评测：机制正确性和真实模型效果分开验证" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -168,6 +168,6 @@ Grok 的 `TurnCompletionEmitter` 持有 session、模型、计时起点和 emitt
 
 ## 系列阅读
 
-[上一篇：界面显示已完成时，Harness 承诺了什么？](/agent-harness/09-clients/)
+[上一篇：界面显示已完成时，Harness 承诺了什么？](/agent-harness/09-clients/) · [下一篇：从四种 Harness 到自己的设计：用离线查看器检验取舍](/agent-harness/11-design/)
 
 <!-- /harness-series-nav -->

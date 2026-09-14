@@ -15,7 +15,16 @@ for (const post of posts) {
   if (post.diagram) assert(post.diagram_alt && post.diagram_caption, `配图缺少说明：${post.file}`);
 }
 const meta = (html, key) => unescapeHTML(html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]*)"`))?.[1] || '');
-const htmlFiles = walk(path.join(root, 'public')).filter(p => p.endsWith('.html'));
+// Research downloads are original artifacts, not themed website pages.
+const downloadRoot = path.join(root, 'source/downloads/agent-harness');
+if (fs.existsSync(downloadRoot)) {
+  for (const source of walk(downloadRoot)) {
+    const output = path.join(root, 'public/downloads/agent-harness', path.relative(downloadRoot, source));
+    assert(fs.existsSync(output) && fs.readFileSync(source).equals(fs.readFileSync(output)), `原始附件被修改或丢失：${source}`);
+  }
+}
+const downloadPrefix = path.join(root, 'public/downloads/agent-harness') + path.sep;
+const htmlFiles = walk(path.join(root, 'public')).filter(p => p.endsWith('.html') && !p.startsWith(downloadPrefix));
 const articles = [];
 const articlePaths = new Set();
 for (const file of htmlFiles) {
