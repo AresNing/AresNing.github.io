@@ -43,7 +43,7 @@ npm run server -- --port 4317
 
 ## 发布
 
-2026-09-13 已获授权推送并发布至 [GitHub Pages](https://aresning.github.io/)。源码保存在 `source`，线上使用 `main` 根目录；本轮静态发布提交为 `c8ed4a9`，Pages 构建状态为 `built`。
+2026-09-14 已将源码 `ff5e17e` 构建并发布至 [GitHub Pages](https://aresning.github.io/)。源码保存在 `source`，线上使用 `main` 根目录；最新静态发布提交为 `5fe30ca`，Pages 构建状态为 `built`。胶囊切换、列表分隔和搜索高亮改版已上线。
 
 后续发布先执行 `npm run clean && npm run verify`，再将 `public/` 同步到基于远端 `main` 的独立工作区，提交并正常推送，保留分支历史。发布需要明确授权；不要直接使用带强制推送行为的默认部署器。发布后核对 Pages 状态、公开页面和实际目标平台分享预览。
 
