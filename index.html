@@ -87,6 +87,13 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
+        <h2><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界</a></h2>
+        <p class="article-summary">一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p>
+        <a class="read-more" href="/agent-harness/01-turn-boundaries/" aria-label="阅读全文：Agent 的一轮何时结束？四种 Harness 的执行边界">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+    
+      <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/02-model-streams/">模型流何时可以执行工具？四种 Harness 的终态与重试</a></h2>
         <p class="article-summary">工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。</p>
         <a class="read-more" href="/agent-harness/02-model-streams/" aria-label="阅读全文：模型流何时可以执行工具？四种 Harness 的终态与重试">阅读全文 <span aria-hidden="true">↗</span></a>
@@ -101,13 +108,6 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
-        <h2><a href="/agent-harness/04-tools/">工具并发怎样保持顺序？四种 Harness 的准备、执行与提交</a></h2>
-        <p class="article-summary">多个工具同时运行，不代表审批、后处理和历史提交也能并发。沿四种 Harness 的调度器比较屏障、执行池、锁和结果顺序，解释快工具为什么仍会等待。</p>
-        <a class="read-more" href="/agent-harness/04-tools/" aria-label="阅读全文：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交">阅读全文 <span aria-hidden="true">↗</span></a>
-      </article>
-    
-      <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/05-permissions/">一次批准改变了什么？四种 Harness 的权限与沙箱</a></h2>
         <p class="article-summary">用户批准命令后，执行仍可能被沙箱或网络策略拒绝。比较四种 Harness 的批准对象、逐调用提权、重试资格与决策来源，区分授权判断和实际执行隔离。</p>
         <a class="read-more" href="/agent-harness/05-permissions/" aria-label="阅读全文：一次批准改变了什么？四种 Harness 的权限与沙箱">阅读全文 <span aria-hidden="true">↗</span></a>
@@ -115,9 +115,16 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
-        <h2><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界</a></h2>
-        <p class="article-summary">一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p>
-        <a class="read-more" href="/agent-harness/01-turn-boundaries/" aria-label="阅读全文：Agent 的一轮何时结束？四种 Harness 的执行边界">阅读全文 <span aria-hidden="true">↗</span></a>
+        <h2><a href="/agent-harness/04-tools/">工具并发怎样保持顺序？四种 Harness 的准备、执行与提交</a></h2>
+        <p class="article-summary">多个工具同时运行，不代表审批、后处理和历史提交也能并发。沿四种 Harness 的调度器比较屏障、执行池、锁和结果顺序，解释快工具为什么仍会等待。</p>
+        <a class="read-more" href="/agent-harness/04-tools/" aria-label="阅读全文：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+    
+      <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
+        <h2><a href="/agent-harness/06-recovery/">中断后能恢复什么？四种 Harness 的历史重建与副作用</a></h2>
+        <p class="article-summary">工具已完成外部写入，结果却来不及保存，恢复时能否重跑？从四种 Harness 的有效历史、持久结果、日志落盘和部分回滚入手，分析每一步继续执行需要什么证据。</p>
+        <a class="read-more" href="/agent-harness/06-recovery/" aria-label="阅读全文：中断后能恢复什么？四种 Harness 的历史重建与副作用">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
       <article class="article-row">
@@ -129,13 +136,6 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Programming-Ideas/">Programming Ideas</a></div></div>
-        <h2><a href="/programming-ideas/programmingideas/cleancode/meaningful-names/">Meaningful Names</a></h2>
-        <p class="article-summary">记录如何取有意义的名字：避免误导、支持搜索、区分类与方法，并为同一概念使用一致的词。</p>
-        <a class="read-more" href="/programming-ideas/programmingideas/cleancode/meaningful-names/" aria-label="阅读全文：Meaningful Names">阅读全文 <span aria-hidden="true">↗</span></a>
-      </article>
-    
-      <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Programming-Ideas/">Programming Ideas</a></div></div>
         <h2><a href="/programming-ideas/programmingideas/cleancode/functions/">Functions</a></h2>
         <p class="article-summary">整理函数设计的学习要点：短小、职责单一、抽象层级一致，以及名称、参数与副作用的取舍。</p>
         <a class="read-more" href="/programming-ideas/programmingideas/cleancode/functions/" aria-label="阅读全文：Functions">阅读全文 <span aria-hidden="true">↗</span></a>
@@ -143,9 +143,9 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Programming-Ideas/">Programming Ideas</a></div></div>
-        <h2><a href="/programming-ideas/programmingideas/codeaesthetic/namingpatterns/">代码命名：让名字说明意图</a></h2>
-        <p class="article-summary">从单字母、缩写、单位到类名，整理代码命名的常见问题。好的名字应帮助读者理解用途，减少额外解释。</p>
-        <a class="read-more" href="/programming-ideas/programmingideas/codeaesthetic/namingpatterns/" aria-label="阅读全文：代码命名：让名字说明意图">阅读全文 <span aria-hidden="true">↗</span></a>
+        <h2><a href="/programming-ideas/programmingideas/cleancode/meaningful-names/">Meaningful Names</a></h2>
+        <p class="article-summary">记录如何取有意义的名字：避免误导、支持搜索、区分类与方法，并为同一概念使用一致的词。</p>
+        <a class="read-more" href="/programming-ideas/programmingideas/cleancode/meaningful-names/" aria-label="阅读全文：Meaningful Names">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
     
