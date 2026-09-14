@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/02-model-streams/
-related: ["agent-harness/01-turn-boundaries/"]
+related: ["agent-harness/01-turn-boundaries/", "agent-harness/03-context/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/02/02.svg" target="_blank" rel="noopener" aria-label="查看完整配图：可靠的模型执行流：参数合法性与响应完整性分别判断"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/02/02-mobile.svg"><img src="/images/agent-harness/02/02.svg" alt="可靠的模型执行流：参数合法性与响应完整性分别判断" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -234,10 +234,11 @@ shell 对“Length 且有工具”的连续 salvage 设置 5 次上限，首次�
 
 下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。
 
+
 <!-- harness-series-nav -->
 
 ## 系列阅读
 
-[上一篇：Agent 的一轮何时结束？四种 Harness 的执行边界](/agent-harness/01-turn-boundaries/)
+[上一篇：Agent 的一轮何时结束？四种 Harness 的执行边界](/agent-harness/01-turn-boundaries/) · [下一篇：上下文压缩如何保持一致？切点、替换与请求重建](/agent-harness/03-context/)
 
 <!-- /harness-series-nav -->

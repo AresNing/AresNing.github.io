@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Grok：输入退化与同输入重试是两个维度</title>
+<desc id="desc">不要把请求次数的增加，都算作“模型用同样上下文再试一次”。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#968A7A"/></marker></defs>
+<style>text{font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif} .edge{fill:none;stroke:#968A7A;stroke-width:3;marker-end:url(#arrow)}</style>
+<rect width="1440" height="900" fill="#F7F5EF"/>
+<text x="64" y="53" font-size="19" fill="#964D3B" text-anchor="start" font-weight="400">AGENT HARNESS   /   03   /   Grok Build</text>
+<text x="64" y="130" font-size="42" fill="#292824" text-anchor="start" font-weight="700">Grok：输入退化与同输入重试是两个维度</text>
+<text x="64" y="166" font-size="21" fill="#68645E" text-anchor="start" font-weight="400">分层责任：每一行独立说明一个边界</text>
+<rect x="64" y="199" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="199" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="247" font-size="26" fill="#292824" text-anchor="start" font-weight="650">Verbatim</text>
+<text x="356" y="248" font-size="27" fill="#292824" text-anchor="start" font-weight="400">优先保留原始输入</text>
+<path class="edge" d="M794 255 L865 255"/>
+<text x="897" y="247" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">尝试当前档的采样</text>
+<rect x="64" y="329" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="329" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="377" font-size="26" fill="#292824" text-anchor="start" font-weight="650">Fitted</text>
+<text x="356" y="378" font-size="27" fill="#292824" text-anchor="start" font-weight="400">需要时按预算调整输入</text>
+<path class="edge" d="M794 385 L865 385"/>
+<text x="897" y="377" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">调整后再采样</text>
+<rect x="64" y="459" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="459" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="507" font-size="26" fill="#292824" text-anchor="start" font-weight="650">Lossy</text>
+<text x="356" y="508" font-size="27" fill="#292824" text-anchor="start" font-weight="400">需要时允许更多有损缩减</text>
+<path class="edge" d="M794 515 L865 515"/>
+<text x="897" y="507" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">使用更小的输入采样</text>
+<rect x="64" y="589" width="1312" height="112" rx="16" fill="#ffffff" stroke="#DCD7CD"/>
+<rect x="64" y="589" width="260" height="112" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="86" y="637" font-size="26" fill="#292824" text-anchor="start" font-weight="650">重试层</text>
+<text x="356" y="638" font-size="27" fill="#292824" text-anchor="start" font-weight="400">相同输入上的暂时失败</text>
+<path class="edge" d="M794 645 L865 645"/>
+<text x="897" y="637" font-size="26" fill="#964D3B" text-anchor="start" font-weight="550">另按 sampler 重试预算判断</text>
+<rect x="64" y="742" width="1312" height="91" rx="16" fill="#EFEBE3" stroke="#DCD7CD"/>
+<text x="87" y="784" font-size="25" fill="#292824" text-anchor="start" font-weight="500">不要把请求次数的增加，都算作“模型用同样上下文再试一次”。</text>
+<text x="64" y="869" font-size="18" fill="#68645E" text-anchor="start" font-weight="400">固定版本源码路径示意 · 省略非关键分支；完整条件见相邻正文</text>
+<text x="1376" y="869" font-size="17" fill="#68645E" text-anchor="end" font-weight="400">G03e · G02</text>
+</svg>

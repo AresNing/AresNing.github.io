@@ -1,0 +1,42 @@
+{
+  "scope": "Unmodified AST declarations isolated from product import graph; not full compaction integration",
+  "file": "packages/agent/src/harness/compaction/compaction.ts",
+  "sha256": "6e7aec0d27cb566f8f85f7dd13850eda98f5ddf7e78f9a919fb3dd03c3ea3a8a",
+  "declarations": [
+    {
+      "name": "safeJsonStringify",
+      "start": 38,
+      "end": 44
+    },
+    {
+      "name": "ESTIMATED_IMAGE_CHARS",
+      "start": 251,
+      "end": 251
+    },
+    {
+      "name": "estimateTextAndImageContentChars",
+      "start": 253,
+      "end": 267
+    },
+    {
+      "name": "estimateTokens",
+      "start": 270,
+      "end": 310
+    },
+    {
+      "name": "findValidCutPoints",
+      "start": 311,
+      "end": 340
+    },
+    {
+      "name": "findTurnStartIndex",
+      "start": 343,
+      "end": 357
+    },
+    {
+      "name": "findCutPoint",
+      "start": 370,
+      "end": 418
+    }
+  ]
+}
