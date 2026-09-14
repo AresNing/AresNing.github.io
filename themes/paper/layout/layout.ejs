@@ -28,14 +28,14 @@
   <% if (socialPost) { %><meta property="article:author" content="<%= full_url_for('/about/') %>"><% if (paper_has_date(page)) { %><meta property="article:published_time" content="<%= date_xml(page.date) %>"><% } %><% if (paper_has_updated(page)) { %><meta property="article:modified_time" content="<%= date_xml(page.updated) %>"><% } %><% } %>
   <link rel="canonical" href="<%= full_url_for(page.path || '') %>">
   <link rel="icon" type="image/png" href="<%= url_for('/images/favicon-32x32.png') %>">
-  <link rel="stylesheet" href="<%= url_for('/css/paper.css') %>">
+  <link rel="stylesheet" href="<%= url_for('/css/paper.css') %>?v=20260914-share">
   <script defer src="<%= url_for('/lib/paper/a11y-dialog.min.js') %>"></script>
   <script defer src="<%= url_for('/lib/paper/clipboard.min.js') %>"></script>
   <% if (socialPost) { %>
   <script defer src="<%= url_for('/lib/paper/floating-ui.core.min.js') %>"></script>
   <script defer src="<%= url_for('/lib/paper/floating-ui.dom.min.js') %>"></script>
   <% } %>
-  <script defer src="<%= url_for('/js/paper.js') %>"></script>
+  <script defer src="<%= url_for('/js/paper.js') %>?v=20260914-share"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到正文</a>
