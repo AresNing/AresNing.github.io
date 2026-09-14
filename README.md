@@ -43,7 +43,7 @@ npm run server -- --port 4317
 
 ## 发布
 
-2026-09-14 已发布 [Agent Harness 00 导读](https://aresning.github.io/agent-harness/00-overview/)、配图与完整实验附件。源码保存在 `source`，内容及配套页面提交为 `eba2546`、`6396728`；线上使用 `main` 根目录，最新静态发布提交为 `686ab9b`，Pages 状态为 `built`。此前的胶囊切换、列表分隔和搜索高亮改版保持上线。
+2026-09-14 已发布 Agent Harness 全系列 00–11，共 12 篇：[从导读开始](https://aresning.github.io/agent-harness/00-overview/) · [全部篇目](https://aresning.github.io/categories/Agent-Harness/) · [轨迹查看器](https://aresning.github.io/agent-harness/11-viewer/)。源码保存在 `source`，最终内容提交为 `1a2bc22`；线上使用 `main` 根目录，静态发布提交为 `84b3481`，Pages 状态为 `built`。482 项公开资源回读一致，实际浏览器系列导航与查看器交互通过；X 后续篇封面预览尚未完整通过，详见设计文档验收记录。
 
 后续发布先执行 `npm run clean && npm run verify`，再将 `public/` 同步到基于远端 `main` 的独立工作区，提交并正常推送，保留分支历史。发布需要明确授权；不要直接使用带强制推送行为的默认部署器。发布后核对 Pages 状态、公开页面和实际目标平台分享预览。
 
@@ -58,6 +58,6 @@ npm run server -- --port 4317
 
 ### Agent Harness 系列
 
-按最终润色包逐篇接入，00 导读入口：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。后续 01–11 按最终包顺序接入，已发布篇目使用前后篇导航连接。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
+已按最终润色包接入 00–11 全部文章。00 导读入口：`source/_posts/AgentHarness/00-overview.md`，固定地址 `agent-harness/00-overview/`。12 篇使用前后篇导航连接。实验说明与复现入口为独立页面；公开附件实体保存在 `source/downloads/agent-harness/00/` 至 `11/`，以 `skip_render` 原样输出。正文不依赖其他任务目录或私有仓库。
 
-接收冻结 ZIP 后先核对 SHA-256 与逐文件清单，再完整复制到博客工作区。公开 ZIP 只包含正文、原图和相关实验材料；交接元数据不放入网站。保留固定源码链接与实验边界，尚未发布的后续篇目只作文字指引。
+接收冻结 ZIP 后先核对 SHA-256 与逐文件清单，再完整复制到博客工作区。公开 ZIP 只包含正文、原图和相关实验材料；交接元数据不放入网站。保留固定源码链接与实验边界；正文的网页适配与下载原稿分开保留。原始 HTML 属于下载材料，构建时检查字节一致；适配查看器位于 `source/agent-harness/11-viewer/`。
