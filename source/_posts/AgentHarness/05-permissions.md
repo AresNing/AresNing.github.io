@@ -10,7 +10,7 @@ tags: ["Agent Harness", "源码阅读", "Coding Agent"]
 date: 2026-09-14
 updated: 2026-09-14
 permalink: agent-harness/05-permissions/
-related: ["agent-harness/04-tools/"]
+related: ["agent-harness/04-tools/", "agent-harness/06-recovery/"]
 ---
 
 <figure class="article-figure"><a href="/images/agent-harness/05/05.svg" target="_blank" rel="noopener" aria-label="查看完整配图：权限与执行隔离：审批管决策，隔离管实际访问范围"><picture><source media="(max-width: 600px)" srcset="/images/agent-harness/05/05-mobile.svg"><img src="/images/agent-harness/05/05.svg" alt="权限与执行隔离：审批管决策，隔离管实际访问范围" loading="lazy"></picture></a><figcaption>点击查看完整配图</figcaption></figure>
@@ -171,10 +171,11 @@ shell file gate 的 Ask 还会阻止 bash grant 抵消它。批准运行某类 b
 
 下载包保留本篇最终正文、6 张原图、固定版本记录及实验源码；不含上游源码或依赖。复现实验需要联网准备环境，既有实验边界见说明。
 
+
 <!-- harness-series-nav -->
 
 ## 系列阅读
 
-[上一篇：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交](/agent-harness/04-tools/)
+[上一篇：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交](/agent-harness/04-tools/) · [下一篇：中断后能恢复什么？四种 Harness 的历史重建与副作用](/agent-harness/06-recovery/)
 
 <!-- /harness-series-nav -->
