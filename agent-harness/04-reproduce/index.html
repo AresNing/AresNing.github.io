@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F7F5EF">
+  <script src="/js/theme.js"></script>
+  
+  <title>04 配套实验复现入口 · AresNing</title>
+  <meta name="description" content="记录 Java、并发编程与代码可读性的学习和实践。">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="04 配套实验复现入口">
+  <meta property="og:description" content="记录 Java、并发编程与代码可读性的学习和实践。">
+  <meta property="og:url" content="https://aresning.github.io/agent-harness/04-reproduce/index.html">
+  <meta property="og:site_name" content="AresNing">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://aresning.github.io/images/share/a589b39b6d04340f.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="AresNing · AresNing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="04 配套实验复现入口">
+  <meta name="twitter:description" content="记录 Java、并发编程与代码可读性的学习和实践。">
+  <meta name="twitter:image" content="https://aresning.github.io/images/share/a589b39b6d04340f.png">
+  <meta name="twitter:image:alt" content="AresNing · AresNing">
+  
+  <link rel="canonical" href="https://aresning.github.io/agent-harness/04-reproduce/index.html">
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png">
+  <link rel="stylesheet" href="/css/paper.css">
+  <script defer src="/lib/paper/a11y-dialog.min.js"></script>
+  <script defer src="/lib/paper/clipboard.min.js"></script>
+  <script defer src="/js/paper.js"></script>
+<meta name="generator" content="Hexo 5.4.2"><link rel="stylesheet" href="/css/prism-vs.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="/" aria-label="AresNing 首页">AresNing</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="/">文章</a>
+      <a href="/archives/">归档</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <fieldset class="theme-control" hidden>
+      <legend class="sr-only">外观</legend>
+      <label><input class="sr-only" type="radio" name="theme" value="system" aria-label="跟随系统"><span>系统</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="light"><span>浅色</span></label>
+      <label><input class="sr-only" type="radio" name="theme" value="dark"><span>深色</span></label>
+    </fieldset>
+    <div class="header-actions">
+      <button class="ui-button icon-button search-toggle" type="button" aria-label="搜索文章" aria-haspopup="dialog" data-a11y-dialog-show="search-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      <button class="ui-button icon-button menu-toggle" type="button" aria-label="打开菜单" aria-controls="menu-dialog" aria-haspopup="dialog" data-a11y-dialog-show="menu-dialog" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main" tabindex="-1"><div class="reading-layout"><article class="reading-page standalone-page">
+  <header class="article-header"><p class="eyebrow">配套材料</p><h1>04 配套实验复现入口</h1></header>
+  
+    <div class="prose"><p><a href="/agent-harness/04-tools/">返回 04 正文</a> · <a href="/downloads/agent-harness/04/agent-harness-04.zip">下载完整材料</a></p>
+<p>本目录提供正文引用的实验源码与原始结果，记录来自 2026-09-12 至 13 日，本次润色未重跑。范围见<a href="/agent-harness/04-evidence/">本篇实验说明</a>。包内没有上游源码或依赖。</p>
+<h2 id="准备源码与依赖">准备源码与依赖</h2>
+<p>原记录环境为 macOS Apple Silicon、Node 22.19.0、Python 3.11.16。在包含 articles、evidence、experiments、research 的解压目录执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python3 research/fetch_sources.py</span><br><span class="line"><span class="built_in">cd</span> research/repos/pi</span><br><span class="line">npm ci --ignore-scripts --no-audit --no-fund</span><br><span class="line"><span class="built_in">cd</span> ../../..</span><br></pre></td></tr></table></figure>
+<p>脚本下载公开固定源码，校验归档哈希后解压，不覆盖已存在的源码目录。使用干净目录复现，避免旧源码混入。只运行 Python 独立机制示例或查看器时，不需要上面的源码及 Node 依赖准备。</p>
+<h2 id="执行本篇对应实验">执行本篇对应实验</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node experiments/build.mjs</span><br><span class="line">node experiments/pi-lab.mjs</span><br><span class="line">node experiments/deep-dive-build.mjs</span><br><span class="line">node experiments/deep-dive-lab.mjs</span><br></pre></td></tr></table></figure>
+<p>构建入口与实验源码保持原样；build.mjs 如在包内，会同时构建 Pi 与 DeepSeek 初始实验，运行范围以上面列出的命令为准。命令会覆盖对应结果文件，保留原记录时请先复制解压目录。生成的 bundle 不随包分发。</p>
+<p>这组命令没有运行四个完整产品或调用真实模型。结果符合断言也可能表示复现了失败行为；应同时阅读测试的输入、控制点、观察与边界。</p>
+</div>
+    
+  
+</article></div>
+</main>
+  <footer class="site-footer shell">
+    <div><span class="footer-name">AresNing · Hungry &amp; Humble</span><small>© 2022–2026 AresNing · Powered by Hexo</small></div>
+    <a target="_blank" href="https://github.com/AresNing" rel="me noopener">GitHub <span aria-hidden="true">↗</span></a>
+  </footer>
+  <div class="ui-dialog" id="search-dialog" aria-hidden="true" aria-labelledby="search-title" data-search-url="/search.xml" data-fuse-url="/lib/paper/fuse.min.mjs">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+    <div class="dialog-heading"><h2 id="search-title">搜索文章</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭搜索"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <label class="sr-only" for="search-input">输入标题、关键词或标签</label>
+    <div class="search-field"><input class="ui-input" id="search-input" type="search" placeholder="搜索标题、关键词或标签…" autocomplete="off" aria-describedby="search-status search-help" aria-controls="search-results" autofocus><button class="ui-button icon-button search-clear" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <p class="search-status" id="search-status" role="status" aria-live="polite">输入关键词开始搜索</p>
+    <ul class="search-results" id="search-results" aria-label="搜索结果"></ul>
+    <p class="search-help" id="search-help">Tab 选择 · Enter 打开 · Esc 关闭</p>
+    </div>
+  </div>
+  <div class="ui-dialog menu-dialog" id="menu-dialog" aria-hidden="true" aria-labelledby="menu-title">
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-panel" role="document">
+      <div class="dialog-heading"><h2 id="menu-title">导航</h2><button class="ui-button icon-button" type="button" data-a11y-dialog-hide aria-label="关闭菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav class="mobile-nav" aria-label="移动端导航">
+        <a href="/">文章</a>
+        <a href="/archives/">归档</a>
+        <a href="/categories/">分类</a>
+        <a href="/tags/">标签</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>

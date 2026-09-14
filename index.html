@@ -87,6 +87,13 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
+        <h2><a href="/agent-harness/02-model-streams/">模型流何时可以执行工具？四种 Harness 的终态与重试</a></h2>
+        <p class="article-summary">工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。</p>
+        <a class="read-more" href="/agent-harness/02-model-streams/" aria-label="阅读全文：模型流何时可以执行工具？四种 Harness 的终态与重试">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+    
+      <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
         <h2><a href="/agent-harness/01-turn-boundaries/">Agent 的一轮何时结束？四种 Harness 的执行边界</a></h2>
         <p class="article-summary">一条用户请求可能跨过多次模型调用。沿四种 Harness 的退出、追加输入与取消路径，区分模型结束、运行结束和资源收尾，解释为何出现最终文本后任务仍会继续。</p>
         <a class="read-more" href="/agent-harness/01-turn-boundaries/" aria-label="阅读全文：Agent 的一轮何时结束？四种 Harness 的执行边界">阅读全文 <span aria-hidden="true">↗</span></a>
@@ -101,16 +108,9 @@
     
       <article class="article-row">
         <div class="row-meta"><div class="eyebrow"><span class="content-kind">文章</span><a href="/categories/Agent-Harness/">Agent Harness</a></div><time datetime="2026-09-13T16:00:00.000Z">2026-09-14</time></div>
-        <h2><a href="/agent-harness/02-model-streams/">模型流何时可以执行工具？四种 Harness 的终态与重试</a></h2>
-        <p class="article-summary">工具参数能解析成 JSON，不代表模型响应已经完整。比较四种 Harness 的流式组装、终止信号与重试路径，追踪工具执行、历史提交和外部副作用之间的关系。</p>
-        <a class="read-more" href="/agent-harness/02-model-streams/" aria-label="阅读全文：模型流何时可以执行工具？四种 Harness 的终态与重试">阅读全文 <span aria-hidden="true">↗</span></a>
-      </article>
-    
-      <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Programming-Ideas/">Programming Ideas</a></div></div>
-        <h2><a href="/programming-ideas/programmingideas/cleancode/comments/">什么样的注释值得写？</a></h2>
-        <p class="article-summary">整理《代码整洁之道》中关于注释的学习要点：用代码表达意图，识别多余注释，并清理已经失效的注释代码。</p>
-        <a class="read-more" href="/programming-ideas/programmingideas/cleancode/comments/" aria-label="阅读全文：什么样的注释值得写？">阅读全文 <span aria-hidden="true">↗</span></a>
+        <h2><a href="/agent-harness/04-tools/">工具并发怎样保持顺序？四种 Harness 的准备、执行与提交</a></h2>
+        <p class="article-summary">多个工具同时运行，不代表审批、后处理和历史提交也能并发。沿四种 Harness 的调度器比较屏障、执行池、锁和结果顺序，解释快工具为什么仍会等待。</p>
+        <a class="read-more" href="/agent-harness/04-tools/" aria-label="阅读全文：工具并发怎样保持顺序？四种 Harness 的准备、执行与提交">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
       <article class="article-row">
@@ -118,6 +118,13 @@
         <h2><a href="/programming-ideas/programmingideas/cleancode/functions/">Functions</a></h2>
         <p class="article-summary">整理函数设计的学习要点：短小、职责单一、抽象层级一致，以及名称、参数与副作用的取舍。</p>
         <a class="read-more" href="/programming-ideas/programmingideas/cleancode/functions/" aria-label="阅读全文：Functions">阅读全文 <span aria-hidden="true">↗</span></a>
+      </article>
+    
+      <article class="article-row">
+        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Programming-Ideas/">Programming Ideas</a></div></div>
+        <h2><a href="/programming-ideas/programmingideas/cleancode/comments/">什么样的注释值得写？</a></h2>
+        <p class="article-summary">整理《代码整洁之道》中关于注释的学习要点：用代码表达意图，识别多余注释，并清理已经失效的注释代码。</p>
+        <a class="read-more" href="/programming-ideas/programmingideas/cleancode/comments/" aria-label="阅读全文：什么样的注释值得写？">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
       <article class="article-row">
@@ -141,15 +148,8 @@
         <a class="read-more" href="/programming-ideas/programmingideas/codeaesthetic/nervernester/" aria-label="阅读全文：Never Nester">阅读全文 <span aria-hidden="true">↗</span></a>
       </article>
     
-      <article class="article-row">
-        <div class="row-meta"><div class="eyebrow"><span class="content-kind">学习笔记</span><a href="/categories/Java-Basics/">Java Basics</a></div></div>
-        <h2><a href="/java-basics/javabasics/polymorphism/">多态</a></h2>
-        <p class="article-summary">通过 Java 示例记录多态中的常见误区，重点关注私有方法、属性、静态方法以及构造器调用。</p>
-        <a class="read-more" href="/java-basics/javabasics/polymorphism/" aria-label="阅读全文：多态">阅读全文 <span aria-hidden="true">↗</span></a>
-      </article>
     
-    
-<nav class="pagination" aria-label="文章分页"><span class="page-number current" aria-current="page">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" aria-label="下一页" rel="next" href="/page/2/">→</a></nav>
+<nav class="pagination" aria-label="文章分页"><span class="page-number current" aria-current="page">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" aria-label="下一页" rel="next" href="/page/2/">→</a></nav>
 
 
   </section>
