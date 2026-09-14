@@ -1,0 +1,72 @@
+{
+  "scope": "Original Pi subagent example functions and DeepSeek delegation policy functions isolated by AST, plus original DeepSeek settleRun; controlled real Node child processes and fixture policy/session services, no actual agents/models. The stuck-child observation deliberately verifies an implementation limitation and uses explicit watchdog cleanup.",
+  "outcomes": [
+    {
+      "name": "08-pi-model-override-stops-thinking-inheritance",
+      "passed": true,
+      "observation": {
+        "inheritedThinking": true,
+        "explicitChildModelThinkingInherited": false,
+        "baseFlags": [
+          "--mode",
+          "json",
+          "-p",
+          "--no-session"
+        ]
+      }
+    },
+    {
+      "name": "08-pi-term-sent-is-not-process-exited",
+      "passed": true,
+      "observation": {
+        "fallbackTimerFired": true,
+        "killedFlag": true,
+        "childStillAlive": true,
+        "parentRunStillPending": true,
+        "watchdogKillRequired": true
+      }
+    },
+    {
+      "name": "08-pi-pool-capacity-and-input-order",
+      "passed": true,
+      "observation": {
+        "maxActive": 2,
+        "CStartsBeforeAEnds": true,
+        "resultsInInputOrder": true
+      }
+    },
+    {
+      "name": "08-pi-pool-rejection-does-not-join-peer",
+      "passed": true,
+      "observation": {
+        "aggregateRejectedBeforePeerFinished": true
+      }
+    },
+    {
+      "name": "08-ds-delegation-pins-approval-not-one-shot-grants",
+      "passed": true,
+      "observation": {
+        "snapshotUnaffectedByLaterParentSwitch": true,
+        "approvalPinnedToNever": true,
+        "deploymentDefaultNotCopied": true,
+        "appendedPolicyEvents": 2
+      }
+    },
+    {
+      "name": "08-ds-job-settlement-waits-disposal",
+      "passed": true,
+      "observation": {
+        "resultReadyBeforeJobSettled": true,
+        "waitsForDispose": true
+      }
+    },
+    {
+      "name": "08-ds-dispose-failure-is-job-failure",
+      "passed": true,
+      "observation": {
+        "successfulResultDoesNotHideCleanupFailure": true,
+        "bothFailureDetailsPreserved": true
+      }
+    }
+  ]
+}
